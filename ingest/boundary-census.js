@@ -26,6 +26,7 @@
 const fs = require("fs");
 const path = require("path");
 const zlib = require("zlib");
+const { request } = require("./net"); // proxy-aware — node fetch ignores HTTPS_PROXY
 
 const ROOT = path.join(__dirname, "..");
 const ENDPOINTS = [
@@ -39,16 +40,17 @@ async function overpass(query, label) {
   for (let attempt = 0; attempt < 8; attempt++) {
     const url = ENDPOINTS[attempt % ENDPOINTS.length];
     try {
-      const res = await fetch(url, {
+      const res = await request(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
           "User-Agent": "GreenBook-boundary-census/1.0 (github.com/CaptainMig/greenbook)",
         },
         body: "data=" + encodeURIComponent(query),
+        timeout: 900000, // band queries run long server-side ([timeout:600])
       });
-      if (!res.ok) throw new Error(`Overpass ${res.status} (${url})`);
-      return await res.json();
+      if (res.status !== 200) throw new Error(`Overpass ${res.status} (${url})`);
+      return JSON.parse(res.buffer.toString());
     } catch (e) {
       lastErr = e;
       const wait = 4000 * (attempt + 1);

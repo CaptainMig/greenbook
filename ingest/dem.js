@@ -18,6 +18,7 @@
  */
 
 const zlib = require("zlib");
+const { request } = require("./net"); // proxy-aware — node fetch ignores HTTPS_PROXY
 
 const S3 = "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current";
 const headerCache = new Map(); // tileName -> parsed header (or null if missing)
@@ -32,10 +33,10 @@ function tileName(lat, lon) {
 const tileUrl = (t) => `${S3}/${t}/USGS_13_${t}.tif`;
 
 async function fetchRange(url, start, end) {
-  const res = await fetch(url, { headers: { Range: `bytes=${start}-${end}` } });
+  const res = await request(url, { headers: { Range: `bytes=${start}-${end}` } });
   if (res.status === 404) return null;
   if (res.status !== 206 && res.status !== 200) throw new Error(`range fetch ${res.status} ${url}`);
-  return Buffer.from(await res.arrayBuffer());
+  return res.buffer;
 }
 
 async function loadHeader(t) {
