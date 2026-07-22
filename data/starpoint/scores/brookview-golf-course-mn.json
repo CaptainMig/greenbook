@@ -1,14 +1,14 @@
 {
  "_license": "All rights reserved, Starpoint LLC",
- "slug": "atkinson-resort-country-club-championship-course-atkinson-nh",
- "computed": "2026-07-22T04:59:04.927Z",
+ "slug": "brookview-golf-course-mn",
+ "computed": "2026-07-22T04:59:04.977Z",
  "axes": [
   {
    "name": "Challenge",
    "status": "DERIVED",
    "srcLabel": "OPENGOLFAPI",
-   "score": 8.1,
-   "note": "Derived from slope 136 / rating 72.9 — reproducible from the ledgered rating source. score = (slope−55)/100·10.",
+   "score": 7.4,
+   "note": "Derived from slope 129 / rating 70.6 — reproducible from the ledgered rating source. score = (slope−55)/100·10.",
    "counted": true
   },
   {
@@ -23,8 +23,8 @@
    "name": "Terrain",
    "status": "DERIVED",
    "srcLabel": "OSM + 3DEP",
-   "score": 5.9,
-   "note": "mean |Δelev| 17.6 ft over 27 ingested holes. score = 2.0 + 0.22·mean, cap 9.5.",
+   "score": 3.6,
+   "note": "mean |Δelev| 7.1 ft over 27 ingested holes. score = 2.0 + 0.22·mean, cap 9.5.",
    "counted": true
   },
   {

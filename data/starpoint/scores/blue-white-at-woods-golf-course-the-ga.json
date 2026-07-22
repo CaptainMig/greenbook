@@ -1,15 +1,15 @@
 {
  "_license": "All rights reserved, Starpoint LLC",
- "slug": "atkinson-resort-country-club-championship-course-atkinson-nh",
- "computed": "2026-07-22T04:59:04.927Z",
+ "slug": "blue-white-at-woods-golf-course-the-ga",
+ "computed": "2026-07-22T04:59:04.969Z",
  "axes": [
   {
    "name": "Challenge",
-   "status": "DERIVED",
-   "srcLabel": "OPENGOLFAPI",
-   "score": 8.1,
-   "note": "Derived from slope 136 / rating 72.9 — reproducible from the ledgered rating source. score = (slope−55)/100·10.",
-   "counted": true
+   "status": "WITHHELD",
+   "srcLabel": "",
+   "score": null,
+   "note": "No rating source ledgered for this course.",
+   "counted": false
   },
   {
    "name": "Pedigree",
@@ -23,8 +23,8 @@
    "name": "Terrain",
    "status": "DERIVED",
    "srcLabel": "OSM + 3DEP",
-   "score": 5.9,
-   "note": "mean |Δelev| 17.6 ft over 27 ingested holes. score = 2.0 + 0.22·mean, cap 9.5.",
+   "score": 6.1,
+   "note": "mean |Δelev| 18.4 ft over 27 ingested holes. score = 2.0 + 0.22·mean, cap 9.5.",
    "counted": true
   },
   {
@@ -44,7 +44,7 @@
    "counted": false
   }
  ],
- "counted": 2,
+ "counted": 1,
  "composite": null,
  "verdict": "INSUFFICIENT"
 }

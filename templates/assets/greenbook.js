@@ -98,7 +98,8 @@ window.GB = (function () {
       C.rating = o.ratings[0].r; C.slope = o.ratings[0].s;
       C.ratingStatus = o.ratings[0].st.toUpperCase(); C.ratingSrcLabel = "";
     } else if (reg && reg.tees && reg.tees.length) {
-      C.ratingCards = reg.tees.filter((t) => t.course_rating && t.slope).map((t) => ({ tee: t.tee_name, color: TEE_COLORS[(t.tee_color || "").toLowerCase()] || "#9aa593", dark: /black/i.test(t.tee_name), r: t.course_rating, s: t.slope, yds: t.yardage || null, status: "DERIVED", srcLabel: "OPENGOLFAPI" }));
+      /* slope is the Challenge input; course_rating may be absent (e.g. executive layouts) */
+      C.ratingCards = reg.tees.filter((t) => t.slope).map((t) => ({ tee: t.tee_name, color: TEE_COLORS[(t.tee_color || "").toLowerCase()] || "#9aa593", dark: /black/i.test(t.tee_name), r: t.course_rating ?? null, s: t.slope, yds: t.yardage || null, status: "DERIVED", srcLabel: "OPENGOLFAPI" }));
       if (C.ratingCards.length) {
         C.rating = C.ratingCards[0].r; C.slope = C.ratingCards[0].s;
         C.ratingStatus = "DERIVED"; C.ratingSrcLabel = "OPENGOLFAPI";
@@ -167,7 +168,7 @@ window.GB = (function () {
     /* Challenge — slope-driven, source-status inherited */
     if (C.slope) {
       const sc = Math.max(0, Math.min(10, ((C.slope - 55) / (155 - 55)) * 10));
-      axes.push({ name: "Challenge", status: C.ratingStatus, srcLabel: C.ratingSrcLabel || "", score: +sc.toFixed(1), note: (oa.challenge && oa.challenge.note) || `Derived from slope ${C.slope} / rating ${C.rating} vs par — reproducible from the ledgered rating source. score = (slope−55)/100·10.` });
+      axes.push({ name: "Challenge", status: C.ratingStatus, srcLabel: C.ratingSrcLabel || "", score: +sc.toFixed(1), note: (oa.challenge && oa.challenge.note) || `Derived from slope ${C.slope}${C.rating ? " / rating " + C.rating : ""} — reproducible from the ledgered rating source. score = (slope−55)/100·10.` });
     } else {
       axes.push({ name: "Challenge", status: "WITHHELD", srcLabel: "", score: null, note: "No rating source ledgered for this course." });
     }

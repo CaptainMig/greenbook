@@ -1,29 +1,66 @@
 # GreenBook — course intelligence (Starpoint LLC)
 
 A provenance-gated golf course intelligence layer. Directory pages → instruments.
-Two views, one build-time data pipeline, no runtime backend.
+Two views, one national registry, a build-time data pipeline, no runtime backend.
 
-## What exists
+## Architecture (Phase 2)
 
-- `templates/course.html` — desktop course view: verdict plate, 5 gated scoring axes,
-  hole-by-hole elevation profiles, scorecard, provenance ledger, pipeline map.
-  (The original prototype `index.html` was not present in the handed-off folder;
-  this template recreates it from the README spec on play.html's visual system.)
-- `templates/play.html` — mobile on-course card: plays-like yardage, firmness/roll-out
-  heuristic, gated shot verdict with one-way brake, SUPERCASTER-style calibration
-  ledger (persisted on-device via localStorage, JSON export).
-- `templates/home.html` — course directory.
-- `ingest/ingest.js` — Node 18+ zero-dep script: Overpass (OSM golf=hole centerlines
-  + hazard polygons) → resample every 20 m → USGS 3DEP EPQS elevation → emits
-  `data/courses/<slug>.json`. Emits an honest `coverage:"none"` stub when OSM has
-  no centerlines. Never synthesizes. Retries transient Overpass errors across mirrors.
-- `data/registry.json` — course registry: metadata + per-source ratings provenance
-  (first source is designated authoritative; conflicts flagged, never averaged).
-- `build.js` — zero-dep static build (AnthonyCharts v17 flat-file pattern):
-  registry + ingest artifacts → `dist/` with `/c/<slug>` and `/c/<slug>/play`.
-  The ingest artifact always wins over registry metadata on shared fields.
-  Courses loaded: Allentown Municipal (real OSM/3DEP ingest + GAP ratings),
-  Bethpage Black (demo), Swope Memorial (demo).
+- `templates/course.html` — desktop course view, reconciled against the recovered
+  original design (`index-original.html`): sticky nav, course switcher, hero +
+  verdict plate, 5 axis cards, interactive terrain cross-section with hover
+  readout and tee selector, scorecard, per-tee rating cards, provenance ledger
+  with flagged-conflict callout, pipeline map.
+- `templates/play.html` — mobile on-course card: plays-like yardage, NOAA-fed
+  firmness/roll-out (api.weather.gov precip on load, sliders as manual override,
+  feed timestamp shown), gated shot verdict with one-way brake, calibration
+  ledger (localStorage + JSON export).
+- `templates/courses.html` — national index: client-side search + state filter
+  over the registry (15,667 U.S. courses).
+- `templates/attribution.html` — licenses and credits, linked from every footer.
+- `templates/assets/greenbook.js` — shared runtime: loads open + Starpoint trees
+  by slug, joins them at render, computes gated axes. build.js executes the SAME
+  file to materialize scores, so page and build cannot drift.
+- **Routing:** ONE course template + ONE play template serve every slug via
+  Vercel rewrites (`/c/:slug` → `/c/course.html`). Registry-only courses fall
+  back gracefully with the Terrain axis gated. No per-course HTML generation.
+
+### Composite scale
+
+The composite is **x.x / 10** with verdict bands STRONG PLAY ≥ 8.0 > PLAY ≥ 6.5
+> HOLD, per the original design. (A Phase-1 interim rebuild displayed /100 while
+the original file was missing; that rescale is reverted.)
+
+## Licensing structure (non-negotiable)
+
+- `data/open/` — **ODbL collective database**: registry (seeded from OpenGolfAPI
+  release v2.1.0, sharded by state), hole geometry + elevation profiles
+  (`courses/<slug>.json`). Ships with `LICENSE` (ODbL 1.0 text) and
+  `ATTRIBUTION.md` (OpenGolfAPI, OpenStreetMap, USGS 3DEP, NOAA).
+- `data/starpoint/` — **all rights reserved, Starpoint LLC**: `scoring.json`
+  (gates, verdict bands, axis formulas), editorial overlays
+  (`courses/<slug>.json`), materialized axis outputs (`scores/<slug>.json`).
+- Computed scores are NEVER written into `data/open/`. The trees join only at
+  render time, by slug. `build.js` enforces this with a purity gate that fails
+  the build if score-like keys appear anywhere in the open tree.
+- Registry fields cite OPENGOLFAPI as source — not USGA — until independently
+  verified per course. Every page rendering OSM/OpenGolfAPI data carries
+  attribution in the footer, linked to `/attribution`.
+
+## Ingest pipeline (`ingest/`)
+
+- `census.js` — nationwide Overpass sweep: 156,027 `golf=hole` ways across
+  CONUS, matched to 8,600 named courses → `queue.json` ranked by completeness.
+- `dem.js` — zero-dep USGS 3DEP 1/3″ GeoTIFF sampler: HTTP range-reads of tile
+  headers + only the 512×512 internal blocks containing sample points (LZW +
+  floating-point-predictor decode, bilinear interpolation). Validated to <1 ft
+  against EPQS on the Allentown reference profile. EPQS stays as the
+  single-course fallback (`ingest.js`).
+- `cohort.js` — ingests the top of the queue (single-course layouts, 18–27
+  holes, registry-matched) → `data/open/courses/`. Never synthesizes; skips
+  honestly on missing coverage.
+- `registry.js` — seeds `data/open/registry/` from the OpenGolfAPI bulk release;
+  `--enrich slug…` adds per-tee ratings from the API (throttled).
+- `ingest.js` — original single-course EPQS path (Allentown was ingested here).
 
 ## Non-negotiable rules (carry these into every change)
 
@@ -31,36 +68,22 @@ Two views, one build-time data pipeline, no runtime backend.
    Demo layers are labeled, never blended into composites.
 2. **Axis gating:** an axis scores only on VERIFIED or DERIVED inputs. Composite
    requires ≥3 qualified axes, else verdict = INSUFFICIENT DATA.
-3. **Conflicting sources are flagged, not averaged** (see the Allentown 72.2/129 vs
-   72.4/132 case in index.html).
+3. **Conflicting sources are flagged, not averaged.** Allentown case: the GAP
+   handicap TABLE (72.2/129) is authoritative; the GAP directory marketing PROSE
+   (72.4/132) is the flagged claim — and that prose value has propagated into
+   OpenGolfAPI via the course-website crawl, so the registry tee card carries
+   the flag too. One mismatch, three receipts.
 4. **One-way brake in play view:** a HOLD does not upgrade to COMMIT within the same
    hole session.
-5. **Attribution:** OSM data is ODbL — attribute on every page that renders it.
-   USGS 3DEP is public domain. Respect Overpass + EPQS rate limits.
+5. **Attribution:** OSM + OpenGolfAPI data is ODbL — attribute on every page that
+   renders it, linked to `/attribution`. USGS 3DEP + NOAA are public domain.
+   Respect Overpass, EPQS, api.weather.gov and OpenGolfAPI rate limits.
 6. USGA Rule 4.3 note: slope-adjusted advice may be restricted in competition;
    keep the calibration ledger (self-judgment) available in all modes.
-
-## Task list for Claude Code
-
-1. **Run first ingest:** `node ingest/ingest.js --name "Allentown Municipal" --slug allentown --bbox "40.57,-75.55,40.62,-75.48"`
-   (verify bbox against the course at 3400 Tilghman St, Allentown PA before running).
-   If coverage:none, the course needs OSM mapping first — do not fake it.
-2. **Wire real data:** load `data/courses/<slug>.json` in both views; flip
-   `holesDemo:false` only for courses with coverage ≥ partial; activate the Terrain
-   axis from real `elev_delta_ft` distribution.
-3. **NOAA feed:** replace play.html firmness sliders with NOAA/NWS station precip
-   (api.weather.gov, free) fetched at build or on load; keep sliders as manual override.
-4. **Persistence:** in the deployed build, persist the calibration ledger on-device
-   (localStorage is fine outside claude.ai preview) + JSON export for SUPERCASTER.
-5. **Course registry:** script to seed the course list from OpenGolfAPI (ODbL);
-   one static page per course generated at build (same v17 flat-file pattern as
-   AnthonyCharts).
-6. **Deploy:** static Vercel project; per-course routes `/c/<slug>`, play view at
-   `/c/<slug>/play`.
 
 ## Build & deploy
 
 ```
-node build.js    # → dist/ (static only, no runtime backend)
-vercel deploy    # vercel.json runs the build; routes: /c/<slug>, /c/<slug>/play
+node build.js    # purity gate → materialize scores → dist/ (static only)
+vercel deploy    # rewrites: /c/:slug → course template, /c/:slug/play → play
 ```
