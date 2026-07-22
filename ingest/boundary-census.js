@@ -146,7 +146,7 @@ function assembleRings(members) {
         way["leisure"="golf_course"](${s},${w},${n},${e});
         relation["leisure"="golf_course"](${s},${w},${n},${e});
       );
-      out tags geom;`;
+      out geom;`; // NOT "out tags geom" — the tags verbosity suppresses relation member lists
     const j = await overpass(q, `band ${w.toFixed(0)}`);
     let fresh = 0;
     for (const el of j.elements) {
@@ -171,7 +171,11 @@ function assembleRings(members) {
       outer = [el.geometry.map((g) => [rnd(g.lat), rnd(g.lon)])];
     } else {
       const mem = (el.members || []).filter((m) => m.type === "way" && m.geometry);
-      const out = assembleRings(mem.filter((m) => m.role === "outer" || m.role === ""));
+      /* strict first (outer + untyped roles); site-style relations carry stray
+         untyped members that break closure — retry with role=outer only. A
+         PARTIAL outer is never accepted: wrong boundary is worse than none. */
+      const out = assembleRings(mem.filter((m) => m.role === "outer" || m.role === ""))
+        || assembleRings(mem.filter((m) => m.role === "outer"));
       if (!out || !out.length) { unusable.push({ osm: `${el.type}/${el.id}`, name, reason: "multipolygon outer rings did not assemble" }); continue; }
       outer = out;
       inners = assembleRings(mem.filter((m) => m.role === "inner")) || [];
