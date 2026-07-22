@@ -3,18 +3,27 @@
 A provenance-gated golf course intelligence layer. Directory pages → instruments.
 Two views, one build-time data pipeline, no runtime backend.
 
-## What exists (prototype)
+## What exists
 
-- `index.html` — desktop course page: verdict plate, 5 gated scoring axes, hole-by-hole
-  elevation profiles, full scorecard across tee sets, provenance ledger, pipeline map.
-  Three courses loaded: Allentown Municipal (real GAP ratings), Bethpage Black (demo),
-  Swope Memorial (demo).
-- `play.html` — mobile on-course card: plays-like yardage, firmness/roll-out heuristic,
-  gated shot verdict with one-way brake, SUPERCASTER-style calibration ledger.
+- `templates/course.html` — desktop course view: verdict plate, 5 gated scoring axes,
+  hole-by-hole elevation profiles, scorecard, provenance ledger, pipeline map.
+  (The original prototype `index.html` was not present in the handed-off folder;
+  this template recreates it from the README spec on play.html's visual system.)
+- `templates/play.html` — mobile on-course card: plays-like yardage, firmness/roll-out
+  heuristic, gated shot verdict with one-way brake, SUPERCASTER-style calibration
+  ledger (persisted on-device via localStorage, JSON export).
+- `templates/home.html` — course directory.
 - `ingest/ingest.js` — Node 18+ zero-dep script: Overpass (OSM golf=hole centerlines
   + hazard polygons) → resample every 20 m → USGS 3DEP EPQS elevation → emits
   `data/courses/<slug>.json`. Emits an honest `coverage:"none"` stub when OSM has
-  no centerlines. Never synthesizes.
+  no centerlines. Never synthesizes. Retries transient Overpass errors across mirrors.
+- `data/registry.json` — course registry: metadata + per-source ratings provenance
+  (first source is designated authoritative; conflicts flagged, never averaged).
+- `build.js` — zero-dep static build (AnthonyCharts v17 flat-file pattern):
+  registry + ingest artifacts → `dist/` with `/c/<slug>` and `/c/<slug>/play`.
+  The ingest artifact always wins over registry metadata on shared fields.
+  Courses loaded: Allentown Municipal (real OSM/3DEP ingest + GAP ratings),
+  Bethpage Black (demo), Swope Memorial (demo).
 
 ## Non-negotiable rules (carry these into every change)
 
@@ -49,8 +58,9 @@ Two views, one build-time data pipeline, no runtime backend.
 6. **Deploy:** static Vercel project; per-course routes `/c/<slug>`, play view at
    `/c/<slug>/play`.
 
-## Deploy now (prototype as-is)
+## Build & deploy
 
 ```
-vercel deploy   # from this folder; it's all static
+node build.js    # → dist/ (static only, no runtime backend)
+vercel deploy    # vercel.json runs the build; routes: /c/<slug>, /c/<slug>/play
 ```

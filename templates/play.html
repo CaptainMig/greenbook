@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GreenBook · Play</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--pine:#0c1a12;--pine-2:#122419;--pine-3:#1a3222;--chalk:#e9e4d3;--dim:#9aa593;
+--flag:#e23d2e;--sand:#d9b98a;--line:#2a4433;--ok:#8fd6a0;
+--mono:'IBM Plex Mono',ui-monospace,monospace;--disp:'Archivo',system-ui,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+body{background:var(--pine);color:var(--chalk);font-family:var(--disp);font-size:15px;line-height:1.5}
+.app{max-width:430px;margin:0 auto;min-height:100vh;padding:0 14px 60px;border-left:1px solid var(--line);border-right:1px solid var(--line)}
+:focus-visible{outline:2px solid var(--ok);outline-offset:2px}
+.mono{font-family:var(--mono)}
+.k{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim)}
+
+.top{display:flex;justify-content:space-between;align-items:center;height:52px;border-bottom:1px solid var(--line)}
+.top b{font-weight:900;font-stretch:110%;font-size:16px}
+.top b i{font-style:normal;color:var(--ok)}
+.top .mono{font-size:9px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase}
+.top a{color:inherit;text-decoration:none}
+
+.holes{display:flex;gap:4px;overflow-x:auto;padding:12px 0;scrollbar-width:none}
+.holes::-webkit-scrollbar{display:none}
+.holes button{font-family:var(--mono);font-size:12px;min-width:40px;height:36px;background:transparent;color:var(--dim);border:1px solid var(--line);border-radius:2px;cursor:pointer;flex-shrink:0}
+.holes button.on{background:var(--chalk);color:var(--pine);font-weight:600;border-color:var(--chalk)}
+
+.card{border:1px solid var(--line);background:var(--pine-2);border-radius:2px;padding:14px;margin-top:10px}
+.card h3{font-weight:800;font-stretch:108%;font-size:12px;text-transform:uppercase;letter-spacing:.04em;display:flex;justify-content:space-between;align-items:baseline}
+.card h3 .st{font-family:var(--mono);font-size:8.5px;letter-spacing:.12em}
+.st.der{color:var(--dim)}.st.dem{color:var(--sand)}.st.ver{color:var(--ok)}
+
+.big{display:flex;align-items:baseline;gap:10px;margin-top:8px}
+.big .n{font-family:var(--mono);font-weight:600;font-size:54px;line-height:1;letter-spacing:-.02em}
+.big .u{font-family:var(--mono);font-size:11px;color:var(--dim)}
+.sub{font-size:12px;color:var(--dim);margin-top:6px}
+.row{display:flex;justify-content:space-between;font-family:var(--mono);font-size:12px;padding:7px 0;border-bottom:1px solid var(--line)}
+.row:last-child{border-bottom:none}
+.row span:first-child{color:var(--dim)}
+svg{width:100%;height:auto;display:block;margin-top:8px}
+
+.ctrl{margin-top:10px}
+.ctrl label{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+.ctrl label b{color:var(--chalk)}
+input[type=range]{width:100%;accent-color:#8fd6a0;background:transparent}
+.seg{display:flex;gap:6px;margin-top:4px}
+.seg button{flex:1;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:8px 0;background:transparent;border:1px solid var(--line);border-radius:2px;color:var(--dim);cursor:pointer}
+.seg button.on{color:var(--chalk);border-color:var(--chalk);background:var(--pine-3)}
+
+.verdict{font-weight:900;font-stretch:112%;font-size:34px;line-height:1;text-transform:uppercase;margin-top:10px}
+.verdict.commit{color:var(--ok)}.verdict.hold{color:var(--sand)}.verdict.layup{color:var(--flag)}
+.why{font-size:12px;color:var(--dim);margin-top:6px;line-height:1.5}
+.brake{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--flag);margin-top:8px;display:none}
+.brake.show{display:block}
+
+.fc-btns{display:flex;gap:6px;margin-top:10px}
+.fc-btns button{flex:1;font-family:var(--mono);font-size:12px;padding:10px 0;background:transparent;border:1px solid var(--line);border-radius:2px;color:var(--dim);cursor:pointer}
+.fc-btns button.on{color:var(--pine);background:var(--chalk);border-color:var(--chalk);font-weight:600}
+.log{font-family:var(--mono);font-size:11px;margin-top:10px;color:var(--dim);line-height:1.7;max-height:120px;overflow-y:auto}
+.log .hit{color:var(--ok)}.log .miss{color:var(--flag)}
+.cal{margin-top:10px}
+.calbar{height:4px;background:var(--pine-3);border-radius:2px;overflow:hidden;margin-top:4px}
+.calbar i{display:block;height:100%;background:var(--ok)}
+.ghost{font-family:var(--mono);font-size:9.5px;color:var(--sand);letter-spacing:.06em;text-transform:uppercase;margin-top:10px}
+.attr{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.04em;margin-top:24px;padding-top:10px;border-top:1px solid var(--line);line-height:1.8}
+.attr a{color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="top">
+    <b><a href="/">GREEN<i>BOOK</i></a></b>
+    <span class="mono" id="cname"></span>
+  </div>
+
+  <div class="holes" id="holes"></div>
+
+  <!-- PLAYS LIKE -->
+  <div class="card">
+    <h3>Plays like <span class="st dem" id="pl-st">DEMO TERRAIN</span></h3>
+    <div class="big"><span class="n" id="plays">—</span><span class="u">YDS<br><span id="rawyds"></span></span></div>
+    <svg id="strip" viewBox="0 0 400 90" role="img" aria-label="elevation strip"></svg>
+    <div class="row"><span id="r-card-label">Card yardage · Black</span><span id="r-card"></span></div>
+    <div class="row"><span>Elevation Δ</span><span id="r-delta"></span></div>
+    <div class="row"><span>Par / stroke index</span><span id="r-par"></span></div>
+  </div>
+
+  <!-- FIRMNESS -->
+  <div class="card">
+    <h3>Firmness &amp; roll-out <span class="st der">DERIVED · HEURISTIC</span></h3>
+    <div class="ctrl"><label><span>Rain, last 72h</span><b id="rainv">0.4"</b></label>
+      <input type="range" id="rain" min="0" max="30" value="4" aria-label="rain last 72 hours"></div>
+    <div class="ctrl"><label><span>Days since last rain</span><b id="daysv">2</b></label>
+      <input type="range" id="days" min="0" max="10" value="2" aria-label="days since rain"></div>
+    <div class="big"><span class="n" id="roll">—</span><span class="u">YDS<br>EXPECTED ROLL<br>(DRIVER)</span></div>
+    <div class="sub" id="firmnote"></div>
+    <div class="sub" style="margin-top:4px">Production build reads NOAA station precip automatically — sliders become a live feed.</div>
+  </div>
+
+  <!-- VERDICT -->
+  <div class="card">
+    <h3>Shot verdict <span class="st der">GATED · ONE-WAY BRAKE</span></h3>
+    <div class="ctrl"><label><span>Carry required over hazard</span><b id="needv">205 yds</b></label>
+      <input type="range" id="need" min="120" max="280" value="205" aria-label="carry required"></div>
+    <div class="ctrl"><label><span>Your average carry (this club)</span><b id="havev">215 yds</b></label>
+      <input type="range" id="have" min="120" max="300" value="215" aria-label="your carry"></div>
+    <div class="ctrl"><label><span>Penalty if short</span></label>
+      <div class="seg" id="pen">
+        <button data-p="1">Bunker</button><button data-p="2" class="on">Water</button><button data-p="3">OB / lost</button>
+      </div></div>
+    <div class="verdict" id="verd">—</div>
+    <div class="why" id="verdwhy"></div>
+    <div class="brake" id="brake">⛔ One-way brake: a HOLD on this hole doesn't upgrade because conditions look better mid-swing. Change the inputs, or take the layup.</div>
+  </div>
+
+  <!-- CALIBRATION -->
+  <div class="card">
+    <h3>Forecast this shot <span class="st ver">SUPERCASTER LAYER</span></h3>
+    <div class="sub">Before you swing: how confident are you that you hit this green? Log it, then log the result. No model speaks before 50 scored shots.</div>
+    <div class="fc-btns" id="conf">
+      <button data-c="50">50%</button><button data-c="65">65%</button><button data-c="80" class="on">80%</button><button data-c="95">95%</button>
+    </div>
+    <div class="fc-btns">
+      <button id="hitbtn">HIT ✓</button><button id="missbtn">MISS ✗</button>
+    </div>
+    <div class="cal">
+      <div class="k">Calibration ledger · <span id="calcount">0</span>/50 shots to model activation</div>
+      <div class="calbar"><i id="calfill" style="width:0%"></i></div>
+      <div class="row" style="margin-top:6px"><span>Stated confidence (avg)</span><span id="cal-said">—</span></div>
+      <div class="row"><span>Actual hit rate</span><span id="cal-real">—</span></div>
+      <div class="row"><span>Gap</span><span id="cal-gap">—</span></div>
+    </div>
+    <div class="log" id="shotlog"></div>
+    <div class="fc-btns"><button id="exportbtn">EXPORT LEDGER JSON</button></div>
+    <div class="ghost">Ledger persists on-device (localStorage) · export feeds SUPERCASTER. USGA Rule 4.3: slope-adjusted advice may be restricted in competition; the self-judgment ledger stays available in all modes.</div>
+  </div>
+
+  <div class="attr" id="attr"></div>
+</div>
+
+<!--COURSE_DATA-->
+<script>
+/* ---- course layer: injected at build time from data/courses/<slug>.json ---- */
+const C = window.COURSE || null;
+const DEMO = !C || C.demo !== false;
+
+/* demo fallback arrays (labeled DEMO — never blended with real layers) */
+const demoPars=[4,4,5,3,4,4,3,5,4,4,3,5,4,4,3,4,5,4];
+const demoHcp=[7,3,11,17,9,1,15,5,13,8,16,4,2,10,18,12,6,14];
+const demoYds=[385,410,520,175,395,430,160,540,375,400,190,515,420,385,205,410,535,395];
+const SEED=(C&&C.demoSeed)||7;
+function demoProfile(h){const s=SEED*31+h*7,n=40,p=[];for(let i=0;i<=n;i++){const t=i/n;
+ p.push(18*Math.sin(t*Math.PI*1.2+s)+9*Math.sin(t*Math.PI*2.6+s*1.7)+5*Math.sin(t*Math.PI*5.1+s*.6))}
+ const b=p[0];return p.map(e=>e-b)}
+
+/* coverage:none on a real course renders gated & empty — demo arrays are ONLY for demo courses */
+const holesData = (C && C.holes && C.holes.length)
+  ? C.holes
+  : (DEMO ? demoPars.map((p,i)=>({ref:String(i+1),par:p,handicap:demoHcp[i],length_yds:demoYds[i],elev_delta_ft:null,profile:null})) : []);
+
+const pars=holesData.map(h=>h.par);
+const hcp=holesData.map(h=>h.handicap);
+const yards=holesData.map(h=>h.card_yds || h.length_yds);
+
+/* relative elevation series for a hole: real profile if present, else demo generator */
+function relProfile(h){
+  const hd=holesData[h];
+  if(hd.profile && hd.profile.length){
+    const v=hd.profile.filter(p=>p.elev_ft!==null);
+    if(v.length>=2){const b=v[0].elev_ft;return v.map(p=>p.elev_ft-b)}
+  }
+  return demoProfile(h);
+}
+const $=id=>document.getElementById(id);
+let hole=0;
+
+/* ---- state ---- */
+let pen=2, conf=80, holdArmed=false;
+
+/* calibration ledger: on-device persistence, per course */
+const CAL_KEY='greenbook:cal:'+((C&&C.slug)||'demo');
+let shots=[];
+try{shots=JSON.parse(localStorage.getItem(CAL_KEY)||'[]')}catch(e){shots=[]}
+function saveShots(){try{localStorage.setItem(CAL_KEY,JSON.stringify(shots))}catch(e){}}
+
+function renderHoles(){
+  $('holes').innerHTML=pars.map((p,i)=>`<button class="${i===hole?'on':''}" onclick="setHole(${i})">${i+1}</button>`).join('');
+}
+function setHole(h){hole=h;holdArmed=false;$('brake').classList.remove('show');renderAll();}
+
+function renderPlays(){
+  const yds=yards[hole], prof=relProfile(hole);
+  const delta=(!DEMO && holesData[hole].elev_delta_ft!==null)?holesData[hole].elev_delta_ft:prof[prof.length-1];
+  const plays=Math.round(yds+delta/3);
+  $('plays').textContent=plays;
+  $('rawyds').textContent=(DEMO?'CARD ':'OSM ')+yds;
+  $('r-card').textContent=yds+' yds';
+  $('r-delta').textContent=(delta>0?'+':'')+delta.toFixed(0)+' ft';
+  $('r-par').textContent=`Par ${pars[hole]} · SI ${hcp[hole]}`;
+  const W=400,H=90,PL=8,PR=8,PT=12,PB=12;
+  const min=Math.min(...prof)-4,max=Math.max(...prof)+4;
+  const x=i=>PL+(W-PL-PR)*i/(prof.length-1), y=e=>PT+(H-PT-PB)*(1-(e-min)/(max-min));
+  let d=`M${x(0)},${y(prof[0])}`;prof.forEach((e,i)=>{if(i)d+=` L${x(i)},${y(e)}`});
+  const gy=y(prof[prof.length-1]);
+  $('strip').innerHTML=`<path d="${d} L${x(prof.length-1)},${H-PB} L${x(0)},${H-PB} Z" fill="rgba(143,214,160,.10)"/>
+   <path d="${d}" fill="none" stroke="#8fd6a0" stroke-width="1.5"/>
+   <circle cx="${x(0)}" cy="${y(prof[0])}" r="3" fill="#e9e4d3"/>
+   <line x1="${x(prof.length-1)}" y1="${gy}" x2="${x(prof.length-1)}" y2="${gy-16}" stroke="#e23d2e" stroke-width="1.5"/>
+   <path d="M${x(prof.length-1)},${gy-16} l8,3.5 l-8,3.5 Z" fill="#e23d2e"/>`;
+}
+
+function renderFirm(){
+  const rain=+$('rain').value/10, days=+$('days').value;
+  $('rainv').textContent=rain.toFixed(1)+'"'; $('daysv').textContent=days;
+  /* transparent heuristic: dry baseline 24yd driver roll; moisture index m∈[0,1] */
+  const m=Math.min(1, rain*0.55*Math.max(0,1-days/6));
+  const roll=Math.round(24*(1-0.82*m));
+  $('roll').textContent=roll;
+  const label=m<0.15?'FIRM — running fairways, land it short and let it release'
+             :m<0.45?'MEDIUM — normal release, carry numbers govern'
+             :'SOFT — plugs and stops; fly it all the way, add club into greens';
+  $('firmnote').textContent=`Moisture index ${m.toFixed(2)} → ${label}.`;
+}
+
+function normCdf(z){return 1/(1+Math.exp(-1.702*z))}  /* logistic approx */
+function renderVerdict(){
+  const need=+$('need').value, have=+$('have').value;
+  $('needv').textContent=need+' yds'; $('havev').textContent=have+' yds';
+  const sigma=Math.max(6,have*0.05);           /* carry dispersion ~5% */
+  const p=normCdf((have-need)/sigma);
+  const sev=pen; /* 1 bunker, 2 water, 3 OB */
+  const bar=sev===1?0.55:sev===2?0.75:0.85;    /* required P(clear) rises with penalty */
+  let v,cls,why;
+  if(p>=bar+0.10){v='COMMIT';cls='commit';why=`P(clear) ${(p*100).toFixed(0)}% with ±${sigma.toFixed(0)}-yd carry dispersion clears the ${['','bunker','water','OB'][sev]} bar of ${(bar*100).toFixed(0)}% with margin.`}
+  else if(p>=bar){v='HOLD';cls='hold';why=`P(clear) ${(p*100).toFixed(0)}% sits inside the decision band for a ${['','bunker','water','OB'][sev]} penalty. Marginal — the brake favors the conservative line.`}
+  else{v='LAYUP';cls='layup';why=`P(clear) ${(p*100).toFixed(0)}% is below the ${(bar*100).toFixed(0)}% bar. Expected cost of the penalty exceeds the reward of the carry.`}
+  if(v!=='COMMIT') holdArmed=true;
+  if(holdArmed && v==='COMMIT'){ $('brake').classList.add('show'); v='HOLD';cls='hold';
+    why+=' Brake engaged: this hole already produced a non-COMMIT read this session.'}
+  else if(v!=='COMMIT'){$('brake').classList.remove('show')}
+  $('verd').textContent=v; $('verd').className='verdict '+cls; $('verdwhy').textContent=why;
+}
+
+function renderCal(){
+  $('calcount').textContent=shots.length;
+  $('calfill').style.width=Math.min(100,shots.length/50*100)+'%';
+  if(shots.length){
+    const said=shots.reduce((s,x)=>s+x.c,0)/shots.length;
+    const real=shots.filter(x=>x.hit).length/shots.length*100;
+    $('cal-said').textContent=said.toFixed(0)+'%';
+    $('cal-real').textContent=real.toFixed(0)+'%';
+    const gap=real-said;
+    $('cal-gap').textContent=(gap>0?'+':'')+gap.toFixed(0)+' pts '+(Math.abs(gap)<8?'· calibrated':gap<0?'· overconfident':'· sandbagging');
+  } else {$('cal-said').textContent='—';$('cal-real').textContent='—';$('cal-gap').textContent='—'}
+  $('shotlog').innerHTML=shots.slice(-8).reverse().map(x=>
+    `<div>H${x.h+1} · said ${x.c}% · <span class="${x.hit?'hit':'miss'}">${x.hit?'HIT':'MISS'}</span></div>`).join('');
+}
+
+/* ---- wiring ---- */
+['rain','days'].forEach(id=>$(id).addEventListener('input',renderFirm));
+['need','have'].forEach(id=>$(id).addEventListener('input',renderVerdict));
+$('pen').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  pen=+b.dataset.p;[...$('pen').children].forEach(x=>x.classList.toggle('on',x===b));renderVerdict()});
+$('conf').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  conf=+b.dataset.c;[...$('conf').children].forEach(x=>x.classList.toggle('on',x===b))});
+$('hitbtn').onclick=()=>{shots.push({h:hole,c:conf,hit:true});saveShots();renderCal()};
+$('missbtn').onclick=()=>{shots.push({h:hole,c:conf,hit:false});saveShots();renderCal()};
+$('exportbtn').onclick=()=>{
+  const blob=new Blob([JSON.stringify({course:(C&&C.slug)||'demo',exported:new Date().toISOString(),shots},null,1)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='greenbook-cal-'+((C&&C.slug)||'demo')+'.json';a.click();URL.revokeObjectURL(a.href)};
+
+/* ---- course chrome ---- */
+$('cname').textContent=((C&&C.name)||'GreenBook demo').toUpperCase()+' · PLAY MODE';
+if(!DEMO){
+  $('pl-st').textContent='DERIVED · OSM + 3DEP';$('pl-st').className='st der';
+  $('r-card-label').textContent='Centerline yardage · OSM';
+  $('attr').innerHTML='Course geometry © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>, ODbL 1.0 · Elevation: USGS 3DEP (public domain). Centerline yardage ≠ card yardage — card values withheld until a verified source is ledgered.';
+}else{
+  $('attr').innerHTML='Demo layer — no OpenStreetMap data rendered on this page. Demo values are labeled and never blended into composites.';
+}
+
+function renderAll(){
+  if(!holesData.length){ /* honest coverage:none state — no demo fill */
+    $('holes').innerHTML='<span class="k" style="padding:10px 0">COVERAGE: NONE — course not yet mapped in OSM. Nothing synthesized.</span>';
+    $('plays').textContent='—';renderFirm();renderVerdict();renderCal();return;
+  }
+  renderHoles();renderPlays();renderFirm();renderVerdict();renderCal();
+}
+renderAll();
+</script>
+</body>
+</html>

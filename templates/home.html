@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GreenBook · Courses</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--pine:#0c1a12;--pine-2:#122419;--pine-3:#1a3222;--chalk:#e9e4d3;--dim:#9aa593;
+--flag:#e23d2e;--sand:#d9b98a;--line:#2a4433;--ok:#8fd6a0;
+--mono:'IBM Plex Mono',ui-monospace,monospace;--disp:'Archivo',system-ui,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--pine);color:var(--chalk);font-family:var(--disp);font-size:15px;line-height:1.5}
+.page{max-width:860px;margin:0 auto;min-height:100vh;padding:0 22px 80px}
+:focus-visible{outline:2px solid var(--ok);outline-offset:2px}
+.top{display:flex;justify-content:space-between;align-items:center;height:56px;border-bottom:1px solid var(--line)}
+.top b{font-weight:900;font-stretch:110%;font-size:17px}
+.top b i{font-style:normal;color:var(--ok)}
+.top .mono{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase}
+h1{font-weight:900;font-stretch:114%;font-size:40px;line-height:1.05;text-transform:uppercase;margin-top:34px}
+.sub{font-size:13px;color:var(--dim);margin-top:10px;max-width:520px;line-height:1.6}
+.list{margin-top:26px;display:flex;flex-direction:column;gap:10px}
+a.course{display:flex;justify-content:space-between;align-items:center;gap:14px;border:1px solid var(--line);background:var(--pine-2);border-radius:2px;padding:16px 18px;text-decoration:none;color:var(--chalk)}
+a.course:hover{background:var(--pine-3)}
+a.course .nm{font-weight:800;font-stretch:108%;font-size:17px;text-transform:uppercase}
+a.course .loc{font-family:var(--mono);font-size:10px;color:var(--dim);margin-top:3px;letter-spacing:.06em}
+.chip{font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;padding:3px 8px;border-radius:2px;border:1px solid var(--line);white-space:nowrap}
+.chip.ver{color:var(--ok);border-color:var(--ok)}
+.chip.dem{color:var(--sand);border-color:var(--sand)}
+.attr{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.04em;margin-top:40px;padding-top:12px;border-top:1px solid var(--line);line-height:1.8}
+.attr a{color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="top">
+    <b>GREEN<i>BOOK</i></b>
+    <span class="mono">STARPOINT LLC · COURSE INTELLIGENCE</span>
+  </div>
+  <h1>Directory pages<br>→ instruments.</h1>
+  <p class="sub">Provenance-gated course intelligence. Every field carries its source; axes score only on
+  VERIFIED or DERIVED inputs; demo layers are labeled and never blended into a composite.</p>
+  <div class="list">
+<!--COURSE_LIST-->
+  </div>
+  <div class="attr">Course geometry &amp; hazards © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>, ODbL 1.0 (where rendered) · Elevation: USGS 3DEP via EPQS (public domain) · Demo layers labeled per course.</div>
+</div>
+</body>
+</html>

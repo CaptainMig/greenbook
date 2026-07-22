@@ -1,0 +1,33 @@
+{
+  "comment": "Course registry — build-time metadata merged over data/courses/<slug>.json ingest artifacts. Ratings carry per-source provenance; conflicting sources are flagged, never averaged (rule 3). First ratings source is the designated authoritative one.",
+  "courses": [
+    {
+      "slug": "allentown",
+      "name": "Allentown Municipal",
+      "location": "3400 Tilghman St, Allentown PA 18104",
+      "demo": false,
+      "ratings": {
+        "par": 72,
+        "conflict": true,
+        "sources": [
+          { "source": "GAP (Golf Association of Philadelphia)", "rating": 72.2, "slope": 129, "status": "VERIFIED" },
+          { "source": "Printed scorecard", "rating": 72.4, "slope": 132, "status": "APPROX" }
+        ]
+      }
+    },
+    {
+      "slug": "bethpage-black",
+      "name": "Bethpage Black",
+      "location": "Farmingdale, NY — DEMO LAYER",
+      "demo": true,
+      "demoSeed": 11
+    },
+    {
+      "slug": "swope-memorial",
+      "name": "Swope Memorial",
+      "location": "Kansas City, MO — DEMO LAYER",
+      "demo": true,
+      "demoSeed": 23
+    }
+  ]
+}

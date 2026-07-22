@@ -1,0 +1,9 @@
+{
+  "name": "greenbook",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Provenance-gated golf course intelligence (Starpoint LLC)",
+  "scripts": {
+    "build": "node build.js"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "greenbook-dist",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["/private/tmp/claude-501/-Users-homefolder-Downloads---dev-greenbrook/6f5f4bc9-5f76-40ca-9325-cbfa1bc7df60/scratchpad/serve.js"],
+      "port": 4173
+    }
+  ]
+}

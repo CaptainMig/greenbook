@@ -25,7 +25,10 @@
 const fs = require("fs");
 const path = require("path");
 
-const OVERPASS = "https://overpass-api.de/api/interpreter";
+const OVERPASS_ENDPOINTS = [
+  "https://overpass-api.de/api/interpreter",
+  "https://overpass.kumi.systems/api/interpreter",
+];
 const EPQS = "https://epqs.nationalmap.gov/v1/json";
 const SAMPLE_M = 20;          // sample spacing along centerline
 const EPQS_DELAY_MS = 120;    // throttle elevation queries
@@ -81,13 +84,30 @@ function resample(coords, step) {
 }
 
 async function overpass(query) {
-  const res = await fetch(OVERPASS, {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: "data=" + encodeURIComponent(query),
-  });
-  if (!res.ok) throw new Error(`Overpass ${res.status}`);
-  return res.json();
+  // overpass-api.de round-robins across backends; one can intermittently 406.
+  // Retry with backoff, rotating through mirrors. Transport only — no data changes.
+  let lastErr;
+  for (let attempt = 0; attempt < 6; attempt++) {
+    const url = OVERPASS_ENDPOINTS[attempt % OVERPASS_ENDPOINTS.length];
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+          "User-Agent": "GreenBook-ingest/1.0 (github.com/CaptainMig/greenbook)",
+        },
+        body: "data=" + encodeURIComponent(query),
+      });
+      if (!res.ok) throw new Error(`Overpass ${res.status} (${url})`);
+      return await res.json();
+    } catch (e) {
+      lastErr = e;
+      const wait = 1500 * (attempt + 1);
+      console.log(`  retry ${attempt + 1}/6 after ${e.message} — waiting ${wait} ms`);
+      await sleep(wait);
+    }
+  }
+  throw lastErr;
 }
 
 async function elevationFt(lat, lon) {

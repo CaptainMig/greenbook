@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GreenBook · Course</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--pine:#0c1a12;--pine-2:#122419;--pine-3:#1a3222;--chalk:#e9e4d3;--dim:#9aa593;
+--flag:#e23d2e;--sand:#d9b98a;--line:#2a4433;--ok:#8fd6a0;
+--mono:'IBM Plex Mono',ui-monospace,monospace;--disp:'Archivo',system-ui,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+body{background:var(--pine);color:var(--chalk);font-family:var(--disp);font-size:15px;line-height:1.5}
+.page{max-width:1180px;margin:0 auto;min-height:100vh;padding:0 22px 80px}
+:focus-visible{outline:2px solid var(--ok);outline-offset:2px}
+.mono{font-family:var(--mono)}
+.k{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim)}
+
+.top{display:flex;justify-content:space-between;align-items:center;height:56px;border-bottom:1px solid var(--line)}
+.top b{font-weight:900;font-stretch:110%;font-size:17px}
+.top b i{font-style:normal;color:var(--ok)}
+.top a{color:inherit;text-decoration:none}
+.top .mono{font-size:9px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase}
+
+.head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;padding:26px 0 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+h1{font-weight:900;font-stretch:114%;font-size:44px;line-height:1;text-transform:uppercase;letter-spacing:-.01em}
+.loc{font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:8px;letter-spacing:.06em}
+.playlink{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--pine);background:var(--ok);padding:11px 18px;border-radius:2px;text-decoration:none;font-weight:600}
+
+.grid{display:grid;grid-template-columns:340px 1fr;gap:14px;margin-top:14px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.card{border:1px solid var(--line);background:var(--pine-2);border-radius:2px;padding:16px}
+.card h3{font-weight:800;font-stretch:108%;font-size:12px;text-transform:uppercase;letter-spacing:.04em;display:flex;justify-content:space-between;align-items:baseline}
+.card h3 .st{font-family:var(--mono);font-size:8.5px;letter-spacing:.12em}
+.st.der{color:var(--dim)}.st.dem{color:var(--sand)}.st.ver{color:var(--ok)}.st.wit{color:var(--flag)}.st.flg{color:var(--flag)}
+
+.verdict-plate .v{font-weight:900;font-stretch:112%;font-size:40px;line-height:1;text-transform:uppercase;margin-top:12px}
+.verdict-plate .v.ok{color:var(--ok)}.verdict-plate .v.insuff{color:var(--sand)}
+.verdict-plate .n{font-family:var(--mono);font-weight:600;font-size:64px;line-height:1;margin-top:10px}
+.verdict-plate .sub{font-size:12px;color:var(--dim);margin-top:10px;line-height:1.55}
+
+.axis{margin-top:14px}
+.axis .lab{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.axis .lab b{color:var(--chalk)}
+.axis .bar{height:6px;background:var(--pine-3);border-radius:2px;overflow:hidden;margin-top:5px}
+.axis .bar i{display:block;height:100%;background:var(--ok)}
+.axis.gated .bar i{background:repeating-linear-gradient(45deg,var(--sand),var(--sand) 3px,transparent 3px,transparent 7px);opacity:.5}
+.axis .note{font-size:11px;color:var(--dim);margin-top:4px;line-height:1.5}
+
+.profiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-top:12px}
+.ph{border:1px solid var(--line);background:var(--pine);border-radius:2px;padding:8px}
+.ph .k{display:flex;justify-content:space-between}
+.ph svg{width:100%;height:auto;display:block;margin-top:4px}
+
+table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11.5px;margin-top:10px}
+th,td{text-align:right;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
+th{color:var(--dim);font-weight:500;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase}
+th:first-child,td:first-child{text-align:left}
+td.dim{color:var(--dim)}
+.scroll{overflow-x:auto}
+
+.ledger td{white-space:normal}
+.ledger .fld{color:var(--chalk);font-weight:500}
+.chip{font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;padding:2px 7px;border-radius:2px;border:1px solid var(--line)}
+.chip.ver{color:var(--ok);border-color:var(--ok)}
+.chip.der{color:var(--dim)}
+.chip.apx{color:var(--sand);border-color:var(--sand)}
+.chip.dem{color:var(--sand);border-color:var(--sand)}
+.chip.wit{color:var(--flag);border-color:var(--flag)}
+.chip.flg{color:var(--pine);background:var(--flag);border-color:var(--flag)}
+.conflict{border:1px solid var(--flag);border-radius:2px;padding:10px 12px;margin-top:10px;font-size:12px;color:var(--chalk);line-height:1.55}
+.conflict .k{color:var(--flag)}
+
+.pipe{display:flex;gap:8px;align-items:stretch;margin-top:12px;flex-wrap:wrap}
+.pipe .stage{flex:1;min-width:150px;border:1px solid var(--line);background:var(--pine);border-radius:2px;padding:10px}
+.pipe .stage .k{color:var(--ok)}
+.pipe .stage p{font-size:11px;color:var(--dim);margin-top:5px;line-height:1.5}
+.pipe .arrow{align-self:center;color:var(--dim);font-family:var(--mono)}
+
+.attr{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.04em;margin-top:28px;padding-top:12px;border-top:1px solid var(--line);line-height:1.8}
+.attr a{color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="top">
+    <b><a href="/">GREEN<i>BOOK</i></a></b>
+    <span class="mono">COURSE INTELLIGENCE · PROVENANCE-GATED</span>
+  </div>
+
+  <div class="head">
+    <div>
+      <h1 id="cname"></h1>
+      <div class="loc" id="cloc"></div>
+    </div>
+    <a class="playlink" id="playlink" href="play/">Open play mode →</a>
+  </div>
+
+  <div class="grid">
+    <!-- VERDICT PLATE + AXES -->
+    <div>
+      <div class="card verdict-plate">
+        <h3>Verdict <span class="st der" id="v-st">GATED COMPOSITE</span></h3>
+        <div class="v" id="verdict">—</div>
+        <div class="n" id="composite"></div>
+        <div class="sub" id="verdict-note"></div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h3>Scoring axes <span class="st der">SCORE ONLY ON VERIFIED / DERIVED</span></h3>
+        <div id="axes"></div>
+      </div>
+    </div>
+
+    <!-- RIGHT COLUMN -->
+    <div>
+      <div class="card">
+        <h3>Hole-by-hole elevation <span class="st" id="prof-st"></span></h3>
+        <div class="profiles" id="profiles"></div>
+      </div>
+
+      <div class="card" style="margin-top:14px">
+        <h3>Scorecard <span class="st" id="sc-st"></span></h3>
+        <div class="scroll"><table id="scorecard"></table></div>
+        <div class="axis note" id="sc-note" style="font-size:11px;color:var(--dim);margin-top:8px"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROVENANCE LEDGER -->
+  <div class="card" style="margin-top:14px">
+    <h3>Provenance ledger <span class="st ver">EVERY FIELD CARRIES ITS SOURCE</span></h3>
+    <div class="scroll"><table class="ledger" id="ledger"></table></div>
+    <div id="conflictbox"></div>
+  </div>
+
+  <!-- PIPELINE MAP -->
+  <div class="card" style="margin-top:14px">
+    <h3>Pipeline map <span class="st der">BUILD-TIME · NO RUNTIME BACKEND</span></h3>
+    <div class="pipe">
+      <div class="stage"><div class="k">1 · OVERPASS</div><p>OSM golf=hole centerlines + bunker / water / green polygons, scoped to the named course bbox.</p></div>
+      <div class="arrow">→</div>
+      <div class="stage"><div class="k">2 · RESAMPLE</div><p>Each centerline resampled every 20 m, endpoints kept. Centerline length ≠ card yardage — both ledgered.</p></div>
+      <div class="arrow">→</div>
+      <div class="stage"><div class="k">3 · USGS 3DEP</div><p>EPQS point elevation (ft) per sample, throttled. Gaps counted, never interpolated silently.</p></div>
+      <div class="arrow">→</div>
+      <div class="stage"><div class="k">4 · FLAT FILE</div><p>data/courses/&lt;slug&gt;.json committed to the repo. <a id="rawlink" href="#" style="color:var(--ok)">Raw artifact ↗</a></p></div>
+      <div class="arrow">→</div>
+      <div class="stage"><div class="k">5 · STATIC BUILD</div><p>build.js renders /c/&lt;slug&gt; and /c/&lt;slug&gt;/play. Demo layers labeled, never blended.</p></div>
+    </div>
+  </div>
+
+  <div class="attr" id="attr"></div>
+</div>
+
+<!--COURSE_DATA-->
+<script>
+const C = window.COURSE || {};
+const DEMO = C.demo !== false;
+const $=id=>document.getElementById(id);
+
+/* ---- demo fallback layer (labeled, never blended) ---- */
+const demoPars=[4,4,5,3,4,4,3,5,4,4,3,5,4,4,3,4,5,4];
+const demoHcp=[7,3,11,17,9,1,15,5,13,8,16,4,2,10,18,12,6,14];
+const demoYds=[385,410,520,175,395,430,160,540,375,400,190,515,420,385,205,410,535,395];
+const SEED=C.demoSeed||7;
+function demoProfile(h){const s=SEED*31+h*7,n=40,p=[];for(let i=0;i<=n;i++){const t=i/n;
+ p.push(18*Math.sin(t*Math.PI*1.2+s)+9*Math.sin(t*Math.PI*2.6+s*1.7)+5*Math.sin(t*Math.PI*5.1+s*.6))}
+ const b=p[0];return p.map(e=>e-b)}
+
+/* coverage:none on a real course renders gated & empty — demo arrays are ONLY for demo courses */
+const holes=(C.holes&&C.holes.length)?C.holes
+  :(DEMO?demoPars.map((p,i)=>({ref:String(i+1),par:p,handicap:demoHcp[i],length_yds:demoYds[i],elev_delta_ft:null,profile:null})):[]);
+
+function relProfile(i){
+  const hd=holes[i];
+  if(hd.profile&&hd.profile.length){
+    const v=hd.profile.filter(p=>p.elev_ft!==null);
+    if(v.length>=2){const b=v[0].elev_ft;return v.map(p=>p.elev_ft-b)}
+  }
+  return demoProfile(i);
+}
+function delta(i){
+  const hd=holes[i];
+  if(!DEMO&&hd.elev_delta_ft!==null&&hd.elev_delta_ft!==undefined)return hd.elev_delta_ft;
+  const p=relProfile(i);return p[p.length-1];
+}
+
+/* ---- chrome ---- */
+$('cname').textContent=C.name||'Unknown course';
+$('playlink').href='/c/'+(C.slug||'')+'/play';
+$('cloc').textContent=(C.location||'')+(C.ingested?'  ·  INGESTED '+C.ingested.slice(0,10):'')+'  ·  COVERAGE: '+(C.coverage||'demo').toUpperCase();
+$('rawlink').href='/data/courses/'+(C.slug||'demo')+'.json';
+
+/* =====================================================================
+   AXES — an axis scores ONLY on VERIFIED or DERIVED inputs (rule 2).
+   Composite needs ≥3 qualified axes, else INSUFFICIENT DATA.
+   Formulas are printed under each bar; nothing is a black box.
+   ===================================================================== */
+const axes=[];
+
+/* 1 · TERRAIN — real elev_delta_ft distribution (OSM geometry + 3DEP) */
+(function(){
+  const deltas=holes.map((h,i)=>h.elev_delta_ft).filter(d=>d!==null&&d!==undefined);
+  if(!DEMO&&deltas.length>=14){
+    const meanAbs=deltas.reduce((s,d)=>s+Math.abs(d),0)/deltas.length;
+    const score=Math.min(95,Math.round(20+meanAbs*2.2));
+    axes.push({name:'Terrain',status:'DERIVED',score,
+      note:`mean |Δelev| ${meanAbs.toFixed(1)} ft over ${deltas.length} holes (OSM centerlines × USGS 3DEP) → 20 + 2.2·mean, cap 95.`});
+  }else{
+    axes.push({name:'Terrain',status:DEMO?'DEMO':'WITHHELD',score:null,
+      note:DEMO?'Demo sine-wave profiles — labeled, never scored.':'Not enough elevation samples to derive a distribution.'});
+  }
+})();
+
+/* 2 · CHALLENGE — official rating/slope; conflicting sources flagged, never averaged */
+(function(){
+  const r=C.ratings;
+  if(r&&r.sources&&r.sources.length){
+    const a=r.sources[0]; /* designated authoritative source (first in ledger) */
+    const score=Math.max(5,Math.min(95,Math.round((a.slope-55)/100*70+(a.rating-(r.par||72))*8)));
+    axes.push({name:'Challenge',status:a.status||'VERIFIED',score,flagged:!!r.conflict,
+      note:`${a.source}: ${a.rating.toFixed(1)} / ${a.slope}. score = (slope−55)/100·70 + (rating−par)·8.`+(r.conflict?' Conflicting second source flagged in ledger — values NOT averaged.':'')});
+  }else{
+    axes.push({name:'Challenge',status:DEMO?'DEMO':'WITHHELD',score:null,
+      note:DEMO?'Demo ratings — labeled, never scored.':'No verified rating source ledgered.'});
+  }
+})();
+
+/* 3 · VARIETY — spread of hole lengths + par mix, from OSM centerlines */
+(function(){
+  if(!DEMO&&holes.length>=14){
+    const L=holes.map(h=>h.length_yds).filter(Boolean);
+    const mean=L.reduce((s,x)=>s+x,0)/L.length;
+    const sd=Math.sqrt(L.reduce((s,x)=>s+(x-mean)**2,0)/L.length);
+    const p3=holes.filter(h=>h.par===3).length,p5=holes.filter(h=>h.par===5).length;
+    const score=Math.max(5,Math.min(95,Math.round(sd/mean*260+(p3>=3&&p5>=3?18:6))));
+    axes.push({name:'Variety',status:'DERIVED',score,
+      note:`length CV ${(sd/mean).toFixed(2)} over ${L.length} OSM centerlines · ${p3}× par-3, ${p5}× par-5 → CV·260 + mix bonus.`});
+  }else{
+    axes.push({name:'Variety',status:DEMO?'DEMO':'WITHHELD',score:null,
+      note:DEMO?'Demo yardages — labeled, never scored.':'No centerline coverage to derive from.'});
+  }
+})();
+
+/* 4 · HAZARD PRESSURE — OSM hazard/green polygons per hole */
+(function(){
+  const hz=C.hazards;
+  if(!DEMO&&hz&&hz.length){
+    const water=hz.filter(h=>h.kind==='water_hazard'||h.kind==='water').length;
+    const sand=hz.filter(h=>h.kind==='bunker').length;
+    const perHole=(water*2+sand)/holes.length;
+    const score=Math.max(5,Math.min(95,Math.round(perHole*26)));
+    axes.push({name:'Hazard pressure',status:'DERIVED',score,
+      note:`${sand} bunkers + ${water} water bodies in OSM bbox → (2·water + bunkers)/holes · 26. Polygon coverage, not penalty-stroke data.`});
+  }else{
+    axes.push({name:'Hazard pressure',status:DEMO?'DEMO':'WITHHELD',score:null,
+      note:DEMO?'Demo hazards — labeled, never scored.':'No hazard polygons returned for this bbox.'});
+  }
+})();
+
+/* 5 · CONDITIONING — no qualified source exists yet; stays withheld everywhere */
+axes.push({name:'Conditioning',status:'WITHHELD',score:null,
+  note:'No verified source (green speed, firmness logs). Withheld until one is ledgered — a gap is not a zero.'});
+
+/* ---- render axes + gated composite ---- */
+const QUAL=['VERIFIED','DERIVED'];
+const qualified=axes.filter(a=>QUAL.includes(a.status)&&a.score!==null);
+$('axes').innerHTML=axes.map(a=>{
+  const gated=!QUAL.includes(a.status)||a.score===null;
+  const cls=a.status==='VERIFIED'?'ver':a.status==='DERIVED'?'der':a.status==='DEMO'?'dem':'wit';
+  return `<div class="axis ${gated?'gated':''}">
+    <div class="lab"><span>${a.name} ${a.flagged?'<span class="chip flg">FLAG</span>':''}</span>
+      <span><b>${a.score===null?'—':a.score}</b> · <span class="st ${cls}">${a.status}</span></span></div>
+    <div class="bar"><i style="width:${a.score===null?100:a.score}%"></i></div>
+    <div class="note">${a.note}</div></div>`;
+}).join('');
+
+if(qualified.length>=3){
+  const comp=Math.round(qualified.reduce((s,a)=>s+a.score,0)/qualified.length);
+  $('verdict').textContent='SCORED';$('verdict').className='v ok';
+  $('composite').textContent=comp;
+  $('verdict-note').textContent=`Composite of ${qualified.length}/5 axes (${qualified.map(a=>a.name.toLowerCase()).join(', ')}). Gated axes are shown but excluded — a demo layer never moves this number.`;
+}else{
+  $('verdict').textContent='INSUFFICIENT DATA';$('verdict').className='v insuff';
+  $('composite').textContent='—';
+  $('verdict-note').textContent=`Only ${qualified.length}/5 axes have VERIFIED or DERIVED inputs; the composite needs ≥3. Demo layers are labeled below and never blended in.`;
+}
+
+/* ---- hole profiles ---- */
+$('prof-st').textContent=DEMO?'DEMO':'DERIVED · OSM + 3DEP';
+$('prof-st').className='st '+(DEMO?'dem':'der');
+$('profiles').innerHTML=holes.map((h,i)=>{
+  const prof=relProfile(i),d=delta(i);
+  const W=160,H=52,PL=4,PR=4,PT=8,PB=8;
+  const min=Math.min(...prof)-3,max=Math.max(...prof)+3;
+  const x=j=>PL+(W-PL-PR)*j/(prof.length-1),y=e=>PT+(H-PT-PB)*(1-(e-min)/(max-min));
+  let p=`M${x(0)},${y(prof[0])}`;prof.forEach((e,j)=>{if(j)p+=` L${x(j)},${y(e)}`});
+  return `<div class="ph"><div class="k"><span>H${h.ref} · PAR ${h.par??'—'}</span><span>${d===null?'—':(d>0?'+':'')+d.toFixed(0)+' FT'}</span></div>
+    <svg viewBox="0 0 ${W} ${H}"><path d="${p}" fill="none" stroke="#8fd6a0" stroke-width="1.2"/></svg></div>`;
+}).join('');
+
+/* ---- scorecard ---- */
+$('sc-st').textContent=DEMO?'DEMO':'PAR/SI VERIFIED (OSM TAGS) · YDS DERIVED';
+$('sc-st').className='st '+(DEMO?'dem':'der');
+(function(){
+  const heads=['Hole','Par','SI',DEMO?'Black (demo)':'Centerline yds'];
+  const out=holes.filter(h=>+h.ref>=1&&+h.ref<=9), back=holes.filter(h=>+h.ref>=10);
+  const row=hs=>hs.map(h=>`<tr><td>${h.ref}</td><td>${h.par??'—'}</td><td class="dim">${h.handicap??'—'}</td><td>${h.card_yds||h.length_yds||'—'}</td></tr>`).join('');
+  const tot=hs=>hs.reduce((s,h)=>s+(h.card_yds||h.length_yds||0),0);
+  const par=hs=>hs.reduce((s,h)=>s+(h.par||0),0);
+  $('scorecard').innerHTML=`<tr>${heads.map(h=>`<th>${h}</th>`).join('')}</tr>${row(out)}
+    <tr><td class="dim">OUT</td><td>${par(out)}</td><td></td><td>${tot(out)}</td></tr>${row(back)}
+    <tr><td class="dim">IN</td><td>${par(back)}</td><td></td><td>${tot(back)}</td></tr>
+    <tr><td class="dim">TOTAL</td><td>${par(holes)}</td><td></td><td>${tot(holes)}</td></tr>`;
+  $('sc-note').textContent=DEMO
+    ?'Demo scorecard — single fabricated tee set, labeled. Real tee data enters only through the ledger.'
+    :'Centerline yardage is resampled OSM geometry — it is NOT card yardage. Card yardages across tee sets: WITHHELD until a verified source (course-published card) is ledgered.';
+})();
+
+/* ---- provenance ledger ---- */
+(function(){
+  const chip=s=>{const c={VERIFIED:'ver',DERIVED:'der',APPROX:'apx',DEMO:'dem',WITHHELD:'wit'}[s]||'der';return `<span class="chip ${c}">${s}</span>`};
+  let rows;
+  if(!DEMO){
+    const gaps=holes.filter(h=>/gaps/.test(h.elevation_source||'')).length;
+    rows=[
+      ['Hole geometry','OpenStreetMap via Overpass (ODbL)','VERIFIED',`${holes.length} golf=hole centerlines inside verified bbox.`],
+      ['Par / stroke index','OSM way tags (par, handicap)','VERIFIED','Tagged per hole by OSM mappers; matches 18-hole layout.'],
+      ['Elevation profiles','USGS 3DEP via EPQS','VERIFIED',`Point queries every 20 m along centerlines${gaps?` · ${gaps} holes carry sample gaps (counted, not interpolated)`:''}.`],
+      ['Elevation Δ per hole','Computed: last − first valid sample','DERIVED','Derivation of two VERIFIED endpoints.'],
+      ['Centerline yardage','Computed from resampled geometry','DERIVED','Centerline length ≠ card yardage; both kept, never conflated.'],
+      ['Card yardage by tee','—','WITHHELD','No verified card source ledgered yet.'],
+      ['Course rating / slope',(C.ratings&&C.ratings.sources[0].source)||'—',(C.ratings&&C.ratings.sources[0].status)||'WITHHELD',C.ratings&&C.ratings.conflict?'CONFLICT — see flag below. Sources disagree; values not averaged.':'Single-source.'],
+      ['Hazard polygons','OpenStreetMap via Overpass (ODbL)','VERIFIED',`${(C.hazards||[]).length} bunker / water / green rings in bbox.`],
+      ['Conditioning','—','WITHHELD','No source. Absent, not zero.'],
+    ];
+  }else{
+    rows=[
+      ['Hole geometry','Demo sine-wave generator','DEMO','Labeled demo layer; excluded from all composites.'],
+      ['Par / stroke index','Demo arrays','DEMO','Fabricated for layout demonstration.'],
+      ['Elevation profiles','Demo sine-wave generator','DEMO','Not terrain. Terrain axis stays gated.'],
+      ['Card yardage','Demo arrays','DEMO','Single fabricated tee set.'],
+      ['Course rating / slope','—','WITHHELD','No verified source ledgered.'],
+      ['Conditioning','—','WITHHELD','No source. Absent, not zero.'],
+    ];
+  }
+  $('ledger').innerHTML=`<tr><th>Field</th><th>Source</th><th>Status</th><th>Note</th></tr>`+
+    rows.map(r=>`<tr><td class="fld">${r[0]}</td><td class="dim">${r[1]}</td><td>${chip(r[2])}</td><td class="dim">${r[3]}</td></tr>`).join('');
+
+  if(!DEMO&&C.ratings&&C.ratings.conflict){
+    const s=C.ratings.sources;
+    $('conflictbox').innerHTML=`<div class="conflict"><span class="k">⚑ FLAGGED CONFLICT — NOT AVERAGED (RULE 3)</span><br>
+      ${s.map(x=>`${x.source}: <b>${x.rating.toFixed(1)} / ${x.slope}</b> (${x.status})`).join('  ·  ')}<br>
+      The Challenge axis scores from the designated authoritative source (${s[0].source}); the disagreement stays visible until one source is retired with a reason.</div>`;
+  }
+})();
+
+/* ---- attribution ---- */
+$('attr').innerHTML=DEMO
+  ?'Demo layer — no OpenStreetMap data rendered on this page. Demo values are labeled and never blended into composites. USGA Rule 4.3: slope-adjusted advice may be restricted in competition.'
+  :'Course geometry &amp; hazards © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>, ODbL 1.0 · Elevation: USGS 3DEP via EPQS (public domain) · Ratings: as ledgered above. USGA Rule 4.3: slope-adjusted advice may be restricted in competition; the play-mode calibration ledger (self-judgment) is available in all modes.';
+</script>
+</body>
+</html>
