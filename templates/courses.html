@@ -74,7 +74,7 @@ button.more:hover{color:var(--chalk);border-color:var(--chalk-dim)}
 
 <script>
 const $=id=>document.getElementById(id);
-let ALL=[], shown=0, filtered=[], GRADES={}, PARTIALS={}, AXES={}, LIVE=new Set();
+let ALL=[], shown=0, filtered=[], GRADES={}, PARTIALS={}, AXES={}, LIVE=new Set(), DUPS={}, SHADOWED=new Set();
 const PAGE=100;
 
 Promise.all([
@@ -82,7 +82,10 @@ Promise.all([
   fetch('/data/starpoint/quality/index.json').then(r=>r.ok?r.json():null).catch(()=>null),
 ]).then(([j,ql])=>{
   ALL=j.courses;
-  if(ql){GRADES=ql.grades||{};PARTIALS=ql.partials||{};AXES=ql.axes||{};LIVE=new Set(ql.terrain_live||[]);}
+  if(ql){GRADES=ql.grades||{};PARTIALS=ql.partials||{};AXES=ql.axes||{};LIVE=new Set(ql.terrain_live||[]);
+    DUPS=ql.dup_primaries||{};SHADOWED=new Set(ql.shadowed||[]);
+    /* one row per duplicate cluster: shadowed records fold into their primary */
+    ALL=ALL.filter(c=>!SHADOWED.has(c.slug));}
   const states=[...new Set(ALL.map(c=>c.state))].sort();
   $('state').innerHTML='<option value="">All states</option>'+states.map(s=>`<option>${s}</option>`).join('');
   apply();
@@ -112,6 +115,7 @@ function chips(slug){
   if(g==='FULL')out+='<span class="chip full">CARD COMPLETE</span>';
   else if(g==='PARTIAL')out+=`<span class="chip partial">CARD PARTIAL ${PARTIALS[slug]||''}</span>`;
   else if(g==='STUB')out+='<span class="chip stub">STUB</span>';
+  if(DUPS[slug])out+=` <span class="chip stub">${DUPS[slug]} RECORDS</span>`;
   return out;
 }
 function more(){

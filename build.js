@@ -112,6 +112,8 @@ const gradeCounts = { FULL: 0, PARTIAL: 0, STUB: 0 };
 const artifactSlugs = fs.existsSync(path.join(ROOT, "data", "open", "courses"))
   ? fs.readdirSync(path.join(ROOT, "data", "open", "courses")).map((f) => f.replace(".json", "")) : [];
 const qualityBySlug = new Map();
+const shardQuality = new Map(); // state file -> {state, courses:{}}
+const shardRecords = new Map(); // state file -> records
 for (const f of fs.readdirSync(stateDir)) {
   const shard = JSON.parse(read(path.join(stateDir, f)));
   const out = {};
@@ -122,8 +124,78 @@ for (const f of fs.readdirSync(stateDir)) {
     gradeIndex[rec.slug] = q.grade;
     gradeCounts[q.grade]++;
   }
+  shardQuality.set(f, { state: shard.state, courses: out });
+  shardRecords.set(f, shard.courses);
+}
+
+/* ---------- dedup pass: cluster same-course registry records ----------
+ * Judgment layer only — data/open stays exactly as received. Clusters by
+ * normalized name + state + ~1 km proximity; primary = most complete card. */
+const normName = (s) => s.toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g, "")
+  .replace(/[^a-z0-9 ]/g, " ")
+  .replace(/\b(the|golf|club|course|country|cc|gc|links|at)\b/g, " ")
+  .replace(/\s+/g, " ").trim();
+const dKm = (a, b) => {
+  const R = 6371, rad = Math.PI / 180;
+  const s = Math.sin((b.lat - a.lat) * rad / 2) ** 2 +
+    Math.cos(a.lat * rad) * Math.cos(b.lat * rad) * Math.sin((b.lon - a.lon) * rad / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(s));
+};
+const clusters = [];
+for (const [f, records] of shardRecords) {
+  const byName = new Map();
+  for (const rec of records) {
+    const k = normName(rec.name);
+    if (!byName.has(k)) byName.set(k, []);
+    byName.get(k).push(rec);
+  }
+  for (const [k, recs] of byName) {
+    if (recs.length < 2) continue;
+    // proximity-link within the name group (~1.2 km)
+    const used = new Set();
+    for (let i = 0; i < recs.length; i++) {
+      if (used.has(i)) continue;
+      const group = [recs[i]]; used.add(i);
+      for (let j = i + 1; j < recs.length; j++) {
+        if (used.has(j)) continue;
+        if (group.some((g) => dKm(g, recs[j]) <= 1.2)) { group.push(recs[j]); used.add(j); }
+      }
+      if (group.length < 2) continue;
+      group.sort((a, b) => (qualityBySlug.get(b.slug).present - qualityBySlug.get(a.slug).present) || a.slug.localeCompare(b.slug));
+      clusters.push({
+        state: group[0].state, name: group[0].name, city: group[0].city,
+        primary: group[0].slug,
+        members: group.map((g) => {
+          const q = qualityBySlug.get(g.slug);
+          return { slug: g.slug, id: g.id, present: q.present, inferred: q.inferred, grade: q.grade, lat: g.lat, lon: g.lon };
+        }),
+      });
+    }
+  }
+}
+const shadowed = [];
+const dupPrimaries = {};
+for (const cl of clusters) {
+  dupPrimaries[cl.primary] = cl.members.length;
+  for (const m of cl.members) {
+    const st = cl.state + ".json";
+    const entry = shardQuality.get(st).courses[m.slug];
+    if (m.slug === cl.primary) entry.dup_members = cl.members.filter((x) => x.slug !== cl.primary).map((x) => x.slug);
+    else { entry.dup_primary = cl.primary; shadowed.push(m.slug); }
+  }
+}
+fs.writeFileSync(path.join(qualityDir, "duplicates.json"), JSON.stringify({
+  _license: "All rights reserved, Starpoint LLC",
+  note: "Starpoint judgment layer. data/open registry records are untouched — clusters name likely-identical courses; primary = most complete card.",
+  cluster_count: clusters.length,
+  shadowed_count: shadowed.length,
+  clusters,
+}, null, 1));
+console.log(`✓ dedup: ${clusters.length} duplicate clusters (${shadowed.length} shadowed records) → data/starpoint/quality/duplicates.json`);
+
+for (const [f, sq] of shardQuality) {
   fs.writeFileSync(path.join(qualityDir, "state", f), JSON.stringify({
-    _license: "All rights reserved, Starpoint LLC", state: shard.state, courses: out,
+    _license: "All rights reserved, Starpoint LLC", ...sq,
   }));
 }
 /* partial ratios for /courses chips ("CARD PARTIAL 4/9") */
@@ -180,6 +252,7 @@ fs.writeFileSync(path.join(qualityDir, "index.json"), JSON.stringify({
   _license: "All rights reserved, Starpoint LLC",
   counts: gradeCounts, terrain_live: artifactSlugs, grades: gradeIndex,
   partials: partialRatio, axes: axesBySlug,
+  dup_primaries: dupPrimaries, shadowed,
 }));
 
 /* ---------- assemble dist ---------- */

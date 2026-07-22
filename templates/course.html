@@ -131,6 +131,8 @@ td.par{color:var(--chalk-dim)}
 tr.tot td{font-weight:600;border-top:1px solid var(--chalk-dim)}
 tr.gap td{color:var(--line);background:repeating-linear-gradient(45deg,transparent,transparent 6px,rgba(217,185,138,.04) 6px,rgba(217,185,138,.04) 12px)}
 tr.gap td:first-child{color:var(--sand);opacity:.6}
+tr.conflict td{color:var(--flag);background:rgba(226,61,46,.06)}
+td.src{color:var(--chalk-dim);font-size:10px}
 .teecell{display:flex;align-items:center;gap:6px;justify-content:flex-end}
 
 /* ---------- STUB compact layout: identity + verdict + provenance + needs ---------- */
@@ -390,8 +392,10 @@ function renderCard(){
   if(!H.length){$('scorecard').innerHTML='';$('ratings').innerHTML=renderRatingCards();return;}
   const perHoleTees=C.teeList.filter(t=>t.perHole);
   const ydCol=perHoleTees.length?perHoleTees:[C.teeList[teeIdx]];
+  const merged=!!C.mergeSources;
   const head=`<thead><tr><th>Hole</th><th>Par</th><th>HCP</th>`+
-    ydCol.map(t=>`<th><span class="teecell"><span class="dot" style="width:8px;height:8px;border-radius:50%;display:inline-block;background:${t.color};${t.dark?'border:1px solid #555':''}"></span>${t.ydLabel||t.label}</span></th>`).join('')+`</tr></thead>`;
+    ydCol.map(t=>`<th><span class="teecell"><span class="dot" style="width:8px;height:8px;border-radius:50%;display:inline-block;background:${t.color};${t.dark?'border:1px solid #555':''}"></span>${t.ydLabel||t.label}</span></th>`).join('')+
+    (merged?'<th>Rec</th>':'')+`</tr></thead>`;
   const yv=(t,i)=>i===null?null:GB.holeYds(C,i,C.teeList.indexOf(t));
 
   /* honest card: registry PARTIAL records lay out ALL holes of the inferred
@@ -410,23 +414,36 @@ function renderCard(){
   const seg=(rows,lab)=>{
     let out='';
     for(const [n,i] of rows){
-      if(i===null){out+=`<tr class="gap"><td>${n}</td><td class="par">—</td><td class="par">—</td>`+ydCol.map(()=>`<td>—</td>`).join('')+`</tr>`;continue;}
-      out+=`<tr><td>${H[i].ref}</td><td class="par">${H[i].par??'—'}</td><td class="par">${H[i].handicap??'—'}</td>`+
-        ydCol.map(t=>`<td>${yv(t,i)??'—'}</td>`).join('')+`</tr>`;
+      if(i===null){out+=`<tr class="gap"><td>${n}</td><td class="par">—</td><td class="par">—</td>`+ydCol.map(()=>`<td>—</td>`).join('')+(merged?'<td>—</td>':'')+`</tr>`;continue;}
+      const h=H[i];
+      if(h.conflict){
+        const vals=h.conflict.map(v=>`${v.srcs.join('')}: par ${v.par??'—'} / hcp ${v.hcp??'—'}`).join('  vs  ');
+        out+=`<tr class="conflict"><td>${h.ref}</td><td colspan="${2+ydCol.length}">⚑ CONFLICT — ${vals} · not resolved, never averaged</td>${merged?`<td class="src">${h.srcs.join('+')}</td>`:''}</tr>`;
+        continue;
+      }
+      out+=`<tr><td>${h.ref}</td><td class="par">${h.par??'—'}</td><td class="par">${h.handicap??'—'}</td>`+
+        ydCol.map(t=>`<td>${yv(t,i)??'—'}</td>`).join('')+
+        (merged?`<td class="src">${(h.srcs||[]).join('+')}</td>`:'')+`</tr>`;
     }
     const gapHere=rows.some(([,i])=>i===null);
-    const tp=gapHere?null:rows.reduce((a,[,i])=>a+(H[i].par||0),0);
-    out+=`<tr class="tot"><td>${lab}</td><td class="par">${tp===null?'— · incomplete':(tp||'—')}</td><td></td>`+
-      ydCol.map(t=>{if(gapHere)return `<td>— · incomplete</td>`;let s=0,ok=true;for(const [,i] of rows){const v=yv(t,i);if(v===null)ok=false;else s+=v}return `<td>${ok?s.toLocaleString():'—'}</td>`}).join('')+`</tr>`;
+    const confHere=rows.some(([,i])=>i!==null&&H[i].conflict);
+    const broken=gapHere||confHere;
+    const lab2=confHere?'— · unresolved conflict':'— · incomplete';
+    const tp=broken?null:rows.reduce((a,[,i])=>a+(H[i].par||0),0);
+    out+=`<tr class="tot"><td>${lab}</td><td class="par">${tp===null?lab2:(tp||'—')}</td><td></td>`+
+      ydCol.map(t=>{if(broken)return `<td>${lab2}</td>`;let s=0,ok=true;for(const [,i] of rows){const v=yv(t,i);if(v===null)ok=false;else s+=v}return `<td>${ok?s.toLocaleString():'—'}</td>`}).join('')+(merged?'<td></td>':'')+`</tr>`;
     return out;
   };
   const mid=Math.min(9,layout.length);
   let body=seg(layout.slice(0,mid),layout.length>9?'OUT':'TOTAL');
   if(layout.length>9){
     body+=seg(layout.slice(9),'IN');
-    const tpAll=incomplete?null:layout.reduce((a,[,i])=>a+(H[i].par||0),0);
-    body+=`<tr class="tot"><td>TOTAL</td><td class="par">${tpAll===null?'— · incomplete':(tpAll||'—')}</td><td></td>`+
-      ydCol.map(t=>{if(incomplete)return `<td>— · incomplete</td>`;let s=0,ok=true;for(const [,i] of layout){const v=yv(t,i);if(v===null)ok=false;else s+=v}return `<td>${ok?s.toLocaleString():'—'}</td>`}).join('')+`</tr>`;
+    const anyConf=layout.some(([,i])=>i!==null&&H[i].conflict);
+    const brokenAll=incomplete||anyConf;
+    const labAll=anyConf?'— · unresolved conflict':'— · incomplete';
+    const tpAll=brokenAll?null:layout.reduce((a,[,i])=>a+(H[i].par||0),0);
+    body+=`<tr class="tot"><td>TOTAL</td><td class="par">${tpAll===null?labAll:(tpAll||'—')}</td><td></td>`+
+      ydCol.map(t=>{if(brokenAll)return `<td>${labAll}</td>`;let s=0,ok=true;for(const [,i] of layout){const v=yv(t,i);if(v===null)ok=false;else s+=v}return `<td>${ok?s.toLocaleString():'—'}</td>`}).join('')+(merged?'<td></td>':'')+`</tr>`;
   }
   $('scorecard').innerHTML=head+`<tbody>${body}</tbody>`;
   $('ratings').innerHTML=renderRatingCards();

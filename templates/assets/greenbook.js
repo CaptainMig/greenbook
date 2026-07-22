@@ -57,10 +57,14 @@ window.GB = (function () {
     const reg = shard ? shard.courses.find((c) => c.slug === slug) || null : null;
     if (!reg && !overlay && !artifact) throw new Error("no data for slug " + slug);
     const quality = qualityShard && qualityShard.courses ? qualityShard.courses[slug] || null : null;
-    return normalize(slug, reg, artifact, overlay, scores, scoring, quality);
+    /* duplicate cluster: resolve member records from the same state shard */
+    let dupRecs = [];
+    if (quality && quality.dup_members && shard)
+      dupRecs = quality.dup_members.map((s) => shard.courses.find((c) => c.slug === s)).filter(Boolean);
+    return normalize(slug, reg, artifact, overlay, scores, scoring, quality, dupRecs);
   }
 
-  function normalize(slug, reg, artifact, overlay, scores, scoring, quality) {
+  function normalize(slug, reg, artifact, overlay, scores, scoring, quality, dupRecs) {
     const o = overlay || {};
     const demo = !!o.demo;
     const C = {
@@ -86,8 +90,34 @@ window.GB = (function () {
       C.holes = o.pars.map((p, i) => ({ ref: String(i + 1), par: p, handicap: o.hcp[i], demo_yds: o.black[i], profile: null }));
       C.holeSource = "demo";
     } else if (reg && reg.scorecard && reg.scorecard.length) {
-      C.holes = reg.scorecard.map((h) => ({ ref: String(h.hole), par: h.par, handicap: h.handicap_index, profile: null }));
-      C.holeSource = "registry";
+      if (dupRecs && dupRecs.length) {
+        /* MERGE VIEW, gated: union of complementary holes across duplicate
+           records. Every hole cites its source record; a hole present in
+           more than one record with DIFFERENT values renders as CONFLICT —
+           never silently picking one. Open records themselves untouched. */
+        const srcOf = new Map(); // hole -> {par, hcp, srcs:[letter], conflict?}
+        const recs = [{ letter: "A", rec: reg }].concat(dupRecs.map((r, i) => ({ letter: String.fromCharCode(66 + i), rec: r })));
+        C.mergeSources = recs.map((x) => ({ letter: x.letter, slug: x.rec.slug, id: x.rec.id, present: (x.rec.scorecard || []).length }));
+        for (const { letter, rec } of recs) {
+          for (const h of rec.scorecard || []) {
+            const cur = srcOf.get(h.hole);
+            if (!cur) srcOf.set(h.hole, { par: h.par, hcp: h.handicap_index, srcs: [letter] });
+            else if (cur.par === h.par && cur.hcp === h.handicap_index) cur.srcs.push(letter);
+            else {
+              cur.conflict = (cur.conflict || [{ srcs: cur.srcs.slice(), par: cur.par, hcp: cur.hcp }]);
+              cur.conflict.push({ srcs: [letter], par: h.par, hcp: h.handicap_index });
+            }
+          }
+        }
+        C.holes = [...srcOf.entries()].sort((a, b) => a[0] - b[0]).map(([n, v]) =>
+          v.conflict
+            ? { ref: String(n), par: null, handicap: null, profile: null, srcs: v.srcs, conflict: v.conflict }
+            : { ref: String(n), par: v.par, handicap: v.hcp, profile: null, srcs: v.srcs });
+        C.holeSource = "registry";
+      } else {
+        C.holes = reg.scorecard.map((h) => ({ ref: String(h.hole), par: h.par, handicap: h.handicap_index, profile: null }));
+        C.holeSource = "registry";
+      }
     } else C.holes = [];
 
     /* ---- ratings: overlay override (association tables) beats registry (OpenGolfAPI) ---- */
@@ -138,8 +168,15 @@ window.GB = (function () {
       C.prov = [];
       if (reg) {
         C.prov.push(["Identity, city, type", "OpenGolfAPI registry (ODbL) — community-maintained", "DERIVED"]);
+        if (C.mergeSources) {
+          C.prov.push(["Duplicate cluster", `${C.mergeSources.length} registry records name this course (Starpoint judgment layer — open records untouched, see /data/starpoint/quality/duplicates.json). Card below renders their union; each hole cites its record; disagreements flag as CONFLICT.`, "DERIVED"]);
+          for (const s of C.mergeSources)
+            C.prov.push([`Registry record ${s.letter}`, `${s.slug} · OpenGolfAPI id ${s.id} · ${s.present} holes on card`, "DERIVED"]);
+        }
         const q = C.quality;
-        if (q && q.grade === "PARTIAL")
+        if (q && q.grade === "PARTIAL" && C.mergeSources)
+          C.prov.push(["Hole-by-hole card", `Union of ${C.mergeSources.length} records — ${C.holes.length}/${q.inferred} holes covered (primary alone: ${q.present}/${q.inferred}). Cited as OPENGOLFAPI, not USGA.`, `CARD PARTIAL · ${C.holes.length}/${q.inferred}`]);
+        else if (q && q.grade === "PARTIAL")
           C.prov.push(["Hole-by-hole card", `OpenGolfAPI scorecard — cited as OPENGOLFAPI, not USGA. ${q.flags.join(" · ")}`, `CARD PARTIAL · ${q.present}/${q.inferred}`]);
         else if (q && q.grade === "FULL")
           C.prov.push(["Hole-by-hole card", "OpenGolfAPI scorecard — cited as OPENGOLFAPI, not USGA. Card layer complete for the inferred size; completeness describes the card only, not axis coverage.", "CARD COMPLETE"]);
