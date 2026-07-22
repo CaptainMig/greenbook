@@ -55,11 +55,12 @@ button.more:hover{color:var(--chalk);border-color:var(--chalk-dim)}
   <div class="controls">
     <input type="search" id="q" placeholder="Search name or city…" aria-label="search courses">
     <select id="state" aria-label="filter by state"><option value="">All states</option></select>
-    <select id="grade" aria-label="filter by completeness">
-      <option value="">Any completeness</option>
+    <select id="grade" aria-label="filter by coverage">
+      <option value="">Any coverage</option>
+      <option value="SCORED">Scored (axes ≥3)</option>
       <option value="LIVE">Terrain live</option>
-      <option value="FULL">Full record</option>
-      <option value="PARTIAL">Partial record</option>
+      <option value="FULL">Card complete</option>
+      <option value="PARTIAL">Card partial</option>
       <option value="STUB">Stub</option>
     </select>
   </div>
@@ -73,7 +74,7 @@ button.more:hover{color:var(--chalk);border-color:var(--chalk-dim)}
 
 <script>
 const $=id=>document.getElementById(id);
-let ALL=[], shown=0, filtered=[], GRADES={}, LIVE=new Set();
+let ALL=[], shown=0, filtered=[], GRADES={}, PARTIALS={}, AXES={}, LIVE=new Set();
 const PAGE=100;
 
 Promise.all([
@@ -81,36 +82,44 @@ Promise.all([
   fetch('/data/starpoint/quality/index.json').then(r=>r.ok?r.json():null).catch(()=>null),
 ]).then(([j,ql])=>{
   ALL=j.courses;
-  if(ql){GRADES=ql.grades||{};LIVE=new Set(ql.terrain_live||[]);}
+  if(ql){GRADES=ql.grades||{};PARTIALS=ql.partials||{};AXES=ql.axes||{};LIVE=new Set(ql.terrain_live||[]);}
   const states=[...new Set(ALL.map(c=>c.state))].sort();
   $('state').innerHTML='<option value="">All states</option>'+states.map(s=>`<option>${s}</option>`).join('');
   apply();
 });
 
-const gradeOf=s=>LIVE.has(s)?'LIVE':(GRADES[s]||'');
+/* the card grade and axis coverage are separate facts */
+const axesOf=s=>AXES[s]||0;
+function matches(slug,gr){
+  if(!gr)return true;
+  if(gr==='SCORED')return axesOf(slug)>=3;
+  if(gr==='LIVE')return LIVE.has(slug);
+  return (GRADES[slug]||'')===gr;
+}
 function apply(){
   const q=$('q').value.trim().toLowerCase(), st=$('state').value, gr=$('grade').value;
   filtered=ALL.filter(c=>(!st||c.state===st)
-    &&(!gr||gradeOf(c.slug)===gr)
+    &&matches(c.slug,gr)
     &&(!q||c.name.toLowerCase().includes(q)||(c.city||'').toLowerCase().includes(q)));
   shown=0;$('list').innerHTML='';
   more();
   $('count').textContent=`${filtered.length.toLocaleString()} OF ${ALL.length.toLocaleString()} COURSES`;
 }
-function chip(slug){
-  const g=gradeOf(slug);
-  if(g==='LIVE')return '<span class="chip live">TERRAIN LIVE</span>';
-  if(g==='FULL')return '<span class="chip full">FULL RECORD</span>';
-  if(g==='PARTIAL')return '<span class="chip partial">PARTIAL RECORD</span>';
-  if(g==='STUB')return '<span class="chip stub">STUB</span>';
-  return '';
+function chips(slug){
+  const g=GRADES[slug]||'';
+  let out=`<span class="chip ${axesOf(slug)>=3?'full':'stub'}">AXES ${axesOf(slug)}/5</span> `;
+  if(LIVE.has(slug))out+='<span class="chip live">TERRAIN LIVE</span> ';
+  if(g==='FULL')out+='<span class="chip full">CARD COMPLETE</span>';
+  else if(g==='PARTIAL')out+=`<span class="chip partial">CARD PARTIAL ${PARTIALS[slug]||''}</span>`;
+  else if(g==='STUB')out+='<span class="chip stub">STUB</span>';
+  return out;
 }
 function more(){
   const chunk=filtered.slice(shown,shown+PAGE);
   $('list').insertAdjacentHTML('beforeend',chunk.map(c=>
     `<a class="course" href="/c/${c.slug}">
       <span><span class="nm">${c.name}</span><br><span class="loc">${c.city||''}, ${c.state}</span></span>
-      <span class="meta">${c.holes||'—'} HOLES · PAR ${c.par||'—'}${c.yardage?' · '+c.yardage.toLocaleString()+' YDS':''}<br>${chip(c.slug)}</span>
+      <span class="meta">${c.holes||'—'} HOLES · PAR ${c.par||'—'}${c.yardage?' · '+c.yardage.toLocaleString()+' YDS':''}<br>${chips(c.slug)}</span>
     </a>`).join(''));
   shown+=chunk.length;
   $('more').style.display=shown<filtered.length?'':'none';

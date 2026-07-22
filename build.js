@@ -92,7 +92,7 @@ function gradeRecord(rec) {
     flags.push("registry identity only — no per-hole data");
   } else if (inferred && present < inferred) {
     grade = "PARTIAL";
-    flags.push(`PARTIAL · ${present}/${inferred} HOLES`);
+    flags.push(`CARD PARTIAL · ${present}/${inferred} HOLES`);
     if (rec.par && parSummed && parSummed < rec.par - 2)
       flags.push(`hole count and par sum mutually implausible: ${present} holes summing ${parSummed} against stated par ${rec.par}`);
   } else {
@@ -126,11 +126,10 @@ for (const f of fs.readdirSync(stateDir)) {
     _license: "All rights reserved, Starpoint LLC", state: shard.state, courses: out,
   }));
 }
-fs.writeFileSync(path.join(qualityDir, "index.json"), JSON.stringify({
-  _license: "All rights reserved, Starpoint LLC",
-  counts: gradeCounts, terrain_live: artifactSlugs, grades: gradeIndex,
-}));
-console.log(`✓ registry graded: ${gradeCounts.FULL} FULL · ${gradeCounts.PARTIAL} PARTIAL · ${gradeCounts.STUB} STUB → data/starpoint/quality/`);
+/* partial ratios for /courses chips ("CARD PARTIAL 4/9") */
+const partialRatio = {};
+for (const [slug, q] of qualityBySlug) if (q.grade === "PARTIAL" && q.inferred) partialRatio[slug] = `${q.present}/${q.inferred}`;
+console.log(`✓ registry graded: ${gradeCounts.FULL} card-complete · ${gradeCounts.PARTIAL} card-partial · ${gradeCounts.STUB} stub → data/starpoint/quality/`);
 
 /* ---------- materialize axis outputs → data/starpoint/scores/<slug>.json ---------- */
 const scoring = JSON.parse(read(path.join(ROOT, "data", "starpoint", "scoring.json")));
@@ -159,6 +158,7 @@ function regFor(slug) {
   return shard ? shard.courses.find((c) => c.slug === slug) || null : null;
 }
 
+const axesBySlug = {};
 for (const slug of [...slugs].sort()) {
   const overlayP = path.join(overlayDir, `${slug}.json`);
   const artifactP = path.join(artifactDir, `${slug}.json`);
@@ -166,6 +166,7 @@ for (const slug of [...slugs].sort()) {
   const artifact = fs.existsSync(artifactP) ? JSON.parse(read(artifactP)) : null;
   const C = GB.normalize(slug, regFor(slug), artifact, overlay, null, scoring, qualityBySlug.get(slug) || null);
   const R = GB.computeAxes(C);
+  if (R.counted > 0) axesBySlug[slug] = R.counted;
   fs.writeFileSync(path.join(scoresDir, `${slug}.json`), JSON.stringify({
     _license: "All rights reserved, Starpoint LLC",
     slug, computed: new Date().toISOString(),
@@ -173,6 +174,13 @@ for (const slug of [...slugs].sort()) {
   }, null, 1));
 }
 console.log(`✓ axis outputs materialized for ${slugs.size} courses → data/starpoint/scores/`);
+
+/* quality index ships grade + partial ratio + qualified-axes count per slug */
+fs.writeFileSync(path.join(qualityDir, "index.json"), JSON.stringify({
+  _license: "All rights reserved, Starpoint LLC",
+  counts: gradeCounts, terrain_live: artifactSlugs, grades: gradeIndex,
+  partials: partialRatio, axes: axesBySlug,
+}));
 
 /* ---------- assemble dist ---------- */
 fs.rmSync(DIST, { recursive: true, force: true });

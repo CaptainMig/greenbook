@@ -255,7 +255,7 @@ footer a{color:var(--chalk-dim)}
 /* ============ page bootstrap: /c/<slug> — ONE template, data fetched by slug ============ */
 const $=id=>document.getElementById(id);
 const statusClass={VERIFIED:'verified',DERIVED:'derived',APPROX:'approx',DEMO:'approx',WITHHELD:'withheld'};
-const srcClass=s=>/^PARTIAL/.test(s)?'approx':(statusClass[s]||'derived');
+const srcClass=s=>/PARTIAL/.test(s)?'approx':/^CARD COMPLETE/.test(s)?'verified':(statusClass[s]||'derived');
 
 let C=null, hole=0, teeIdx=0;
 
@@ -282,12 +282,14 @@ function renderSwitcher(){
 function renderHero(){
   $('c-loc').textContent=C.locLine;
   $('c-name').textContent=C.name;
+  const R=GB.scoreCourse(C);   /* gates: VERIFIED/DERIVED only, >=3 axes, /10 bands 8 / 6.5 */
+  /* card completeness and axis coverage are separate facts — show both */
   const s=[['Par',C.par??'—'],['Yards',C.yards?C.yards.toLocaleString():'—'],
     ['Rating',C.rating??'—'],['Slope',C.slope??'—'],
-    ['Architect',`<small>${C.architect||'—'}</small>`],['Founded',C.founded||'—']];
+    ['Architect',`<small>${C.architect||'—'}</small>`],['Founded',C.founded||'—'],
+    ['Axes',`${R.counted}/5`]];
   $('c-stats').innerHTML=s.map(([k,v])=>`<div class="stat"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
 
-  const R=GB.scoreCourse(C);   /* gates: VERIFIED/DERIVED only, >=3 axes, /10 bands 8 / 6.5 */
   let cls={STRONG_PLAY:'play',PLAY:'play',HOLD:'hold',INSUFFICIENT:'insuff'}[R.verdict];
   const label=R.verdict==='INSUFFICIENT'?'INSUFFICIENT DATA':R.verdict.replace('_',' ');
   const why=R.verdict==='INSUFFICIENT'

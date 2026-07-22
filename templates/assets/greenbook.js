@@ -140,7 +140,9 @@ window.GB = (function () {
         C.prov.push(["Identity, city, type", "OpenGolfAPI registry (ODbL) — community-maintained", "DERIVED"]);
         const q = C.quality;
         if (q && q.grade === "PARTIAL")
-          C.prov.push(["Hole-by-hole card", `OpenGolfAPI scorecard — cited as OPENGOLFAPI, not USGA. ${q.flags.join(" · ")}`, `PARTIAL · ${q.present}/${q.inferred} HOLES`]);
+          C.prov.push(["Hole-by-hole card", `OpenGolfAPI scorecard — cited as OPENGOLFAPI, not USGA. ${q.flags.join(" · ")}`, `CARD PARTIAL · ${q.present}/${q.inferred}`]);
+        else if (q && q.grade === "FULL")
+          C.prov.push(["Hole-by-hole card", "OpenGolfAPI scorecard — cited as OPENGOLFAPI, not USGA. Card layer complete for the inferred size; completeness describes the card only, not axis coverage.", "CARD COMPLETE"]);
         else
           C.prov.push(["Par / stroke index", reg.scorecard && reg.scorecard.length ? "OpenGolfAPI scorecard — cited as OPENGOLFAPI, not USGA" : "Not present in registry record", reg.scorecard && reg.scorecard.length ? "DERIVED" : "WITHHELD"]);
         C.prov.push(["Ratings & slope", C.ratingCards.length ? "OpenGolfAPI per-tee crawl — cited as OPENGOLFAPI until independently verified" : "Not present in registry record", C.ratingCards.length ? "DERIVED" : "WITHHELD"]);
