@@ -1,0 +1,50 @@
+{
+ "_license": "All rights reserved, Starpoint LLC",
+ "slug": "atkinson-resort-country-club-championship-course-atkinson-nh",
+ "computed": "2026-07-22T04:48:51.998Z",
+ "axes": [
+  {
+   "name": "Challenge",
+   "status": "WITHHELD",
+   "srcLabel": "",
+   "score": null,
+   "note": "No rating source ledgered for this course.",
+   "counted": false
+  },
+  {
+   "name": "Pedigree",
+   "status": "WITHHELD",
+   "srcLabel": "",
+   "score": null,
+   "note": "No editorial layer curated for this course yet.",
+   "counted": false
+  },
+  {
+   "name": "Terrain",
+   "status": "DERIVED",
+   "srcLabel": "OSM + 3DEP",
+   "score": 5.9,
+   "note": "mean |Δelev| 17.6 ft over 27 ingested holes. score = 2.0 + 0.22·mean, cap 9.5.",
+   "counted": true
+  },
+  {
+   "name": "Access",
+   "status": "WITHHELD",
+   "srcLabel": "",
+   "score": null,
+   "note": "No editorial layer curated for this course yet.",
+   "counted": false
+  },
+  {
+   "name": "Conditions",
+   "status": "WITHHELD",
+   "srcLabel": "",
+   "score": null,
+   "note": "No verified review or agronomy feed ingested. A gap is not a zero.",
+   "counted": false
+  }
+ ],
+ "counted": 1,
+ "composite": null,
+ "verdict": "INSUFFICIENT"
+}

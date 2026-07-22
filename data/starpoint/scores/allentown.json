@@ -1,0 +1,50 @@
+{
+ "_license": "All rights reserved, Starpoint LLC",
+ "slug": "allentown",
+ "computed": "2026-07-22T04:48:51.984Z",
+ "axes": [
+  {
+   "name": "Challenge",
+   "status": "VERIFIED",
+   "srcLabel": "GAP TABLE",
+   "score": 7.4,
+   "note": "Derived from the GAP handicap TABLE — 72.2 / 129 (Black). The table drives the conversion charts; it is the operative number. score = (slope−55)/100·10. Conflicting prose-derived claims are flagged below, never averaged.",
+   "counted": true
+  },
+  {
+   "name": "Pedigree",
+   "status": "VERIFIED",
+   "srcLabel": "STARPOINT",
+   "score": 6.8,
+   "note": "Ault, Clark & Associates, 1952; municipal championship layout; GAP member club.",
+   "counted": true
+  },
+  {
+   "name": "Terrain",
+   "status": "DERIVED",
+   "srcLabel": "OSM + 3DEP",
+   "score": 4.7,
+   "note": "mean |Δelev| 12.3 ft over 18 ingested holes. score = 2.0 + 0.22·mean, cap 9.5.",
+   "counted": true
+  },
+  {
+   "name": "Access",
+   "status": "DERIVED",
+   "srcLabel": "STARPOINT",
+   "score": 7.9,
+   "note": "Public, municipal rate card, 5 rated tee sets spanning 62.9–72.2 rating — widest tee spread in its GAP region cohort.",
+   "counted": true
+  },
+  {
+   "name": "Conditions",
+   "status": "WITHHELD",
+   "srcLabel": "",
+   "score": null,
+   "note": "No verified review or agronomy feed ingested. Scored at zero sources → not scored.",
+   "counted": false
+  }
+ ],
+ "counted": 4,
+ "composite": 6.699999999999999,
+ "verdict": "PLAY"
+}

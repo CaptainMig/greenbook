@@ -1,0 +1,19 @@
+{
+  "_license": "All rights reserved, Starpoint LLC — see data/starpoint/LICENSE",
+  "scale": 10,
+  "gates": {
+    "qualified_statuses": ["VERIFIED", "DERIVED"],
+    "min_axes": 3
+  },
+  "verdict_bands": {
+    "strong_play": 8.0,
+    "play": 6.5
+  },
+  "axes": {
+    "challenge": { "formula": "(slope - 55) / (155 - 55) * 10, clamp 0..10" },
+    "terrain": { "formula": "min(9.5, 2.0 + 0.22 * mean(|elev_delta_ft|)), requires >= 14 ingested holes" },
+    "pedigree": { "formula": "editorial, curated per course" },
+    "access": { "formula": "editorial, curated per course" },
+    "conditions": { "formula": "withheld until a verified feed exists" }
+  }
+}

@@ -2,5 +2,9 @@
   "buildCommand": "node build.js",
   "outputDirectory": "dist",
   "cleanUrls": true,
-  "trailingSlash": false
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/c/:slug/play", "destination": "/c/play.html" },
+    { "source": "/c/:slug", "destination": "/c/course.html" }
+  ]
 }

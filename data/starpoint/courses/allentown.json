@@ -1,0 +1,55 @@
+{
+  "_license": "All rights reserved, Starpoint LLC",
+  "slug": "allentown",
+  "demo": false,
+  "meta": {
+    "name": "Allentown Municipal",
+    "locLine": "Allentown, PA · Lehigh Valley · Public",
+    "architect": "Ault, Clark & Assoc.",
+    "founded": 1952,
+    "yards": 6845
+  },
+  "ratings_override": {
+    "status": "VERIFIED",
+    "srcLabel": "GAP TABLE",
+    "source": "GAP handicap conversion tables (gapgolf.org), per-tee",
+    "tees": [
+      { "tee": "Black", "color": "#1b1b1b", "r": 72.2, "s": 129 },
+      { "tee": "Blue", "color": "#3a6ea5", "r": 70.9, "s": 126 },
+      { "tee": "White", "color": "#e9e4d3", "r": 68.6, "s": 122 },
+      { "tee": "Gold", "color": "#c9a227", "r": 65.4, "s": 114 },
+      { "tee": "Red", "color": "#e23d2e", "r": 62.9, "s": 108 }
+    ]
+  },
+  "axes": {
+    "challenge": {
+      "note": "Derived from the GAP handicap TABLE — 72.2 / 129 (Black). The table drives the conversion charts; it is the operative number. score = (slope−55)/100·10. Conflicting prose-derived claims are flagged below, never averaged."
+    },
+    "pedigree": { "score": 6.8, "status": "VERIFIED", "note": "Ault, Clark & Associates, 1952; municipal championship layout; GAP member club." },
+    "access": { "score": 7.9, "status": "DERIVED", "note": "Public, municipal rate card, 5 rated tee sets spanning 62.9–72.2 rating — widest tee spread in its GAP region cohort." },
+    "conditions": { "status": "WITHHELD", "note": "No verified review or agronomy feed ingested. Scored at zero sources → not scored." }
+  },
+  "conflicts": [
+    {
+      "field": "Course rating / slope (Black)",
+      "authoritative": { "source": "GAP handicap conversion TABLE (gapgolf.org)", "value": "72.2 / 129", "status": "VERIFIED" },
+      "flagged": [
+        { "source": "GAP directory PROSE (marketing copy)", "value": "72.4 / 132", "status": "APPROX" },
+        { "source": "OpenGolfAPI (crawled from allentowngolf.org prose)", "value": "72.4 / 132", "status": "APPROX" }
+      ]
+    }
+  ],
+  "prov": [
+    ["Ratings & slope", "AUTHORITATIVE: GAP handicap conversion TABLE (gapgolf.org), per-tee — 72.2 / 129 Black. FLAGGED: the GAP directory marketing PROSE and OpenGolfAPI's website crawl both claim 72.4 / 132. Flagged, not averaged.", "VERIFIED"],
+    ["Architect, founded, type", "GAP club directory + course site (allentowngolf.org)", "VERIFIED"],
+    ["Total yardage / par", "GAP directory (6,845 yds, par 72)", "VERIFIED"],
+    ["Identity, city, pars, stroke index", "OpenGolfAPI registry (ODbL) — cited as OPENGOLFAPI", "DERIVED"],
+    ["Hole geometry", "OpenStreetMap via Overpass (ODbL) — 18 golf=hole centerlines in verified bbox", "VERIFIED"],
+    ["Elevation profiles", "USGS 3DEP sampled every 20 m along centerlines — 0 gaps", "VERIFIED"],
+    ["Centerline yardage", "Computed from resampled OSM geometry — centerline ≠ card yardage; card values withheld until a verified card is ledgered", "DERIVED"],
+    ["Conditions & pace", "No ground truth ingested", "WITHHELD"]
+  ],
+  "provNote": "<b>Live discrepancy, captured July 2026:</b> the GAP directory prose states a 72.4 rating and 132 slope for Allentown Municipal. The handicap TABLE on the same page states 72.2 / 129 for the Black tees. GreenBook surfaces the table value as authoritative (it drives the conversion charts) and flags the prose. The prose number has since propagated into OpenGolfAPI via the course-website crawl — the registry tee card on this page carries that flagged 72.4 / 132. One mismatch, three receipts: this is the whole argument for a provenance ledger.",
+  "cardSub": "Par and stroke index verified against OSM tags and the OpenGolfAPI card. Yardage column is resampled OSM centerline geometry — NOT card yardage; per-tee card yardage stays withheld until a verified card is ledgered. GAP per-tee ratings shown below.",
+  "terrainFlag": ""
+}

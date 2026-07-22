@@ -1,0 +1,36 @@
+{
+  "_license": "All rights reserved, Starpoint LLC",
+  "slug": "bethpage-black",
+  "demo": true,
+  "demoSeed": 19,
+  "meta": {
+    "name": "Bethpage Black",
+    "locLine": "Farmingdale, NY · State Park · Public",
+    "architect": "A.W. Tillinghast",
+    "founded": 1936,
+    "par": 71,
+    "yards": 7468
+  },
+  "pars": [4,4,3,5,4,4,5,3,4, 4,4,4,3,4,4,4,3,5],
+  "hcp": [5,9,15,7,1,11,3,17,13, 8,12,2,16,4,10,6,18,14],
+  "black": [430,389,205,517,451,408,553,210,460, 502,435,499,160,467,478,490,207,607],
+  "ratings": [
+    { "tee": "Black", "color": "#1b1b1b", "r": 77.5, "s": 155, "st": "approx" },
+    { "tee": "Blue", "color": "#3a6ea5", "r": 75.4, "s": 148, "st": "approx" },
+    { "tee": "White", "color": "#e9e4d3", "r": 73.2, "s": 140, "st": "approx" }
+  ],
+  "axes": {
+    "challenge": { "note": "Slope 155 is the USGA ceiling — but the figure is APPROX (unreconciled against NCRDB), so under the provenance gate it is shown and EXCLUDED until verified." },
+    "pedigree": { "score": 9.8, "status": "VERIFIED", "note": "Tillinghast, 1936. Multiple U.S. Opens, PGA Championship, Ryder Cup 2025 host." },
+    "access": { "score": 6.1, "status": "DERIVED", "note": "Public in principle; famously constrained in practice (sleep-in-the-lot tee sheet). Scored on rate + booking friction." },
+    "conditions": { "status": "WITHHELD", "note": "No verified feed ingested." }
+  },
+  "prov": [
+    ["Ratings & slope", "Public figures, unreconciled against USGA NCRDB", "APPROX"],
+    ["Architect, founded", "Widely documented (Tillinghast, 1936)", "VERIFIED"],
+    ["Hole-by-hole yardage", "Representative layout summing to published total", "DEMO"],
+    ["Elevation profiles", "Synthetic placeholder — 3DEP pending", "DEMO"],
+    ["Conditions & pace", "No ground truth ingested", "WITHHELD"]
+  ],
+  "provNote": "<b>Demo course.</b> Bethpage Black is loaded with approximate public figures to demonstrate the gate: with ratings APPROX, only two axes qualify and no composite is published. Before publication, every APPROX field re-verifies against the USGA course rating database and the Bethpage state park card. OSM maps all five Bethpage courses (90 holes) as one facility — it heads the terrain queue for a supervised multi-course ingest."
+}

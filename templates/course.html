@@ -3,364 +3,425 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>GreenBook · Course</title>
+<title>GreenBook — Course Intelligence</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-:root{--pine:#0c1a12;--pine-2:#122419;--pine-3:#1a3222;--chalk:#e9e4d3;--dim:#9aa593;
---flag:#e23d2e;--sand:#d9b98a;--line:#2a4433;--ok:#8fd6a0;
---mono:'IBM Plex Mono',ui-monospace,monospace;--disp:'Archivo',system-ui,sans-serif}
+:root{
+  --pine:#0c1a12;          /* turf at dusk — page field */
+  --pine-2:#122419;        /* card */
+  --pine-3:#1a3222;        /* raised card / hover */
+  --chalk:#e9e4d3;         /* chalk yardage marks — primary text */
+  --chalk-dim:#9aa593;     /* secondary text */
+  --flag:#e23d2e;          /* flagstick red — verdicts + pins only */
+  --sand:#d9b98a;          /* bunker — warnings / approx */
+  --line:#2a4433;          /* hairlines */
+  --verified:#8fd6a0;      /* verified data */
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --disp:'Archivo',system-ui,sans-serif;
+}
 *{margin:0;padding:0;box-sizing:border-box}
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
-body{background:var(--pine);color:var(--chalk);font-family:var(--disp);font-size:15px;line-height:1.5}
-.page{max-width:1180px;margin:0 auto;min-height:100vh;padding:0 22px 80px}
-:focus-visible{outline:2px solid var(--ok);outline-offset:2px}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{background:var(--pine);color:var(--chalk);font-family:var(--disp);font-size:15px;line-height:1.55;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 119px, rgba(233,228,211,.025) 119px, rgba(233,228,211,.025) 120px),
+    repeating-linear-gradient(90deg, transparent, transparent 119px, rgba(233,228,211,.025) 119px, rgba(233,228,211,.025) 120px);
+}
+a{color:inherit}
 .mono{font-family:var(--mono)}
-.k{font-family:var(--mono);font-size:9px;letter-spacing:.15em;text-transform:uppercase;color:var(--dim)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
 
-.top{display:flex;justify-content:space-between;align-items:center;height:56px;border-bottom:1px solid var(--line)}
-.top b{font-weight:900;font-stretch:110%;font-size:17px}
-.top b i{font-style:normal;color:var(--ok)}
-.top a{color:inherit;text-decoration:none}
-.top .mono{font-size:9px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase}
+/* ---------- top bar ---------- */
+header{border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(12,26,18,.92);backdrop-filter:blur(8px);z-index:40}
+.bar{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{display:flex;align-items:baseline;gap:10px;text-decoration:none}
+.logo b{font-weight:900;font-stretch:110%;letter-spacing:.02em;font-size:19px}
+.logo b i{font-style:normal;color:var(--verified)}
+.logo span{font-family:var(--mono);font-size:10px;color:var(--chalk-dim);letter-spacing:.14em;text-transform:uppercase}
+.bar nav{display:flex;gap:22px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.bar nav a{text-decoration:none;color:var(--chalk-dim)}
+.bar nav a:hover,.bar nav a:focus-visible{color:var(--chalk)}
+:focus-visible{outline:2px solid var(--verified);outline-offset:2px}
 
-.head{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;padding:26px 0 18px;border-bottom:1px solid var(--line);flex-wrap:wrap}
-h1{font-weight:900;font-stretch:114%;font-size:44px;line-height:1;text-transform:uppercase;letter-spacing:-.01em}
-.loc{font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:8px;letter-spacing:.06em}
-.playlink{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--pine);background:var(--ok);padding:11px 18px;border-radius:2px;text-decoration:none;font-weight:600}
+/* ---------- course switcher ---------- */
+.switcher{display:flex;gap:8px;padding:16px 0;flex-wrap:wrap}
+.switcher a,.switcher button{font-family:var(--mono);font-size:11px;letter-spacing:.06em;padding:8px 14px;background:transparent;
+  color:var(--chalk-dim);border:1px solid var(--line);border-radius:2px;cursor:pointer;transition:.15s;text-decoration:none;display:inline-block}
+.switcher a:hover,.switcher button:hover{border-color:var(--chalk-dim);color:var(--chalk)}
+.switcher .on{background:var(--pine-3);color:var(--chalk);border-color:var(--verified)}
+.switcher .tag{font-size:9px;color:var(--sand);margin-left:6px}
 
-.grid{display:grid;grid-template-columns:340px 1fr;gap:14px;margin-top:14px}
-@media(max-width:900px){.grid{grid-template-columns:1fr}}
-.card{border:1px solid var(--line);background:var(--pine-2);border-radius:2px;padding:16px}
-.card h3{font-weight:800;font-stretch:108%;font-size:12px;text-transform:uppercase;letter-spacing:.04em;display:flex;justify-content:space-between;align-items:baseline}
-.card h3 .st{font-family:var(--mono);font-size:8.5px;letter-spacing:.12em}
-.st.der{color:var(--dim)}.st.dem{color:var(--sand)}.st.ver{color:var(--ok)}.st.wit{color:var(--flag)}.st.flg{color:var(--flag)}
+/* ---------- hero ---------- */
+.hero{padding:34px 0 30px;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--chalk-dim);margin-bottom:10px}
+h1{font-weight:900;font-stretch:115%;font-size:clamp(34px,6vw,68px);line-height:.98;letter-spacing:-.01em;text-transform:uppercase}
+.hero-grid{display:grid;grid-template-columns:1fr 300px;gap:32px;align-items:end}
+@media(max-width:820px){.hero-grid{grid-template-columns:1fr}}
+.statrow{display:flex;flex-wrap:wrap;gap:0;margin-top:26px;border:1px solid var(--line)}
+.stat{padding:12px 18px;border-right:1px solid var(--line);flex:1;min-width:110px}
+.stat:last-child{border-right:none}
+.stat .k{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--chalk-dim)}
+.stat .v{font-weight:800;font-size:21px;font-stretch:105%;margin-top:2px}
+.stat .v small{font-size:11px;font-weight:400;color:var(--chalk-dim)}
 
-.verdict-plate .v{font-weight:900;font-stretch:112%;font-size:40px;line-height:1;text-transform:uppercase;margin-top:12px}
-.verdict-plate .v.ok{color:var(--ok)}.verdict-plate .v.insuff{color:var(--sand)}
-.verdict-plate .n{font-family:var(--mono);font-weight:600;font-size:64px;line-height:1;margin-top:10px}
-.verdict-plate .sub{font-size:12px;color:var(--dim);margin-top:10px;line-height:1.55}
+/* verdict plate */
+.plate{border:1px solid var(--line);background:var(--pine-2);padding:18px;border-radius:2px}
+.plate .k{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--chalk-dim)}
+.plate .verdict{font-weight:900;font-stretch:112%;font-size:30px;line-height:1.05;margin:6px 0 4px;text-transform:uppercase}
+.plate .verdict.play{color:var(--verified)}
+.plate .verdict.hold{color:var(--sand)}
+.plate .verdict.insuff{color:var(--chalk-dim)}
+.plate .why{font-size:12.5px;color:var(--chalk-dim);line-height:1.5}
+.plate .cov{font-family:var(--mono);font-size:10px;margin-top:10px;color:var(--chalk-dim)}
+.covbar{height:4px;background:var(--pine-3);margin-top:5px;border-radius:2px;overflow:hidden}
+.covbar i{display:block;height:100%;background:var(--verified)}
 
-.axis{margin-top:14px}
-.axis .lab{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
-.axis .lab b{color:var(--chalk)}
-.axis .bar{height:6px;background:var(--pine-3);border-radius:2px;overflow:hidden;margin-top:5px}
-.axis .bar i{display:block;height:100%;background:var(--ok)}
-.axis.gated .bar i{background:repeating-linear-gradient(45deg,var(--sand),var(--sand) 3px,transparent 3px,transparent 7px);opacity:.5}
-.axis .note{font-size:11px;color:var(--dim);margin-top:4px;line-height:1.5}
+/* ---------- sections ---------- */
+section{padding:40px 0;border-bottom:1px solid var(--line)}
+h2{font-weight:900;font-stretch:112%;text-transform:uppercase;font-size:22px;letter-spacing:.01em;display:flex;align-items:center;gap:12px}
+h2 .n{font-family:var(--mono);font-weight:500;font-size:11px;color:var(--chalk-dim);letter-spacing:.1em}
+.sub{color:var(--chalk-dim);font-size:13.5px;max-width:640px;margin-top:6px}
 
-.profiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:10px;margin-top:12px}
-.ph{border:1px solid var(--line);background:var(--pine);border-radius:2px;padding:8px}
-.ph .k{display:flex;justify-content:space-between}
-.ph svg{width:100%;height:auto;display:block;margin-top:4px}
+/* ---------- scoring axes ---------- */
+.axes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:24px}
+.axis{border:1px solid var(--line);background:var(--pine-2);padding:14px;border-radius:2px;position:relative}
+.axis.off{opacity:.55}
+.axis .name{font-weight:800;font-size:14px;font-stretch:105%}
+.axis .src{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.src.verified{color:var(--verified)} .src.derived{color:var(--chalk-dim)} .src.approx{color:var(--sand)} .src.withheld{color:var(--flag)}
+.axis .score{font-family:var(--mono);font-weight:600;font-size:26px;margin-top:10px}
+.axis .score small{font-size:11px;color:var(--chalk-dim);font-weight:400}
+.axis .bar{height:4px;background:var(--pine-3);margin-top:8px;border-radius:2px;overflow:hidden}
+.axis .bar i{display:block;height:100%;background:var(--chalk)}
+.axis .note{font-size:11.5px;color:var(--chalk-dim);margin-top:8px;line-height:1.45}
 
-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11.5px;margin-top:10px}
-th,td{text-align:right;padding:6px 8px;border-bottom:1px solid var(--line);white-space:nowrap}
-th{color:var(--dim);font-weight:500;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase}
-th:first-child,td:first-child{text-align:left}
-td.dim{color:var(--dim)}
-.scroll{overflow-x:auto}
+/* ---------- terrain / hole strip ---------- */
+.holetabs{display:flex;flex-wrap:wrap;gap:4px;margin-top:22px}
+.holetabs button{font-family:var(--mono);font-size:12px;width:44px;height:36px;background:transparent;color:var(--chalk-dim);
+  border:1px solid var(--line);border-radius:2px;cursor:pointer}
+.holetabs button:hover{color:var(--chalk);border-color:var(--chalk-dim)}
+.holetabs button.on{background:var(--chalk);color:var(--pine);font-weight:600;border-color:var(--chalk)}
+.teesel{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap}
+.teesel button{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;
+  background:transparent;border:1px solid var(--line);border-radius:20px;color:var(--chalk-dim);cursor:pointer;display:flex;align-items:center;gap:7px}
+.teesel button.on{color:var(--chalk);border-color:var(--chalk)}
+.teesel .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.holecard{display:grid;grid-template-columns:1fr 260px;gap:24px;margin-top:18px}
+@media(max-width:820px){.holecard{grid-template-columns:1fr}}
+.profile{border:1px solid var(--line);background:var(--pine-2);border-radius:2px;padding:10px;position:relative}
+.profile svg{width:100%;height:auto;display:block}
+.readout{position:absolute;top:14px;left:16px;font-family:var(--mono);font-size:11px;color:var(--chalk-dim);pointer-events:none}
+.readout b{color:var(--chalk);font-weight:600}
+.holestats{display:flex;flex-direction:column;gap:10px}
+.hs{border:1px solid var(--line);background:var(--pine-2);padding:12px 14px;border-radius:2px;display:flex;justify-content:space-between;align-items:baseline}
+.hs .k{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--chalk-dim)}
+.hs .v{font-family:var(--mono);font-weight:600;font-size:18px}
+.hs .v small{font-size:10px;color:var(--chalk-dim);font-weight:400}
+.demoflag{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;color:var(--sand);text-transform:uppercase;margin-top:10px}
 
-.ledger td{white-space:normal}
-.ledger .fld{color:var(--chalk);font-weight:500}
-.chip{font-family:var(--mono);font-size:8.5px;letter-spacing:.12em;padding:2px 7px;border-radius:2px;border:1px solid var(--line)}
-.chip.ver{color:var(--ok);border-color:var(--ok)}
-.chip.der{color:var(--dim)}
-.chip.apx{color:var(--sand);border-color:var(--sand)}
-.chip.dem{color:var(--sand);border-color:var(--sand)}
-.chip.wit{color:var(--flag);border-color:var(--flag)}
-.chip.flg{color:var(--pine);background:var(--flag);border-color:var(--flag)}
-.conflict{border:1px solid var(--flag);border-radius:2px;padding:10px 12px;margin-top:10px;font-size:12px;color:var(--chalk);line-height:1.55}
-.conflict .k{color:var(--flag)}
+/* ---------- scorecard ---------- */
+.cardwrap{overflow-x:auto;margin-top:22px;border:1px solid var(--line);border-radius:2px}
+table{border-collapse:collapse;width:100%;min-width:640px;font-family:var(--mono);font-size:12px}
+th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-weight:500;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--chalk-dim);text-align:right}
+th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:var(--pine-2)}
+tbody tr:hover td{background:var(--pine-3)}
+td.par{color:var(--chalk-dim)}
+tr.tot td{font-weight:600;border-top:1px solid var(--chalk-dim)}
+.teecell{display:flex;align-items:center;gap:6px;justify-content:flex-end}
 
-.pipe{display:flex;gap:8px;align-items:stretch;margin-top:12px;flex-wrap:wrap}
-.pipe .stage{flex:1;min-width:150px;border:1px solid var(--line);background:var(--pine);border-radius:2px;padding:10px}
-.pipe .stage .k{color:var(--ok)}
-.pipe .stage p{font-size:11px;color:var(--dim);margin-top:5px;line-height:1.5}
-.pipe .arrow{align-self:center;color:var(--dim);font-family:var(--mono)}
+/* ---------- ratings ---------- */
+.ratings{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:22px}
+.rt{border:1px solid var(--line);background:var(--pine-2);padding:12px 14px;border-radius:2px}
+.rt .tee{display:flex;align-items:center;gap:8px;font-weight:800;font-size:13px;text-transform:uppercase;font-stretch:105%}
+.rt .nums{font-family:var(--mono);font-size:13px;margin-top:8px}
+.rt .nums span{color:var(--chalk-dim)}
 
-.attr{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.04em;margin-top:28px;padding-top:12px;border-top:1px solid var(--line);line-height:1.8}
-.attr a{color:var(--dim)}
+/* ---------- provenance ---------- */
+.prov{margin-top:22px;border:1px solid var(--line);border-radius:2px;overflow:hidden}
+.prow{display:grid;grid-template-columns:180px 1fr 130px;gap:14px;padding:12px 16px;border-bottom:1px solid var(--line);font-size:13px;align-items:baseline}
+.prow:last-child{border-bottom:none}
+.prow .f{font-weight:700;font-stretch:105%}
+.prow .s{color:var(--chalk-dim);font-size:12.5px}
+.prow .st{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;text-align:right}
+@media(max-width:700px){.prow{grid-template-columns:1fr;gap:2px}.prow .st{text-align:left}}
+.callout{margin-top:16px;border-left:3px solid var(--sand);background:var(--pine-2);padding:14px 16px;font-size:13px;color:var(--chalk-dim);border-radius:0 2px 2px 0}
+.callout b{color:var(--sand)}
+
+/* ---------- pipeline ---------- */
+.pipe{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-top:22px}
+.pl{border:1px solid var(--line);background:var(--pine-2);padding:16px;border-radius:2px}
+.pl .t{font-weight:800;font-stretch:105%;font-size:14px}
+.pl .d{font-size:12.5px;color:var(--chalk-dim);margin-top:6px;line-height:1.5}
+.pl .m{font-family:var(--mono);font-size:10px;color:var(--verified);margin-top:10px;letter-spacing:.06em}
+
+footer{padding:34px 0 50px;color:var(--chalk-dim);font-size:12px}
+footer .mono{font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+footer a{color:var(--chalk-dim)}
 </style>
 </head>
 <body>
-<div class="page">
-  <div class="top">
-    <b><a href="/">GREEN<i>BOOK</i></a></b>
-    <span class="mono">COURSE INTELLIGENCE · PROVENANCE-GATED</span>
-  </div>
 
-  <div class="head">
-    <div>
-      <h1 id="cname"></h1>
-      <div class="loc" id="cloc"></div>
-    </div>
-    <a class="playlink" id="playlink" href="play/">Open play mode →</a>
-  </div>
+<header><div class="wrap bar">
+  <a class="logo" href="/"><b>GREEN<i>BOOK</i></b><span>course intelligence · Starpoint</span></a>
+  <nav>
+    <a href="#score">Score</a><a href="#terrain">Terrain</a><a href="#card">Card</a><a href="#prov">Provenance</a><a href="#pipe">Pipeline</a><a href="" id="playnav">Play</a>
+  </nav>
+</div></header>
 
-  <div class="grid">
-    <!-- VERDICT PLATE + AXES -->
-    <div>
-      <div class="card verdict-plate">
-        <h3>Verdict <span class="st der" id="v-st">GATED COMPOSITE</span></h3>
-        <div class="v" id="verdict">—</div>
-        <div class="n" id="composite"></div>
-        <div class="sub" id="verdict-note"></div>
-      </div>
-      <div class="card" style="margin-top:14px">
-        <h3>Scoring axes <span class="st der">SCORE ONLY ON VERIFIED / DERIVED</span></h3>
-        <div id="axes"></div>
-      </div>
-    </div>
-
-    <!-- RIGHT COLUMN -->
-    <div>
-      <div class="card">
-        <h3>Hole-by-hole elevation <span class="st" id="prof-st"></span></h3>
-        <div class="profiles" id="profiles"></div>
-      </div>
-
-      <div class="card" style="margin-top:14px">
-        <h3>Scorecard <span class="st" id="sc-st"></span></h3>
-        <div class="scroll"><table id="scorecard"></table></div>
-        <div class="axis note" id="sc-note" style="font-size:11px;color:var(--dim);margin-top:8px"></div>
-      </div>
-    </div>
-  </div>
-
-  <!-- PROVENANCE LEDGER -->
-  <div class="card" style="margin-top:14px">
-    <h3>Provenance ledger <span class="st ver">EVERY FIELD CARRIES ITS SOURCE</span></h3>
-    <div class="scroll"><table class="ledger" id="ledger"></table></div>
-    <div id="conflictbox"></div>
-  </div>
-
-  <!-- PIPELINE MAP -->
-  <div class="card" style="margin-top:14px">
-    <h3>Pipeline map <span class="st der">BUILD-TIME · NO RUNTIME BACKEND</span></h3>
-    <div class="pipe">
-      <div class="stage"><div class="k">1 · OVERPASS</div><p>OSM golf=hole centerlines + bunker / water / green polygons, scoped to the named course bbox.</p></div>
-      <div class="arrow">→</div>
-      <div class="stage"><div class="k">2 · RESAMPLE</div><p>Each centerline resampled every 20 m, endpoints kept. Centerline length ≠ card yardage — both ledgered.</p></div>
-      <div class="arrow">→</div>
-      <div class="stage"><div class="k">3 · USGS 3DEP</div><p>EPQS point elevation (ft) per sample, throttled. Gaps counted, never interpolated silently.</p></div>
-      <div class="arrow">→</div>
-      <div class="stage"><div class="k">4 · FLAT FILE</div><p>data/courses/&lt;slug&gt;.json committed to the repo. <a id="rawlink" href="#" style="color:var(--ok)">Raw artifact ↗</a></p></div>
-      <div class="arrow">→</div>
-      <div class="stage"><div class="k">5 · STATIC BUILD</div><p>build.js renders /c/&lt;slug&gt; and /c/&lt;slug&gt;/play. Demo layers labeled, never blended.</p></div>
-    </div>
-  </div>
-
-  <div class="attr" id="attr"></div>
+<div class="wrap">
+  <div class="switcher" id="switcher"></div>
 </div>
 
-<!--COURSE_DATA-->
+<div class="wrap hero">
+  <div class="hero-grid">
+    <div>
+      <div class="eyebrow" id="c-loc"></div>
+      <h1 id="c-name">Loading…</h1>
+      <div class="statrow" id="c-stats"></div>
+    </div>
+    <div class="plate" id="plate"></div>
+  </div>
+</div>
+
+<section id="score"><div class="wrap">
+  <h2><span class="n">01</span>Scored where the data earns it</h2>
+  <p class="sub">Five axes. An axis scores only when its inputs are verified or reproducibly derived — demo, approximate and missing inputs are shown, but excluded from the composite. No coverage, no verdict. Brake with provenance, not prediction.</p>
+  <div class="axes" id="axes"></div>
+</div></section>
+
+<section id="terrain"><div class="wrap">
+  <h2><span class="n">02</span>Terrain, hole by hole</h2>
+  <p class="sub">Cross-section from tee to green. Elevation-adjusted "plays-like" distance uses the caddie rule of thumb: one yard added per yard of rise, subtracted per yard of fall. Hover the profile for a live readout.</p>
+  <div class="holetabs" id="holetabs"></div>
+  <div class="teesel" id="teesel"></div>
+  <div class="holecard">
+    <div class="profile">
+      <div class="readout" id="readout"></div>
+      <svg id="profsvg" viewBox="0 0 720 260" role="img" aria-label="Hole elevation profile"></svg>
+    </div>
+    <div class="holestats" id="holestats"></div>
+  </div>
+  <div class="demoflag" id="terrainflag"></div>
+</div></section>
+
+<section id="card"><div class="wrap">
+  <h2><span class="n">03</span>The card</h2>
+  <p class="sub" id="cardsub"></p>
+  <div class="cardwrap"><table id="scorecard"></table></div>
+  <h2 style="margin-top:36px"><span class="n">03a</span>Ratings by tee</h2>
+  <div class="ratings" id="ratings"></div>
+</div></section>
+
+<section id="prov"><div class="wrap">
+  <h2><span class="n">04</span>Provenance ledger</h2>
+  <p class="sub">Every number on this page carries its source and status. Directory pages mix marketing prose with data — and the two disagree. Conflicts are flagged, never averaged.</p>
+  <div class="prov" id="provrows"></div>
+  <div class="callout" id="provnote" style="display:none"></div>
+</div></section>
+
+<section id="pipe"><div class="wrap">
+  <h2><span class="n">05</span>How this scales to every U.S. course</h2>
+  <p class="sub">Four open layers per course, regenerated as flat JSON at build time — no runtime backend. The scoring layer joins at render, by slug, and never writes into the open tree.</p>
+  <div class="pipe">
+    <div class="pl"><div class="t">Course registry</div><div class="d">OpenGolfAPI (15,600+ U.S. courses, ODbL) seeds identity, pars, stroke index, yardage — and, where crawled, per-tee ratings. Cited as OPENGOLFAPI until independently verified.</div><div class="m">STATUS · LIVE</div></div>
+    <div class="pl"><div class="t">Hole geometry</div><div class="d">OpenStreetMap golf=hole centerlines + hazard polygons via Overpass. Coverage varies; the Terrain axis gates on it. Nationwide census ranks the ingest queue.</div><div class="m">STATUS · LIVE · QUEUED BY COVERAGE</div></div>
+    <div class="pl"><div class="t">Elevation</div><div class="d">USGS 3DEP GeoTIFF tiles (AWS Open Data) sampled along centerlines in bulk; EPQS point API as single-course fallback. Public domain.</div><div class="m">STATUS · LIVE</div></div>
+    <div class="pl"><div class="t">Ratings &amp; slope</div><div class="d">State golf association tables (like GAP) as the verification layer over registry values. Two sources disagree → field flagged, not averaged.</div><div class="m">STATUS · VERIFY PER COURSE</div></div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <div class="mono">GreenBook · a Starpoint LLC instrument · data statuses shown per field · demo layers labeled, never blended</div>
+  <div class="mono" style="margin-top:8px" id="attrline"></div>
+</div></footer>
+
+<script src="/assets/greenbook.js"></script>
 <script>
-const C = window.COURSE || {};
-const DEMO = C.demo !== false;
+/* ============ page bootstrap: /c/<slug> — ONE template, data fetched by slug ============ */
 const $=id=>document.getElementById(id);
+const statusClass={VERIFIED:'verified',DERIVED:'derived',APPROX:'approx',DEMO:'approx',WITHHELD:'withheld'};
+const srcClass=s=>statusClass[s]||'derived';
 
-/* ---- demo fallback layer (labeled, never blended) ---- */
-const demoPars=[4,4,5,3,4,4,3,5,4,4,3,5,4,4,3,4,5,4];
-const demoHcp=[7,3,11,17,9,1,15,5,13,8,16,4,2,10,18,12,6,14];
-const demoYds=[385,410,520,175,395,430,160,540,375,400,190,515,420,385,205,410,535,395];
-const SEED=C.demoSeed||7;
-function demoProfile(h){const s=SEED*31+h*7,n=40,p=[];for(let i=0;i<=n;i++){const t=i/n;
- p.push(18*Math.sin(t*Math.PI*1.2+s)+9*Math.sin(t*Math.PI*2.6+s*1.7)+5*Math.sin(t*Math.PI*5.1+s*.6))}
- const b=p[0];return p.map(e=>e-b)}
+let C=null, hole=0, teeIdx=0;
 
-/* coverage:none on a real course renders gated & empty — demo arrays are ONLY for demo courses */
-const holes=(C.holes&&C.holes.length)?C.holes
-  :(DEMO?demoPars.map((p,i)=>({ref:String(i+1),par:p,handicap:demoHcp[i],length_yds:demoYds[i],elev_delta_ft:null,profile:null})):[]);
+(async function(){
+  const slug=GB.slugFromPath();
+  $('playnav').href=`/c/${slug}/play`;
+  try{ C=await GB.loadCourse(slug); }
+  catch(e){ $('c-name').textContent='Course not found'; $('c-loc').textContent=String(e.message||e).toUpperCase(); return; }
+  document.title=`GreenBook — ${C.name}`;
+  renderAll();
+})();
 
-function relProfile(i){
-  const hd=holes[i];
-  if(hd.profile&&hd.profile.length){
-    const v=hd.profile.filter(p=>p.elev_ft!==null);
-    if(v.length>=2){const b=v[0].elev_ft;return v.map(p=>p.elev_ft-b)}
-  }
-  return demoProfile(i);
-}
-function delta(i){
-  const hd=holes[i];
-  if(!DEMO&&hd.elev_delta_ft!==null&&hd.elev_delta_ft!==undefined)return hd.elev_delta_ft;
-  const p=relProfile(i);return p[p.length-1];
+function renderSwitcher(){
+  const others=[{slug:'allentown',name:'Allentown Municipal',demo:false},
+                {slug:'bethpage-black',name:'Bethpage Black',demo:true},
+                {slug:'swope-memorial',name:'Swope Memorial',demo:true}];
+  let html=others.map(o=>`<a class="${o.slug===C.slug?'on':''}" href="/c/${o.slug}">${o.name}${o.demo?'<span class="tag">DEMO DATA</span>':''}</a>`).join('');
+  if(!others.some(o=>o.slug===C.slug))
+    html=`<a class="on" href="/c/${C.slug}">${C.name}</a>`+html;
+  html+=`<a href="/courses">ALL COURSES →</a>`;
+  $('switcher').innerHTML=html;
 }
 
-/* ---- chrome ---- */
-$('cname').textContent=C.name||'Unknown course';
-$('playlink').href='/c/'+(C.slug||'')+'/play';
-$('cloc').textContent=(C.location||'')+(C.ingested?'  ·  INGESTED '+C.ingested.slice(0,10):'')+'  ·  COVERAGE: '+(C.coverage||'demo').toUpperCase();
-$('rawlink').href='/data/courses/'+(C.slug||'demo')+'.json';
+function renderHero(){
+  $('c-loc').textContent=C.locLine;
+  $('c-name').textContent=C.name;
+  const s=[['Par',C.par??'—'],['Yards',C.yards?C.yards.toLocaleString():'—'],
+    ['Rating',C.rating??'—'],['Slope',C.slope??'—'],
+    ['Architect',`<small>${C.architect||'—'}</small>`],['Founded',C.founded||'—']];
+  $('c-stats').innerHTML=s.map(([k,v])=>`<div class="stat"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
 
-/* =====================================================================
-   AXES — an axis scores ONLY on VERIFIED or DERIVED inputs (rule 2).
-   Composite needs ≥3 qualified axes, else INSUFFICIENT DATA.
-   Formulas are printed under each bar; nothing is a black box.
-   ===================================================================== */
-const axes=[];
-
-/* 1 · TERRAIN — real elev_delta_ft distribution (OSM geometry + 3DEP) */
-(function(){
-  const deltas=holes.map((h,i)=>h.elev_delta_ft).filter(d=>d!==null&&d!==undefined);
-  if(!DEMO&&deltas.length>=14){
-    const meanAbs=deltas.reduce((s,d)=>s+Math.abs(d),0)/deltas.length;
-    const score=Math.min(95,Math.round(20+meanAbs*2.2));
-    axes.push({name:'Terrain',status:'DERIVED',score,
-      note:`mean |Δelev| ${meanAbs.toFixed(1)} ft over ${deltas.length} holes (OSM centerlines × USGS 3DEP) → 20 + 2.2·mean, cap 95.`});
-  }else{
-    axes.push({name:'Terrain',status:DEMO?'DEMO':'WITHHELD',score:null,
-      note:DEMO?'Demo sine-wave profiles — labeled, never scored.':'Not enough elevation samples to derive a distribution.'});
-  }
-})();
-
-/* 2 · CHALLENGE — official rating/slope; conflicting sources flagged, never averaged */
-(function(){
-  const r=C.ratings;
-  if(r&&r.sources&&r.sources.length){
-    const a=r.sources[0]; /* designated authoritative source (first in ledger) */
-    const score=Math.max(5,Math.min(95,Math.round((a.slope-55)/100*70+(a.rating-(r.par||72))*8)));
-    axes.push({name:'Challenge',status:a.status||'VERIFIED',score,flagged:!!r.conflict,
-      note:`${a.source}: ${a.rating.toFixed(1)} / ${a.slope}. score = (slope−55)/100·70 + (rating−par)·8.`+(r.conflict?' Conflicting second source flagged in ledger — values NOT averaged.':'')});
-  }else{
-    axes.push({name:'Challenge',status:DEMO?'DEMO':'WITHHELD',score:null,
-      note:DEMO?'Demo ratings — labeled, never scored.':'No verified rating source ledgered.'});
-  }
-})();
-
-/* 3 · VARIETY — spread of hole lengths + par mix, from OSM centerlines */
-(function(){
-  if(!DEMO&&holes.length>=14){
-    const L=holes.map(h=>h.length_yds).filter(Boolean);
-    const mean=L.reduce((s,x)=>s+x,0)/L.length;
-    const sd=Math.sqrt(L.reduce((s,x)=>s+(x-mean)**2,0)/L.length);
-    const p3=holes.filter(h=>h.par===3).length,p5=holes.filter(h=>h.par===5).length;
-    const score=Math.max(5,Math.min(95,Math.round(sd/mean*260+(p3>=3&&p5>=3?18:6))));
-    axes.push({name:'Variety',status:'DERIVED',score,
-      note:`length CV ${(sd/mean).toFixed(2)} over ${L.length} OSM centerlines · ${p3}× par-3, ${p5}× par-5 → CV·260 + mix bonus.`});
-  }else{
-    axes.push({name:'Variety',status:DEMO?'DEMO':'WITHHELD',score:null,
-      note:DEMO?'Demo yardages — labeled, never scored.':'No centerline coverage to derive from.'});
-  }
-})();
-
-/* 4 · HAZARD PRESSURE — OSM hazard/green polygons per hole */
-(function(){
-  const hz=C.hazards;
-  if(!DEMO&&hz&&hz.length){
-    const water=hz.filter(h=>h.kind==='water_hazard'||h.kind==='water').length;
-    const sand=hz.filter(h=>h.kind==='bunker').length;
-    const perHole=(water*2+sand)/holes.length;
-    const score=Math.max(5,Math.min(95,Math.round(perHole*26)));
-    axes.push({name:'Hazard pressure',status:'DERIVED',score,
-      note:`${sand} bunkers + ${water} water bodies in OSM bbox → (2·water + bunkers)/holes · 26. Polygon coverage, not penalty-stroke data.`});
-  }else{
-    axes.push({name:'Hazard pressure',status:DEMO?'DEMO':'WITHHELD',score:null,
-      note:DEMO?'Demo hazards — labeled, never scored.':'No hazard polygons returned for this bbox.'});
-  }
-})();
-
-/* 5 · CONDITIONING — no qualified source exists yet; stays withheld everywhere */
-axes.push({name:'Conditioning',status:'WITHHELD',score:null,
-  note:'No verified source (green speed, firmness logs). Withheld until one is ledgered — a gap is not a zero.'});
-
-/* ---- render axes + gated composite ---- */
-const QUAL=['VERIFIED','DERIVED'];
-const qualified=axes.filter(a=>QUAL.includes(a.status)&&a.score!==null);
-$('axes').innerHTML=axes.map(a=>{
-  const gated=!QUAL.includes(a.status)||a.score===null;
-  const cls=a.status==='VERIFIED'?'ver':a.status==='DERIVED'?'der':a.status==='DEMO'?'dem':'wit';
-  return `<div class="axis ${gated?'gated':''}">
-    <div class="lab"><span>${a.name} ${a.flagged?'<span class="chip flg">FLAG</span>':''}</span>
-      <span><b>${a.score===null?'—':a.score}</b> · <span class="st ${cls}">${a.status}</span></span></div>
-    <div class="bar"><i style="width:${a.score===null?100:a.score}%"></i></div>
-    <div class="note">${a.note}</div></div>`;
-}).join('');
-
-if(qualified.length>=3){
-  const comp=Math.round(qualified.reduce((s,a)=>s+a.score,0)/qualified.length);
-  $('verdict').textContent='SCORED';$('verdict').className='v ok';
-  $('composite').textContent=comp;
-  $('verdict-note').textContent=`Composite of ${qualified.length}/5 axes (${qualified.map(a=>a.name.toLowerCase()).join(', ')}). Gated axes are shown but excluded — a demo layer never moves this number.`;
-}else{
-  $('verdict').textContent='INSUFFICIENT DATA';$('verdict').className='v insuff';
-  $('composite').textContent='—';
-  $('verdict-note').textContent=`Only ${qualified.length}/5 axes have VERIFIED or DERIVED inputs; the composite needs ≥3. Demo layers are labeled below and never blended in.`;
+  const R=GB.scoreCourse(C);   /* gates: VERIFIED/DERIVED only, >=3 axes, /10 bands 8 / 6.5 */
+  let cls={STRONG_PLAY:'play',PLAY:'play',HOLD:'hold',INSUFFICIENT:'insuff'}[R.verdict];
+  const label=R.verdict==='INSUFFICIENT'?'INSUFFICIENT DATA':R.verdict.replace('_',' ');
+  const why=R.verdict==='INSUFFICIENT'
+    ?'Fewer than three axes meet the provenance bar. No composite is published until they do.'
+    :`Composite ${R.composite.toFixed(1)}/10 across ${R.counted} qualified axes. Unqualified axes are shown below and excluded — they do not dilute or inflate the number.`;
+  $('plate').innerHTML=`<div class="k">GreenBook verdict</div>
+    <div class="verdict ${cls}">${label}</div>
+    <div class="why">${why}</div>
+    <div class="cov">AXIS COVERAGE · ${R.counted}/${R.axes.length}</div>
+    <div class="covbar"><i style="width:${R.counted/R.axes.length*100}%"></i></div>`;
+  C._scored=R;
 }
 
-/* ---- hole profiles ---- */
-$('prof-st').textContent=DEMO?'DEMO':'DERIVED · OSM + 3DEP';
-$('prof-st').className='st '+(DEMO?'dem':'der');
-$('profiles').innerHTML=holes.map((h,i)=>{
-  const prof=relProfile(i),d=delta(i);
-  const W=160,H=52,PL=4,PR=4,PT=8,PB=8;
-  const min=Math.min(...prof)-3,max=Math.max(...prof)+3;
-  const x=j=>PL+(W-PL-PR)*j/(prof.length-1),y=e=>PT+(H-PT-PB)*(1-(e-min)/(max-min));
-  let p=`M${x(0)},${y(prof[0])}`;prof.forEach((e,j)=>{if(j)p+=` L${x(j)},${y(e)}`});
-  return `<div class="ph"><div class="k"><span>H${h.ref} · PAR ${h.par??'—'}</span><span>${d===null?'—':(d>0?'+':'')+d.toFixed(0)+' FT'}</span></div>
-    <svg viewBox="0 0 ${W} ${H}"><path d="${p}" fill="none" stroke="#8fd6a0" stroke-width="1.2"/></svg></div>`;
-}).join('');
+function renderAxes(){
+  $('axes').innerHTML=C._scored.axes.map(a=>`<div class="axis ${a.counted?'':'off'}">
+      <div class="name">${a.name}</div>
+      <div class="src ${srcClass(a.status)}">${a.status}${a.srcLabel?' · '+a.srcLabel:''}${a.counted?' · COUNTED':' · EXCLUDED'}</div>
+      <div class="score">${a.score===null?'—':a.score.toFixed(1)}<small> /10</small></div>
+      <div class="bar"><i style="width:${a.score===null?0:a.score*10}%"></i></div>
+      <div class="note">${a.note}</div>
+    </div>`).join('');
+}
 
-/* ---- scorecard ---- */
-$('sc-st').textContent=DEMO?'DEMO':'PAR/SI VERIFIED (OSM TAGS) · YDS DERIVED';
-$('sc-st').className='st '+(DEMO?'dem':'der');
-(function(){
-  const heads=['Hole','Par','SI',DEMO?'Black (demo)':'Centerline yds'];
-  const out=holes.filter(h=>+h.ref>=1&&+h.ref<=9), back=holes.filter(h=>+h.ref>=10);
-  const row=hs=>hs.map(h=>`<tr><td>${h.ref}</td><td>${h.par??'—'}</td><td class="dim">${h.handicap??'—'}</td><td>${h.card_yds||h.length_yds||'—'}</td></tr>`).join('');
-  const tot=hs=>hs.reduce((s,h)=>s+(h.card_yds||h.length_yds||0),0);
-  const par=hs=>hs.reduce((s,h)=>s+(h.par||0),0);
-  $('scorecard').innerHTML=`<tr>${heads.map(h=>`<th>${h}</th>`).join('')}</tr>${row(out)}
-    <tr><td class="dim">OUT</td><td>${par(out)}</td><td></td><td>${tot(out)}</td></tr>${row(back)}
-    <tr><td class="dim">IN</td><td>${par(back)}</td><td></td><td>${tot(back)}</td></tr>
-    <tr><td class="dim">TOTAL</td><td>${par(holes)}</td><td></td><td>${tot(holes)}</td></tr>`;
-  $('sc-note').textContent=DEMO
-    ?'Demo scorecard — single fabricated tee set, labeled. Real tee data enters only through the ledger.'
-    :'Centerline yardage is resampled OSM geometry — it is NOT card yardage. Card yardages across tee sets: WITHHELD until a verified source (course-published card) is ledgered.';
-})();
+function renderTerrain(){
+  const H=C.holes;
+  if(!H.length){
+    $('holetabs').innerHTML='';$('teesel').innerHTML='';$('holestats').innerHTML='';
+    $('profsvg').innerHTML='';$('readout').innerHTML='';
+    $('terrainflag').textContent='▲ No hole layer for this course yet — no OSM centerlines ingested and no demo layer loaded. Nothing is synthesized.';
+    return;
+  }
+  $('holetabs').innerHTML=H.map((h,i)=>
+    `<button class="${i===hole?'on':''}" onclick="setHole(${i})" aria-label="Hole ${h.ref}">${h.ref}</button>`).join('');
+  const tees=C.teeList;
+  $('teesel').innerHTML=tees.map((t,i)=>
+    `<button class="${i===teeIdx?'on':''}" onclick="setTee(${i})">
+      <span class="dot" style="background:${t.color};${t.dark?'border:1px solid #555':''}"></span>${t.label}</button>`).join('');
 
-/* ---- provenance ledger ---- */
-(function(){
-  const chip=s=>{const c={VERIFIED:'ver',DERIVED:'der',APPROX:'apx',DEMO:'dem',WITHHELD:'wit'}[s]||'der';return `<span class="chip ${c}">${s}</span>`};
-  let rows;
-  if(!DEMO){
-    const gaps=holes.filter(h=>/gaps/.test(h.elevation_source||'')).length;
-    rows=[
-      ['Hole geometry','OpenStreetMap via Overpass (ODbL)','VERIFIED',`${holes.length} golf=hole centerlines inside verified bbox.`],
-      ['Par / stroke index','OSM way tags (par, handicap)','VERIFIED','Tagged per hole by OSM mappers; matches 18-hole layout.'],
-      ['Elevation profiles','USGS 3DEP via EPQS','VERIFIED',`Point queries every 20 m along centerlines${gaps?` · ${gaps} holes carry sample gaps (counted, not interpolated)`:''}.`],
-      ['Elevation Δ per hole','Computed: last − first valid sample','DERIVED','Derivation of two VERIFIED endpoints.'],
-      ['Centerline yardage','Computed from resampled geometry','DERIVED','Centerline length ≠ card yardage; both kept, never conflated.'],
-      ['Card yardage by tee','—','WITHHELD','No verified card source ledgered yet.'],
-      ['Course rating / slope',(C.ratings&&C.ratings.sources[0].source)||'—',(C.ratings&&C.ratings.sources[0].status)||'WITHHELD',C.ratings&&C.ratings.conflict?'CONFLICT — see flag below. Sources disagree; values not averaged.':'Single-source.'],
-      ['Hazard polygons','OpenStreetMap via Overpass (ODbL)','VERIFIED',`${(C.hazards||[]).length} bunker / water / green rings in bbox.`],
-      ['Conditioning','—','WITHHELD','No source. Absent, not zero.'],
-    ];
+  const yds=GB.holeYds(C,hole,teeIdx);
+  const prof=GB.relProfile(C,hole);
+  const delta=prof.length?prof[prof.length-1]:null;
+  const playsLike=delta===null||yds===null?null:Math.round(yds + delta/3); /* 1 yd per 3 ft */
+
+  const W=720,Hh=260,PL=44,PR=30,PT=34,PB=40;
+  if(prof.length){
+    const min=Math.min(...prof)-6, max=Math.max(...prof)+6;
+    const x=i=>PL+(W-PL-PR)*i/(prof.length-1);
+    const y=e=>PT+(Hh-PT-PB)*(1-(e-min)/(max-min));
+    let d=`M${x(0)},${y(prof[0])}`;
+    prof.forEach((e,i)=>{if(i)d+=` L${x(i)},${y(e)}`});
+    const area=d+` L${x(prof.length-1)},${Hh-PB} L${x(0)},${Hh-PB} Z`;
+    let bands='';
+    for(let e=Math.ceil(min/10)*10;e<=max;e+=10){
+      bands+=`<line x1="${PL}" y1="${y(e)}" x2="${W-PR}" y2="${y(e)}" stroke="rgba(233,228,211,.08)" stroke-dasharray="2 5"/>
+      <text x="${PL-6}" y="${y(e)+3}" fill="#9aa593" font-size="9" text-anchor="end" font-family="IBM Plex Mono">${e>0?'+':''}${e}ft</text>`;
+    }
+    const gy=y(prof[prof.length-1]);
+    $('profsvg').innerHTML=`
+      ${bands}
+      <path d="${area}" fill="rgba(143,214,160,.10)"/>
+      <path d="${d}" fill="none" stroke="#8fd6a0" stroke-width="2"/>
+      <circle cx="${x(0)}" cy="${y(prof[0])}" r="4" fill="#e9e4d3"/>
+      <text x="${x(0)}" y="${y(prof[0])-10}" fill="#e9e4d3" font-size="10" font-family="IBM Plex Mono" text-anchor="middle">TEE</text>
+      <line x1="${x(prof.length-1)}" y1="${gy}" x2="${x(prof.length-1)}" y2="${gy-26}" stroke="#e23d2e" stroke-width="2"/>
+      <path d="M${x(prof.length-1)},${gy-26} l12,5 l-12,5 Z" fill="#e23d2e"/>
+      <text x="${W-PR}" y="${Hh-14}" fill="#9aa593" font-size="9" font-family="IBM Plex Mono" text-anchor="end">${yds??'—'} YDS · ${tees[teeIdx].label.toUpperCase()}</text>
+      <rect id="hitzone" x="${PL}" y="${PT}" width="${W-PL-PR}" height="${Hh-PT-PB}" fill="transparent"/>`;
+    const hz=document.getElementById('hitzone');
+    const base=`HOLE <b>${H[hole].ref}</b> · PAR <b>${H[hole].par??'—'}</b> · HCP <b>${H[hole].handicap??'—'}</b>`;
+    $('readout').innerHTML=base;
+    hz.onmousemove=ev=>{
+      const r=hz.getBoundingClientRect();
+      const t=Math.min(1,Math.max(0,(ev.clientX-r.left)/r.width));
+      const i=Math.round(t*(prof.length-1));
+      $('readout').innerHTML=`HOLE <b>${H[hole].ref}</b> · <b>${yds?Math.round(yds*t):'—'}</b> yds out · elev <b>${prof[i]>0?'+':''}${prof[i].toFixed(0)} ft</b>`;
+    };
+    hz.onmouseleave=()=>{$('readout').innerHTML=base};
   }else{
-    rows=[
-      ['Hole geometry','Demo sine-wave generator','DEMO','Labeled demo layer; excluded from all composites.'],
-      ['Par / stroke index','Demo arrays','DEMO','Fabricated for layout demonstration.'],
-      ['Elevation profiles','Demo sine-wave generator','DEMO','Not terrain. Terrain axis stays gated.'],
-      ['Card yardage','Demo arrays','DEMO','Single fabricated tee set.'],
-      ['Course rating / slope','—','WITHHELD','No verified source ledgered.'],
-      ['Conditioning','—','WITHHELD','No source. Absent, not zero.'],
-    ];
+    $('profsvg').innerHTML=`<text x="360" y="130" fill="#9aa593" font-size="12" font-family="IBM Plex Mono" text-anchor="middle">NO ELEVATION LAYER — TERRAIN AXIS GATED</text>`;
+    $('readout').innerHTML='';
   }
-  $('ledger').innerHTML=`<tr><th>Field</th><th>Source</th><th>Status</th><th>Note</th></tr>`+
-    rows.map(r=>`<tr><td class="fld">${r[0]}</td><td class="dim">${r[1]}</td><td>${chip(r[2])}</td><td class="dim">${r[3]}</td></tr>`).join('');
 
-  if(!DEMO&&C.ratings&&C.ratings.conflict){
-    const s=C.ratings.sources;
-    $('conflictbox').innerHTML=`<div class="conflict"><span class="k">⚑ FLAGGED CONFLICT — NOT AVERAGED (RULE 3)</span><br>
-      ${s.map(x=>`${x.source}: <b>${x.rating.toFixed(1)} / ${x.slope}</b> (${x.status})`).join('  ·  ')}<br>
-      The Challenge axis scores from the designated authoritative source (${s[0].source}); the disagreement stays visible until one source is retired with a reason.</div>`;
+  $('holestats').innerHTML=[
+    ['Yardage · '+C.teeList[teeIdx].label, yds===null?'—':`${yds}<small> yds</small>`],
+    ['Elevation Δ tee→green', delta===null?'—':`${delta>0?'+':''}${delta.toFixed(0)}<small> ft</small>`],
+    ['Plays like', playsLike===null?'—':`${playsLike}<small> yds</small>`],
+    ['Stroke index', H[hole].handicap??'—'],
+  ].map(([k,v])=>`<div class="hs"><span class="k">${k}</span><span class="v">${v}</span></div>`).join('');
+
+  $('terrainflag').textContent=C.terrainFlag||'';
+}
+function setHole(h){hole=h;renderTerrain();}
+function setTee(i){teeIdx=i;renderTerrain();renderCard();}
+
+function renderCard(){
+  $('cardsub').textContent=C.cardSub;
+  const H=C.holes;
+  if(!H.length){$('scorecard').innerHTML='';$('ratings').innerHTML=renderRatingCards();return;}
+  const perHoleTees=C.teeList.filter(t=>t.perHole);
+  const ydCol=perHoleTees.length?perHoleTees:[C.teeList[teeIdx]];
+  const head=`<thead><tr><th>Hole</th><th>Par</th><th>HCP</th>`+
+    ydCol.map(t=>`<th><span class="teecell"><span class="dot" style="width:8px;height:8px;border-radius:50%;display:inline-block;background:${t.color};${t.dark?'border:1px solid #555':''}"></span>${t.ydLabel||t.label}</span></th>`).join('')+`</tr></thead>`;
+  const yv=(t,i)=>GB.holeYds(C,i,C.teeList.indexOf(t));
+  const seg=(from,to,lab)=>{
+    let rows='';
+    for(let i=from;i<to;i++){
+      rows+=`<tr><td>${H[i].ref}</td><td class="par">${H[i].par??'—'}</td><td class="par">${H[i].handicap??'—'}</td>`+
+        ydCol.map(t=>`<td>${yv(t,i)??'—'}</td>`).join('')+`</tr>`;
+    }
+    const tp=H.slice(from,to).reduce((a,h)=>a+(h.par||0),0);
+    rows+=`<tr class="tot"><td>${lab}</td><td class="par">${tp||'—'}</td><td></td>`+
+      ydCol.map(t=>{let s=0,ok=true;for(let i=from;i<to;i++){const v=yv(t,i);if(v===null)ok=false;else s+=v}return `<td>${ok?s.toLocaleString():'—'}</td>`}).join('')+`</tr>`;
+    return rows;
+  };
+  const mid=Math.min(9,H.length);
+  let body=seg(0,mid,'OUT');
+  if(H.length>9) body+=seg(9,H.length,'IN');
+  body+=`<tr class="tot"><td>TOTAL</td><td class="par">${H.reduce((a,h)=>a+(h.par||0),0)||'—'}</td><td></td>`+
+    ydCol.map(t=>{let s=0,ok=true;for(let i=0;i<H.length;i++){const v=yv(t,i);if(v===null)ok=false;else s+=v}return `<td>${ok?s.toLocaleString():'—'}</td>`}).join('')+`</tr>`;
+  $('scorecard').innerHTML=head+`<tbody>${body}</tbody>`;
+  $('ratings').innerHTML=renderRatingCards();
+}
+function renderRatingCards(){
+  if(!C.ratingCards.length) return `<div class="sub">No per-tee ratings ledgered for this course.</div>`;
+  return C.ratingCards.map(r=>
+    `<div class="rt"><div class="tee"><span class="dot" style="width:9px;height:9px;border-radius:50%;display:inline-block;background:${r.color};${r.dark?'border:1px solid #555':''}"></span>${r.tee}</div>
+     <div class="nums"><span>R</span> ${r.r} &nbsp;<span>S</span> ${r.s}${r.yds?` &nbsp;<span>Y</span> ${r.yds.toLocaleString()}`:''}</div>
+     <div class="src ${srcClass(r.status)}" style="margin-top:6px;font-family:var(--mono);font-size:9px;letter-spacing:.1em">${r.status}${r.srcLabel?' · '+r.srcLabel:''}</div></div>`).join('');
+}
+
+function renderProv(){
+  $('provrows').innerHTML=C.prov.map(([f,s,st])=>
+    `<div class="prow"><div class="f">${f}</div><div class="s">${s}</div><div class="st ${srcClass(st)}">${st}</div></div>`).join('');
+  let note=C.provNote||'';
+  if(C.conflicts&&C.conflicts.length){
+    note+=C.conflicts.map(cf=>`<div style="margin-top:10px;font-family:var(--mono);font-size:11px;line-height:1.7">
+      <b>⚑ ${cf.field} — FLAGGED, NOT AVERAGED</b><br>
+      AUTHORITATIVE · ${cf.authoritative.source}: <b>${cf.authoritative.value}</b> (${cf.authoritative.status})<br>
+      ${cf.flagged.map(x=>`FLAGGED · ${x.source}: ${x.value} (${x.status})`).join('<br>')}</div>`).join('');
   }
-})();
+  if(note){$('provnote').style.display='';$('provnote').innerHTML=note;}
+}
 
-/* ---- attribution ---- */
-$('attr').innerHTML=DEMO
-  ?'Demo layer — no OpenStreetMap data rendered on this page. Demo values are labeled and never blended into composites. USGA Rule 4.3: slope-adjusted advice may be restricted in competition.'
-  :'Course geometry &amp; hazards © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>, ODbL 1.0 · Elevation: USGS 3DEP via EPQS (public domain) · Ratings: as ledgered above. USGA Rule 4.3: slope-adjusted advice may be restricted in competition; the play-mode calibration ledger (self-judgment) is available in all modes.';
+function renderAll(){
+  renderSwitcher();renderHero();renderAxes();renderTerrain();renderCard();renderProv();
+  $('attrline').innerHTML=GB.attributionLine(C);
+}
 </script>
 </body>
 </html>

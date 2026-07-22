@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GreenBook · All Courses</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--pine:#0c1a12;--pine-2:#122419;--pine-3:#1a3222;--chalk:#e9e4d3;--dim:#9aa593;
+--flag:#e23d2e;--sand:#d9b98a;--line:#2a4433;--ok:#8fd6a0;
+--mono:'IBM Plex Mono',ui-monospace,monospace;--disp:'Archivo',system-ui,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--pine);color:var(--chalk);font-family:var(--disp);font-size:15px;line-height:1.5}
+.page{max-width:860px;margin:0 auto;min-height:100vh;padding:0 22px 80px}
+:focus-visible{outline:2px solid var(--ok);outline-offset:2px}
+.top{display:flex;justify-content:space-between;align-items:center;height:56px;border-bottom:1px solid var(--line)}
+.top b{font-weight:900;font-stretch:110%;font-size:17px}
+.top b i{font-style:normal;color:var(--ok)}
+.top a{color:inherit;text-decoration:none}
+.top .mono{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase}
+h1{font-weight:900;font-stretch:114%;font-size:34px;line-height:1.05;text-transform:uppercase;margin-top:30px}
+.sub{font-size:13px;color:var(--dim);margin-top:8px;max-width:560px;line-height:1.6}
+.controls{display:flex;gap:8px;margin-top:22px;flex-wrap:wrap}
+input[type=search]{flex:1;min-width:220px;font-family:var(--mono);font-size:13px;padding:11px 14px;background:var(--pine-2);border:1px solid var(--line);border-radius:2px;color:var(--chalk)}
+select{font-family:var(--mono);font-size:12px;padding:11px 14px;background:var(--pine-2);border:1px solid var(--line);border-radius:2px;color:var(--chalk)}
+.count{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--dim);text-transform:uppercase;margin-top:14px}
+.list{margin-top:10px;display:flex;flex-direction:column;gap:6px}
+a.course{display:flex;justify-content:space-between;align-items:center;gap:14px;border:1px solid var(--line);background:var(--pine-2);border-radius:2px;padding:11px 16px;text-decoration:none;color:var(--chalk)}
+a.course:hover{background:var(--pine-3)}
+a.course .nm{font-weight:800;font-stretch:106%;font-size:14px}
+a.course .loc{font-family:var(--mono);font-size:9.5px;color:var(--dim);margin-top:2px;letter-spacing:.06em;text-transform:uppercase}
+a.course .meta{font-family:var(--mono);font-size:10px;color:var(--dim);white-space:nowrap}
+button.more{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-top:14px;padding:12px;width:100%;background:transparent;border:1px solid var(--line);border-radius:2px;color:var(--dim);cursor:pointer}
+button.more:hover{color:var(--chalk);border-color:var(--chalk-dim)}
+.attr{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.04em;margin-top:40px;padding-top:12px;border-top:1px solid var(--line);line-height:1.8}
+.attr a{color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="top">
+    <b><a href="/">GREEN<i>BOOK</i></a></b>
+    <span class="mono">NATIONAL REGISTRY · ODbL</span>
+  </div>
+  <h1>Every U.S. course.<br>Scored where the data earns it.</h1>
+  <p class="sub">Seeded from the OpenGolfAPI open database (ODbL). Registry fields are cited as
+  OPENGOLFAPI — not USGA — until independently verified. Courses without verified or derived
+  axis inputs render as INSUFFICIENT DATA; the Terrain axis activates only on real OSM + USGS ingest.</p>
+  <div class="controls">
+    <input type="search" id="q" placeholder="Search name or city…" aria-label="search courses">
+    <select id="state" aria-label="filter by state"><option value="">All states</option></select>
+  </div>
+  <div class="count" id="count"></div>
+  <div class="list" id="list"></div>
+  <button class="more" id="more" style="display:none">Show more</button>
+  <div class="attr">Registry: <a href="https://opengolfapi.org">OpenGolfAPI</a> (ODbL) · contains information from
+  <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> © OpenStreetMap contributors ·
+  <a href="/attribution">Full attribution &amp; licenses</a></div>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+let ALL=[], shown=0, filtered=[];
+const PAGE=100;
+
+fetch('/data/open/registry/index.json').then(r=>r.json()).then(j=>{
+  ALL=j.courses;
+  const states=[...new Set(ALL.map(c=>c.state))].sort();
+  $('state').innerHTML='<option value="">All states</option>'+states.map(s=>`<option>${s}</option>`).join('');
+  apply();
+});
+
+function apply(){
+  const q=$('q').value.trim().toLowerCase(), st=$('state').value;
+  filtered=ALL.filter(c=>(!st||c.state===st)&&(!q||c.name.toLowerCase().includes(q)||(c.city||'').toLowerCase().includes(q)));
+  shown=0;$('list').innerHTML='';
+  more();
+  $('count').textContent=`${filtered.length.toLocaleString()} OF ${ALL.length.toLocaleString()} COURSES`;
+}
+function more(){
+  const chunk=filtered.slice(shown,shown+PAGE);
+  $('list').insertAdjacentHTML('beforeend',chunk.map(c=>
+    `<a class="course" href="/c/${c.slug}">
+      <span><span class="nm">${c.name}</span><br><span class="loc">${c.city||''}, ${c.state}</span></span>
+      <span class="meta">${c.holes||'—'} HOLES · PAR ${c.par||'—'}${c.yardage?' · '+c.yardage.toLocaleString()+' YDS':''}</span>
+    </a>`).join(''));
+  shown+=chunk.length;
+  $('more').style.display=shown<filtered.length?'':'none';
+}
+$('q').addEventListener('input',apply);
+$('state').addEventListener('change',apply);
+$('more').addEventListener('click',more);
+</script>
+</body>
+</html>

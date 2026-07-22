@@ -1,0 +1,50 @@
+{
+ "_license": "All rights reserved, Starpoint LLC",
+ "slug": "bethpage-black",
+ "computed": "2026-07-22T04:48:52.025Z",
+ "axes": [
+  {
+   "name": "Challenge",
+   "status": "APPROX",
+   "srcLabel": "",
+   "score": 10,
+   "note": "Slope 155 is the USGA ceiling — but the figure is APPROX (unreconciled against NCRDB), so under the provenance gate it is shown and EXCLUDED until verified.",
+   "counted": false
+  },
+  {
+   "name": "Pedigree",
+   "status": "VERIFIED",
+   "srcLabel": "STARPOINT",
+   "score": 9.8,
+   "note": "Tillinghast, 1936. Multiple U.S. Opens, PGA Championship, Ryder Cup 2025 host.",
+   "counted": true
+  },
+  {
+   "name": "Terrain",
+   "status": "DEMO",
+   "srcLabel": "",
+   "score": null,
+   "note": "Profiles below are placeholders. Axis activates when 3DEP + OSM centerlines land.",
+   "counted": false
+  },
+  {
+   "name": "Access",
+   "status": "DERIVED",
+   "srcLabel": "STARPOINT",
+   "score": 6.1,
+   "note": "Public in principle; famously constrained in practice (sleep-in-the-lot tee sheet). Scored on rate + booking friction.",
+   "counted": true
+  },
+  {
+   "name": "Conditions",
+   "status": "WITHHELD",
+   "srcLabel": "",
+   "score": null,
+   "note": "No verified feed ingested.",
+   "counted": false
+  }
+ ],
+ "counted": 2,
+ "composite": null,
+ "verdict": "INSUFFICIENT"
+}

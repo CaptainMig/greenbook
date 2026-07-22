@@ -1,0 +1,11 @@
+Copyright (c) 2026 Starpoint LLC. All rights reserved.
+
+Everything under data/starpoint/ — axis outputs, verdict states, heuristic
+parameters, scoring configuration, and editorial course overlays — is a
+proprietary work of Starpoint LLC. It is NOT part of the ODbL collective
+database in data/open/ and is not licensed for reuse, redistribution, or
+derivative works without written permission.
+
+The scoring layer reads the open tree at render time, joined by slug. It is
+a produced work consuming the open database; the open database itself remains
+ODbL (see data/open/LICENSE) and share-alike obligations are honored there.

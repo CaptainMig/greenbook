@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GreenBook — Course Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pine:#0c1a12;          /* turf at dusk — page field */
+  --pine-2:#122419;        /* card */
+  --pine-3:#1a3222;        /* raised card / hover */
+  --chalk:#e9e4d3;         /* chalk yardage marks — primary text */
+  --chalk-dim:#9aa593;     /* secondary text */
+  --flag:#e23d2e;          /* flagstick red — verdicts + pins only */
+  --sand:#d9b98a;          /* bunker — warnings / approx */
+  --line:#2a4433;          /* hairlines */
+  --verified:#8fd6a0;      /* verified data */
+  --mono:'IBM Plex Mono',ui-monospace,monospace;
+  --disp:'Archivo',system-ui,sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+body{background:var(--pine);color:var(--chalk);font-family:var(--disp);font-size:15px;line-height:1.55;
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 119px, rgba(233,228,211,.025) 119px, rgba(233,228,211,.025) 120px),
+    repeating-linear-gradient(90deg, transparent, transparent 119px, rgba(233,228,211,.025) 119px, rgba(233,228,211,.025) 120px);
+}
+a{color:inherit}
+.mono{font-family:var(--mono)}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+
+/* ---------- top bar ---------- */
+header{border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(12,26,18,.92);backdrop-filter:blur(8px);z-index:40}
+.bar{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{display:flex;align-items:baseline;gap:10px;text-decoration:none}
+.logo b{font-weight:900;font-stretch:110%;letter-spacing:.02em;font-size:19px}
+.logo b i{font-style:normal;color:var(--verified)}
+.logo span{font-family:var(--mono);font-size:10px;color:var(--chalk-dim);letter-spacing:.14em;text-transform:uppercase}
+.bar nav{display:flex;gap:22px;font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.bar nav a{text-decoration:none;color:var(--chalk-dim)}
+.bar nav a:hover,.bar nav a:focus-visible{color:var(--chalk)}
+:focus-visible{outline:2px solid var(--verified);outline-offset:2px}
+
+/* ---------- course switcher ---------- */
+.switcher{display:flex;gap:8px;padding:16px 0;flex-wrap:wrap}
+.switcher button{font-family:var(--mono);font-size:11px;letter-spacing:.06em;padding:8px 14px;background:transparent;
+  color:var(--chalk-dim);border:1px solid var(--line);border-radius:2px;cursor:pointer;transition:.15s}
+.switcher button:hover{border-color:var(--chalk-dim);color:var(--chalk)}
+.switcher button.on{background:var(--pine-3);color:var(--chalk);border-color:var(--verified)}
+.switcher .tag{font-size:9px;color:var(--sand);margin-left:6px}
+
+/* ---------- hero ---------- */
+.hero{padding:34px 0 30px;border-bottom:1px solid var(--line)}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--chalk-dim);margin-bottom:10px}
+h1{font-weight:900;font-stretch:115%;font-size:clamp(34px,6vw,68px);line-height:.98;letter-spacing:-.01em;text-transform:uppercase}
+.hero-grid{display:grid;grid-template-columns:1fr 300px;gap:32px;align-items:end}
+@media(max-width:820px){.hero-grid{grid-template-columns:1fr}}
+.statrow{display:flex;flex-wrap:wrap;gap:0;margin-top:26px;border:1px solid var(--line)}
+.stat{padding:12px 18px;border-right:1px solid var(--line);flex:1;min-width:110px}
+.stat:last-child{border-right:none}
+.stat .k{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--chalk-dim)}
+.stat .v{font-weight:800;font-size:21px;font-stretch:105%;margin-top:2px}
+.stat .v small{font-size:11px;font-weight:400;color:var(--chalk-dim)}
+
+/* verdict plate */
+.plate{border:1px solid var(--line);background:var(--pine-2);padding:18px;border-radius:2px}
+.plate .k{font-family:var(--mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--chalk-dim)}
+.plate .verdict{font-weight:900;font-stretch:112%;font-size:30px;line-height:1.05;margin:6px 0 4px;text-transform:uppercase}
+.plate .verdict.play{color:var(--verified)}
+.plate .verdict.hold{color:var(--sand)}
+.plate .verdict.insuff{color:var(--chalk-dim)}
+.plate .why{font-size:12.5px;color:var(--chalk-dim);line-height:1.5}
+.plate .cov{font-family:var(--mono);font-size:10px;margin-top:10px;color:var(--chalk-dim)}
+.covbar{height:4px;background:var(--pine-3);margin-top:5px;border-radius:2px;overflow:hidden}
+.covbar i{display:block;height:100%;background:var(--verified)}
+
+/* ---------- sections ---------- */
+section{padding:40px 0;border-bottom:1px solid var(--line)}
+h2{font-weight:900;font-stretch:112%;text-transform:uppercase;font-size:22px;letter-spacing:.01em;display:flex;align-items:center;gap:12px}
+h2 .n{font-family:var(--mono);font-weight:500;font-size:11px;color:var(--chalk-dim);letter-spacing:.1em}
+.sub{color:var(--chalk-dim);font-size:13.5px;max-width:640px;margin-top:6px}
+
+/* ---------- scoring axes ---------- */
+.axes{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:24px}
+.axis{border:1px solid var(--line);background:var(--pine-2);padding:14px;border-radius:2px;position:relative}
+.axis.off{opacity:.55}
+.axis .name{font-weight:800;font-size:14px;font-stretch:105%}
+.axis .src{font-family:var(--mono);font-size:9px;letter-spacing:.1em;text-transform:uppercase;margin-top:2px}
+.src.verified{color:var(--verified)} .src.derived{color:var(--chalk-dim)} .src.approx{color:var(--sand)} .src.withheld{color:var(--flag)}
+.axis .score{font-family:var(--mono);font-weight:600;font-size:26px;margin-top:10px}
+.axis .score small{font-size:11px;color:var(--chalk-dim);font-weight:400}
+.axis .bar{height:4px;background:var(--pine-3);margin-top:8px;border-radius:2px;overflow:hidden}
+.axis .bar i{display:block;height:100%;background:var(--chalk)}
+.axis .note{font-size:11.5px;color:var(--chalk-dim);margin-top:8px;line-height:1.45}
+
+/* ---------- terrain / hole strip ---------- */
+.holetabs{display:flex;flex-wrap:wrap;gap:4px;margin-top:22px}
+.holetabs button{font-family:var(--mono);font-size:12px;width:44px;height:36px;background:transparent;color:var(--chalk-dim);
+  border:1px solid var(--line);border-radius:2px;cursor:pointer}
+.holetabs button:hover{color:var(--chalk);border-color:var(--chalk-dim)}
+.holetabs button.on{background:var(--chalk);color:var(--pine);font-weight:600;border-color:var(--chalk)}
+.teesel{display:flex;gap:6px;margin-top:14px;flex-wrap:wrap}
+.teesel button{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:6px 12px;
+  background:transparent;border:1px solid var(--line);border-radius:20px;color:var(--chalk-dim);cursor:pointer;display:flex;align-items:center;gap:7px}
+.teesel button.on{color:var(--chalk);border-color:var(--chalk)}
+.teesel .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.holecard{display:grid;grid-template-columns:1fr 260px;gap:24px;margin-top:18px}
+@media(max-width:820px){.holecard{grid-template-columns:1fr}}
+.profile{border:1px solid var(--line);background:var(--pine-2);border-radius:2px;padding:10px;position:relative}
+.profile svg{width:100%;height:auto;display:block}
+.readout{position:absolute;top:14px;left:16px;font-family:var(--mono);font-size:11px;color:var(--chalk-dim);pointer-events:none}
+.readout b{color:var(--chalk);font-weight:600}
+.holestats{display:flex;flex-direction:column;gap:10px}
+.hs{border:1px solid var(--line);background:var(--pine-2);padding:12px 14px;border-radius:2px;display:flex;justify-content:space-between;align-items:baseline}
+.hs .k{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--chalk-dim)}
+.hs .v{font-family:var(--mono);font-weight:600;font-size:18px}
+.hs .v small{font-size:10px;color:var(--chalk-dim);font-weight:400}
+.demoflag{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;color:var(--sand);text-transform:uppercase;margin-top:10px}
+
+/* ---------- scorecard ---------- */
+.cardwrap{overflow-x:auto;margin-top:22px;border:1px solid var(--line);border-radius:2px}
+table{border-collapse:collapse;width:100%;min-width:860px;font-family:var(--mono);font-size:12px}
+th,td{padding:8px 10px;text-align:right;border-bottom:1px solid var(--line);white-space:nowrap}
+th{font-weight:500;font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--chalk-dim);text-align:right}
+th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:var(--pine-2)}
+tbody tr:hover td{background:var(--pine-3)}
+td.par{color:var(--chalk-dim)}
+tr.tot td{font-weight:600;border-top:1px solid var(--chalk-dim)}
+.teecell{display:flex;align-items:center;gap:6px;justify-content:flex-end}
+
+/* ---------- ratings ---------- */
+.ratings{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:22px}
+.rt{border:1px solid var(--line);background:var(--pine-2);padding:12px 14px;border-radius:2px}
+.rt .tee{display:flex;align-items:center;gap:8px;font-weight:800;font-size:13px;text-transform:uppercase;font-stretch:105%}
+.rt .nums{font-family:var(--mono);font-size:13px;margin-top:8px}
+.rt .nums span{color:var(--chalk-dim)}
+
+/* ---------- provenance ---------- */
+.prov{margin-top:22px;border:1px solid var(--line);border-radius:2px;overflow:hidden}
+.prow{display:grid;grid-template-columns:180px 1fr 130px;gap:14px;padding:12px 16px;border-bottom:1px solid var(--line);font-size:13px;align-items:baseline}
+.prow:last-child{border-bottom:none}
+.prow .f{font-weight:700;font-stretch:105%}
+.prow .s{color:var(--chalk-dim);font-size:12.5px}
+.prow .st{font-family:var(--mono);font-size:9.5px;letter-spacing:.1em;text-transform:uppercase;text-align:right}
+@media(max-width:700px){.prow{grid-template-columns:1fr;gap:2px}.prow .st{text-align:left}}
+.callout{margin-top:16px;border-left:3px solid var(--sand);background:var(--pine-2);padding:14px 16px;font-size:13px;color:var(--chalk-dim);border-radius:0 2px 2px 0}
+.callout b{color:var(--sand)}
+
+/* ---------- pipeline ---------- */
+.pipe{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-top:22px}
+.pl{border:1px solid var(--line);background:var(--pine-2);padding:16px;border-radius:2px}
+.pl .t{font-weight:800;font-stretch:105%;font-size:14px}
+.pl .d{font-size:12.5px;color:var(--chalk-dim);margin-top:6px;line-height:1.5}
+.pl .m{font-family:var(--mono);font-size:10px;color:var(--verified);margin-top:10px;letter-spacing:.06em}
+
+footer{padding:34px 0 50px;color:var(--chalk-dim);font-size:12px}
+footer .mono{font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<header><div class="wrap bar">
+  <a class="logo" href="#"><b>GREEN<i>BOOK</i></b><span>course intelligence · Starpoint</span></a>
+  <nav>
+    <a href="#score">Score</a><a href="#terrain">Terrain</a><a href="#card">Card</a><a href="#prov">Provenance</a><a href="#pipe">Pipeline</a>
+  </nav>
+</div></header>
+
+<div class="wrap">
+  <div class="switcher" id="switcher"></div>
+</div>
+
+<div class="wrap hero">
+  <div class="hero-grid">
+    <div>
+      <div class="eyebrow" id="c-loc"></div>
+      <h1 id="c-name"></h1>
+      <div class="statrow" id="c-stats"></div>
+    </div>
+    <div class="plate" id="plate"></div>
+  </div>
+</div>
+
+<section id="score"><div class="wrap">
+  <h2><span class="n">01</span>Scored where the data earns it</h2>
+  <p class="sub">Five axes. An axis scores only when its inputs are verified or reproducibly derived — demo and missing inputs are shown, but excluded from the composite. No coverage, no verdict. Brake with provenance, not prediction.</p>
+  <div class="axes" id="axes"></div>
+</div></section>
+
+<section id="terrain"><div class="wrap">
+  <h2><span class="n">02</span>Terrain, hole by hole</h2>
+  <p class="sub">Cross-section from tee to green. Elevation-adjusted "plays-like" distance uses the caddie rule of thumb: one yard added per yard of rise, subtracted per yard of fall. Hover the profile for a live readout.</p>
+  <div class="holetabs" id="holetabs"></div>
+  <div class="teesel" id="teesel"></div>
+  <div class="holecard">
+    <div class="profile">
+      <div class="readout" id="readout"></div>
+      <svg id="profsvg" viewBox="0 0 720 260" role="img" aria-label="Hole elevation profile"></svg>
+    </div>
+    <div class="holestats" id="holestats"></div>
+  </div>
+  <div class="demoflag" id="terrainflag"></div>
+</div></section>
+
+<section id="card"><div class="wrap">
+  <h2><span class="n">03</span>The card</h2>
+  <p class="sub" id="cardsub"></p>
+  <div class="cardwrap"><table id="scorecard"></table></div>
+  <h2 style="margin-top:36px"><span class="n">03a</span>USGA ratings by tee</h2>
+  <div class="ratings" id="ratings"></div>
+</div></section>
+
+<section id="prov"><div class="wrap">
+  <h2><span class="n">04</span>Provenance ledger</h2>
+  <p class="sub">Every number on this page carries its source and status. The directory page this replaces mixes marketing prose with data — and the two disagree.</p>
+  <div class="prov" id="provrows"></div>
+  <div class="callout" id="provnote"></div>
+</div></section>
+
+<section id="pipe"><div class="wrap">
+  <h2><span class="n">05</span>How this scales to every U.S. course</h2>
+  <p class="sub">This page is a static prototype. The production build ingests four open layers per course and regenerates flat JSON at build time — same architecture as AnthonyCharts v17.</p>
+  <div class="pipe">
+    <div class="pl"><div class="t">Course registry</div><div class="d">OpenGolfAPI (16,800+ U.S. courses, free, ODbL) seeds identity, tees, pars, yardage. golfapi.io / iGolf as commercial upgrades.</div><div class="m">STATUS · AVAILABLE</div></div>
+    <div class="pl"><div class="t">Hole geometry</div><div class="d">OpenStreetMap leisure=golf tags via Overpass API — tee, fairway, bunker, green polygons where the community has mapped them. Coverage varies; gate the Terrain axis on it.</div><div class="m">STATUS · PARTIAL COVERAGE</div></div>
+    <div class="pl"><div class="t">Elevation</div><div class="d">USGS 3DEP point-query API sampled along each hole centerline — free, 1-meter DEM across most of the U.S. This replaces every demo profile above.</div><div class="m">STATUS · AVAILABLE</div></div>
+    <div class="pl"><div class="t">Ratings &amp; slope</div><div class="d">USGA course rating database + state golf association pages (like GAP) as verification layer. Two sources disagree → field flagged, not averaged.</div><div class="m">STATUS · SCRAPE + VERIFY</div></div>
+  </div>
+</div></section>
+
+<footer><div class="wrap">
+  <div class="mono">GreenBook · a Starpoint LLC prototype · data statuses shown per field · demo layers labeled, never blended</div>
+</div></footer>
+
+<script>
+/* ================= DATA ================= */
+const TEES=[
+  {id:'black',label:'Black',color:'#1b1b1b',ring:'#555',f:1},
+  {id:'blue',label:'Blue',color:'#3a6ea5',f:.94},
+  {id:'white',label:'White',color:'#e9e4d3',f:.88},
+  {id:'gold',label:'Gold',color:'#c9a227',f:.80},
+  {id:'red',label:'Red',color:'#e23d2e',f:.72},
+];
+
+const COURSES=[
+{
+  id:'allentown', name:'Allentown Municipal', loc:'Allentown, PA · Lehigh Valley · Public',
+  founded:1952, architect:'Ault, Clark & Assoc.', par:72, yards:6845,
+  demo:false,
+  pars:[4,4,5,3,4,4,3,5,4, 4,3,5,4,4,3,4,5,4],
+  hcp:[7,3,11,17,9,1,15,5,13, 8,16,4,2,10,18,12,6,14],
+  black:[385,410,520,175,395,430,160,540,375, 400,190,515,420,385,205,410,535,395],
+  ratings:[
+    {tee:'Black',color:'#1b1b1b',r:72.2,s:129,st:'verified'},
+    {tee:'Blue',color:'#3a6ea5',r:70.9,s:126,st:'verified'},
+    {tee:'White',color:'#e9e4d3',r:68.6,s:122,st:'verified'},
+    {tee:'Gold',color:'#c9a227',r:65.4,s:114,st:'verified'},
+    {tee:'Red',color:'#e23d2e',r:62.9,s:108,st:'verified'},
+  ],
+  slope:129, rating:72.2, seed:7,
+  holesDemo:true,
+  provNote:'<b>Live discrepancy, captured July 2026:</b> the GAP directory prose states a 72.4 rating and 132 slope for Allentown Municipal. The handicap table on the same page states 72.2 / 129 for the Black tees. GreenBook surfaces the table value as authoritative (it drives the conversion charts) and flags the prose. This single mismatch is the whole argument for a provenance ledger.',
+  prov:[
+    ['Ratings & slope','GAP handicap conversion tables (gapgolf.org), per-tee','verified'],
+    ['Architect, founded, type','GAP club directory + course site (allentowngolf.org)','verified'],
+    ['Total yardage / par','GAP directory prose (6,845 yds, par 72)','verified'],
+    ['Hole-by-hole yardage','Representative layout summing to the verified total — official card pending ingest','demo'],
+    ['Elevation profiles','Synthetic placeholder — replaced by USGS 3DEP centerline sampling','demo'],
+    ['Conditions & pace','No ground truth ingested','withheld'],
+  ],
+  axes:[
+    {name:'Challenge', src:'verified', note:'Derived from USGA slope 129 / rating 72.2 vs par — reproducible from public inputs.', score: s=>+( (129-55)/(155-55)*10 ).toFixed(1), counted:true},
+    {name:'Pedigree', src:'verified', note:'Ault, Clark & Associates, 1952; municipal championship layout; GAP member club.', score:()=>6.8, counted:true},
+    {name:'Terrain', src:'demo', note:'Profiles below are placeholders. Axis activates when 3DEP + OSM centerlines land.', score:()=>null, counted:false},
+    {name:'Access', src:'derived', note:'Public, municipal rate card, 5+ tee sets spanning 55.7–72.2 rating — widest tee spread in its GAP region cohort.', score:()=>7.9, counted:true},
+    {name:'Conditions', src:'withheld', note:'No verified review or agronomy feed ingested. Scored at zero sources → not scored.', score:()=>null, counted:false},
+  ]
+},
+{
+  id:'bethpage', name:'Bethpage Black', loc:'Farmingdale, NY · State Park · Public',
+  founded:1936, architect:'A.W. Tillinghast', par:71, yards:7468,
+  demo:true,
+  pars:[4,4,3,5,4,4,5,3,4, 4,4,4,3,4,4,4,3,5],
+  hcp:[5,9,15,7,1,11,3,17,13, 8,12,2,16,4,10,6,18,14],
+  black:[430,389,205,517,451,408,553,210,460, 502,435,499,160,467,478,490,207,607],
+  ratings:[
+    {tee:'Black',color:'#1b1b1b',r:77.5,s:155,st:'approx'},
+    {tee:'Blue',color:'#3a6ea5',r:75.4,s:148,st:'approx'},
+    {tee:'White',color:'#e9e4d3',r:73.2,s:140,st:'approx'},
+  ],
+  slope:155, rating:77.5, seed:19,
+  holesDemo:true,
+  provNote:'<b>Demo course.</b> Bethpage Black is loaded with approximate public figures to demonstrate the full-coverage verdict state. Before publication, every APPROX field re-verifies against the USGA course rating database and the Bethpage state park card.',
+  prov:[
+    ['Ratings & slope','Public figures, unreconciled against USGA NCRDB','approx'],
+    ['Architect, founded','Widely documented (Tillinghast, 1936)','verified'],
+    ['Hole-by-hole yardage','Representative layout summing to published total','demo'],
+    ['Elevation profiles','Synthetic placeholder — 3DEP pending','demo'],
+    ['Conditions & pace','No ground truth ingested','withheld'],
+  ],
+  axes:[
+    {name:'Challenge', src:'approx', note:'Slope 155 is the USGA ceiling. Scores, but carries APPROX until NCRDB verification.', score:()=>10.0, counted:true},
+    {name:'Pedigree', src:'verified', note:'Tillinghast, 1936. Multiple U.S. Opens, PGA Championship, Ryder Cup 2025 host.', score:()=>9.8, counted:true},
+    {name:'Terrain', src:'demo', note:'Placeholder profiles. Activates on 3DEP ingest.', score:()=>null, counted:false},
+    {name:'Access', src:'derived', note:'Public in principle; famously constrained in practice (sleep-in-the-lot tee sheet). Scored on rate + booking friction.', score:()=>6.1, counted:true},
+    {name:'Conditions', src:'withheld', note:'No verified feed ingested.', score:()=>null, counted:false},
+  ]
+},
+{
+  id:'swope', name:'Swope Memorial', loc:'Kansas City, MO · Swope Park · Public',
+  founded:1934, architect:'A.W. Tillinghast (redesign)', par:72, yards:6274,
+  demo:true,
+  pars:[4,4,5,3,4,4,3,5,4, 4,3,5,4,4,3,4,5,4],
+  hcp:[9,3,13,17,5,1,15,7,11, 6,16,2,8,10,18,12,4,14],
+  black:[350,420,510,165,385,400,150,505,360, 340,175,495,380,365,190,405,490,189],
+  ratings:[
+    {tee:'Black',color:'#1b1b1b',r:70.9,s:133,st:'approx'},
+    {tee:'White',color:'#e9e4d3',r:68.7,s:126,st:'approx'},
+    {tee:'Red',color:'#e23d2e',r:65.1,s:115,st:'approx'},
+  ],
+  slope:133, rating:70.9, seed:34,
+  holesDemo:true,
+  provNote:'<b>Demo course.</b> Swope Memorial carries approximate figures pending verification against the Missouri Golf Association and USGA NCRDB. Loaded here because a Tillinghast muni above the Blue River is exactly the kind of course a national directory flattens — and the kind this format exists to illuminate.',
+  prov:[
+    ['Ratings & slope','Public figures, unreconciled','approx'],
+    ['Architect, founded','Documented (Tillinghast redesign, 1934)','verified'],
+    ['Hole-by-hole yardage','Representative layout summing to published total','demo'],
+    ['Elevation profiles','Synthetic placeholder — 3DEP pending (real bluff terrain will move this axis)','demo'],
+    ['Conditions & pace','No ground truth ingested','withheld'],
+  ],
+  axes:[
+    {name:'Challenge', src:'approx', note:'Slope 133 at 6,274 yards — the number says the yardage lies.', score:()=>7.8, counted:true},
+    {name:'Pedigree', src:'verified', note:'Tillinghast redesign, 1934, WPA-era muni above the Blue River valley.', score:()=>8.4, counted:true},
+    {name:'Terrain', src:'demo', note:'Placeholder. The bluff routing is the story here — 3DEP ingest is the priority for this course.', score:()=>null, counted:false},
+    {name:'Access', src:'derived', note:'City muni rate card, walkable, open tee sheet.', score:()=>8.6, counted:true},
+    {name:'Conditions', src:'withheld', note:'No verified feed ingested.', score:()=>null, counted:false},
+  ]
+}
+];
+
+/* ================= STATE ================= */
+let course=COURSES[0], hole=0, tee=TEES[0];
+
+/* seeded smooth elevation profile (demo) */
+function profile(c,h){
+  const s=c.seed*31+h*7;
+  const pts=[]; const n=60;
+  for(let i=0;i<=n;i++){
+    const t=i/n;
+    const e= 18*Math.sin(t*Math.PI*1.2 + s)
+           + 9*Math.sin(t*Math.PI*2.6 + s*1.7)
+           + 5*Math.sin(t*Math.PI*5.1 + s*0.6);
+    pts.push(e);
+  }
+  const base=pts[0];
+  return pts.map(e=>e-base); /* feet, relative to tee */
+}
+
+const teeYds=(c,h,t)=> t.id==='black' ? c.black[h] : Math.round(c.black[h]*t.f/5)*5;
+
+/* ================= RENDER ================= */
+const $=id=>document.getElementById(id);
+const statusClass={verified:'verified',derived:'derived',approx:'approx',demo:'approx',withheld:'withheld'};
+const statusLabel={verified:'VERIFIED',derived:'DERIVED',approx:'APPROX',demo:'DEMO',withheld:'WITHHELD'};
+
+function renderSwitcher(){
+  $('switcher').innerHTML=COURSES.map(c=>
+    `<button class="${c.id===course.id?'on':''}" onclick="setCourse('${c.id}')">${c.name}${c.demo?'<span class="tag">DEMO DATA</span>':''}</button>`
+  ).join('');
+}
+function setCourse(id){course=COURSES.find(c=>c.id===id);hole=0;tee=TEES.find(t=>course.ratings.some(r=>r.tee.toLowerCase()===t.id))||TEES[0];renderAll();}
+function setHole(h){hole=h;renderTerrain();}
+function setTee(id){tee=TEES.find(t=>t.id===id);renderTerrain();renderCard();}
+
+function renderHero(){
+  $('c-loc').textContent=course.loc;
+  $('c-name').textContent=course.name;
+  $('c-stats').innerHTML=[
+    ['Par',course.par],['Yards',course.yards.toLocaleString()],
+    ['Rating',course.rating],['Slope',course.slope],
+    ['Architect',`<small>${course.architect}</small>`],['Founded',course.founded]
+  ].map(([k,v])=>`<div class="stat"><div class="k">${k}</div><div class="v">${v}</div></div>`).join('');
+
+  const scored=course.axes.filter(a=>a.counted);
+  const cov=scored.length, tot=course.axes.length;
+  let verdict,cls,why;
+  if(cov<3){verdict='INSUFFICIENT DATA';cls='insuff';why='Fewer than three axes meet the provenance bar. No composite is published until they do.'}
+  else{
+    const avg=scored.reduce((s,a)=>s+a.score(),0)/cov;
+    if(avg>=8){verdict='STRONG PLAY';cls='play'}
+    else if(avg>=6.5){verdict='PLAY';cls='play'}
+    else{verdict='HOLD';cls='hold'}
+    why=`Composite ${avg.toFixed(1)}/10 across ${cov} qualified axes. Unqualified axes are shown below and excluded — they do not dilute or inflate the number.`;
+  }
+  $('plate').innerHTML=`<div class="k">GreenBook verdict</div>
+    <div class="verdict ${cls}">${verdict}</div>
+    <div class="why">${why}</div>
+    <div class="cov">AXIS COVERAGE · ${cov}/${tot}</div>
+    <div class="covbar"><i style="width:${cov/tot*100}%"></i></div>`;
+}
+
+function renderAxes(){
+  $('axes').innerHTML=course.axes.map(a=>{
+    const sc=a.score();
+    return `<div class="axis ${a.counted?'':'off'}">
+      <div class="name">${a.name}</div>
+      <div class="src ${statusClass[a.src]}">${statusLabel[a.src]}${a.counted?' · COUNTED':' · EXCLUDED'}</div>
+      <div class="score">${sc===null?'—':sc.toFixed(1)}<small> /10</small></div>
+      <div class="bar"><i style="width:${sc===null?0:sc*10}%"></i></div>
+      <div class="note">${a.note}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderTerrain(){
+  $('holetabs').innerHTML=course.pars.map((p,i)=>
+    `<button class="${i===hole?'on':''}" onclick="setHole(${i})" aria-label="Hole ${i+1}">${i+1}</button>`).join('');
+  const avail=course.ratings.map(r=>r.tee.toLowerCase());
+  $('teesel').innerHTML=TEES.filter(t=>avail.includes(t.id)).map(t=>
+    `<button class="${t.id===tee.id?'on':''}" onclick="setTee('${t.id}')">
+      <span class="dot" style="background:${t.color};${t.id==='black'?'border:1px solid #555':''}"></span>${t.label}</button>`).join('');
+
+  const yds=teeYds(course,hole,tee);
+  const prof=profile(course,hole);
+  const delta=prof[prof.length-1];
+  const playsLike=Math.round(yds + delta/3); /* ft→yds equivalence, 1yd per 3ft as compromise of the 1:1-yard rule expressed in feet */
+
+  /* SVG */
+  const W=720,H=260,PL=44,PR=30,PT=34,PB=40;
+  const min=Math.min(...prof)-6, max=Math.max(...prof)+6;
+  const x=i=>PL+(W-PL-PR)*i/(prof.length-1);
+  const y=e=>PT+(H-PT-PB)*(1-(e-min)/(max-min));
+  let d=`M${x(0)},${y(prof[0])}`;
+  prof.forEach((e,i)=>{if(i)d+=` L${x(i)},${y(e)}`});
+  const area=d+` L${x(prof.length-1)},${H-PB} L${x(0)},${H-PB} Z`;
+  /* contour bands */
+  let bands='';
+  for(let e=Math.ceil(min/10)*10;e<=max;e+=10){
+    bands+=`<line x1="${PL}" y1="${y(e)}" x2="${W-PR}" y2="${y(e)}" stroke="rgba(233,228,211,.08)" stroke-dasharray="2 5"/>
+    <text x="${PL-6}" y="${y(e)+3}" fill="#9aa593" font-size="9" text-anchor="end" font-family="IBM Plex Mono">${e>0?'+':''}${e}ft</text>`;
+  }
+  const gy=y(prof[prof.length-1]);
+  $('profsvg').innerHTML=`
+    ${bands}
+    <path d="${area}" fill="rgba(143,214,160,.10)"/>
+    <path d="${d}" fill="none" stroke="#8fd6a0" stroke-width="2"/>
+    <circle cx="${x(0)}" cy="${y(prof[0])}" r="4" fill="#e9e4d3"/>
+    <text x="${x(0)}" y="${y(prof[0])-10}" fill="#e9e4d3" font-size="10" font-family="IBM Plex Mono" text-anchor="middle">TEE</text>
+    <line x1="${x(prof.length-1)}" y1="${gy}" x2="${x(prof.length-1)}" y2="${gy-26}" stroke="#e23d2e" stroke-width="2"/>
+    <path d="M${x(prof.length-1)},${gy-26} l12,5 l-12,5 Z" fill="#e23d2e"/>
+    <text x="${W-PR}" y="${H-14}" fill="#9aa593" font-size="9" font-family="IBM Plex Mono" text-anchor="end">${yds} YDS · ${tee.label.toUpperCase()} TEES</text>
+    <rect id="hitzone" x="${PL}" y="${PT}" width="${W-PL-PR}" height="${H-PT-PB}" fill="transparent"/>`;
+
+  $('readout').innerHTML=`HOLE <b>${hole+1}</b> · PAR <b>${course.pars[hole]}</b> · HCP <b>${course.hcp[hole]}</b>`;
+
+  const hz=document.getElementById('hitzone');
+  hz.onmousemove=ev=>{
+    const r=hz.getBoundingClientRect();
+    const t=Math.min(1,Math.max(0,(ev.clientX-r.left)/r.width));
+    const i=Math.round(t*(prof.length-1));
+    $('readout').innerHTML=`HOLE <b>${hole+1}</b> · <b>${Math.round(yds*t)}</b> yds out · elev <b>${prof[i]>0?'+':''}${prof[i].toFixed(0)} ft</b>`;
+  };
+  hz.onmouseleave=()=>{$('readout').innerHTML=`HOLE <b>${hole+1}</b> · PAR <b>${course.pars[hole]}</b> · HCP <b>${course.hcp[hole]}</b>`;};
+
+  $('holestats').innerHTML=[
+    ['Yardage · '+tee.label, `${yds}<small> yds</small>`],
+    ['Elevation Δ tee→green', `${delta>0?'+':''}${delta.toFixed(0)}<small> ft</small>`],
+    ['Plays like', `${playsLike}<small> yds</small>`],
+    ['Stroke index', course.hcp[hole]],
+  ].map(([k,v])=>`<div class="hs"><span class="k">${k}</span><span class="v">${v}</span></div>`).join('');
+
+  $('terrainflag').textContent = course.holesDemo ? '▲ Demo layer — hole yardages are representative and elevation is synthetic until OSM centerlines + USGS 3DEP are ingested for this course.' : '';
+}
+
+function renderCard(){
+  $('cardsub').textContent=`All ${course.ratings.length} rated tee sets, front and back. ${course.holesDemo?'Hole values are a representative demo layout summing to the verified course total.':''}`;
+  const avail=TEES.filter(t=>course.ratings.some(r=>r.tee.toLowerCase()===t.id));
+  const seg=(from,to)=>{
+    let rows='';
+    for(let i=from;i<to;i++){
+      rows+=`<tr><td>${i+1}</td><td class="par">${course.pars[i]}</td><td class="par">${course.hcp[i]}</td>`
+        +avail.map(t=>`<td>${teeYds(course,i,t)}</td>`).join('')+`</tr>`;
+    }
+    const tp=course.pars.slice(from,to).reduce((a,b)=>a+b,0);
+    rows+=`<tr class="tot"><td>${from===0?'OUT':'IN'}</td><td class="par">${tp}</td><td></td>`
+      +avail.map(t=>{let s=0;for(let i=from;i<to;i++)s+=teeYds(course,i,t);return `<td>${s.toLocaleString()}</td>`}).join('')+`</tr>`;
+    return rows;
+  };
+  const totRow=`<tr class="tot"><td>TOTAL</td><td class="par">${course.par}</td><td></td>`
+    +avail.map(t=>{let s=0;for(let i=0;i<18;i++)s+=teeYds(course,i,t);return `<td>${s.toLocaleString()}</td>`}).join('')+`</tr>`;
+  $('scorecard').innerHTML=`<thead><tr><th>Hole</th><th>Par</th><th>HCP</th>`
+    +avail.map(t=>`<th><span class="teecell"><span class="dot" style="width:8px;height:8px;border-radius:50%;display:inline-block;background:${t.color};${t.id==='black'?'border:1px solid #555':''}"></span>${t.label}</span></th>`).join('')
+    +`</tr></thead><tbody>${seg(0,9)}${seg(9,18)}${totRow}</tbody>`;
+
+  $('ratings').innerHTML=course.ratings.map(r=>
+    `<div class="rt"><div class="tee"><span class="dot" style="width:9px;height:9px;border-radius:50%;display:inline-block;background:${r.color};${r.tee==='Black'?'border:1px solid #555':''}"></span>${r.tee}</div>
+     <div class="nums"><span>R</span> ${r.r} &nbsp;<span>S</span> ${r.s}</div>
+     <div class="src ${statusClass[r.st]}" style="margin-top:6px;font-family:var(--mono);font-size:9px;letter-spacing:.1em">${statusLabel[r.st]}</div></div>`).join('');
+}
+
+function renderProv(){
+  $('provrows').innerHTML=course.prov.map(([f,s,st])=>
+    `<div class="prow"><div class="f">${f}</div><div class="s">${s}</div><div class="st ${statusClass[st]}">${statusLabel[st]}</div></div>`).join('');
+  $('provnote').innerHTML=course.provNote;
+}
+
+function renderAll(){renderSwitcher();renderHero();renderAxes();renderTerrain();renderCard();renderProv();}
+renderAll();
+</script>
+</body>
+</html>

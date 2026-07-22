@@ -1,0 +1,50 @@
+{
+ "_license": "All rights reserved, Starpoint LLC",
+ "slug": "swope-memorial",
+ "computed": "2026-07-22T04:48:52.041Z",
+ "axes": [
+  {
+   "name": "Challenge",
+   "status": "APPROX",
+   "srcLabel": "",
+   "score": 7.8,
+   "note": "Slope 133 at 6,274 yards — the number says the yardage lies. APPROX until reconciled with the Missouri Golf Association; shown and EXCLUDED under the gate.",
+   "counted": false
+  },
+  {
+   "name": "Pedigree",
+   "status": "VERIFIED",
+   "srcLabel": "STARPOINT",
+   "score": 8.4,
+   "note": "Tillinghast redesign, 1934, WPA-era muni above the Blue River valley.",
+   "counted": true
+  },
+  {
+   "name": "Terrain",
+   "status": "DEMO",
+   "srcLabel": "",
+   "score": null,
+   "note": "Profiles below are placeholders. Axis activates when 3DEP + OSM centerlines land.",
+   "counted": false
+  },
+  {
+   "name": "Access",
+   "status": "DERIVED",
+   "srcLabel": "STARPOINT",
+   "score": 8.6,
+   "note": "City muni rate card, walkable, open tee sheet.",
+   "counted": true
+  },
+  {
+   "name": "Conditions",
+   "status": "WITHHELD",
+   "srcLabel": "",
+   "score": null,
+   "note": "No verified feed ingested.",
+   "counted": false
+  }
+ ],
+ "counted": 2,
+ "composite": null,
+ "verdict": "INSUFFICIENT"
+}

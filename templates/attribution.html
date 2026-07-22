@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GreenBook · Attribution &amp; Licenses</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--pine:#0c1a12;--pine-2:#122419;--pine-3:#1a3222;--chalk:#e9e4d3;--dim:#9aa593;
+--flag:#e23d2e;--sand:#d9b98a;--line:#2a4433;--ok:#8fd6a0;
+--mono:'IBM Plex Mono',ui-monospace,monospace;--disp:'Archivo',system-ui,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--pine);color:var(--chalk);font-family:var(--disp);font-size:15px;line-height:1.6}
+.page{max-width:760px;margin:0 auto;min-height:100vh;padding:0 22px 80px}
+.top{display:flex;justify-content:space-between;align-items:center;height:56px;border-bottom:1px solid var(--line)}
+.top b{font-weight:900;font-stretch:110%;font-size:17px}
+.top b i{font-style:normal;color:var(--ok)}
+.top a{color:inherit;text-decoration:none}
+.top .mono{font-family:var(--mono);font-size:9px;letter-spacing:.14em;color:var(--dim);text-transform:uppercase}
+h1{font-weight:900;font-stretch:114%;font-size:34px;text-transform:uppercase;margin-top:30px}
+h2{font-weight:800;font-stretch:108%;font-size:16px;text-transform:uppercase;margin-top:34px;letter-spacing:.02em}
+p,li{font-size:13.5px;color:var(--dim);margin-top:10px}
+a{color:var(--ok)}
+ul{margin:10px 0 0 18px}
+.card{border:1px solid var(--line);background:var(--pine-2);border-radius:2px;padding:16px 18px;margin-top:14px}
+.card .k{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--ok)}
+.mono{font-family:var(--mono)}
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="top">
+    <b><a href="/">GREEN<i>BOOK</i></a></b>
+    <span class="mono">ATTRIBUTION &amp; LICENSES</span>
+  </div>
+  <h1>Attribution</h1>
+  <p>GreenBook is built on open data. Everything under <span class="mono">/data/open/</span> is a
+  collective database licensed under the <a href="https://opendatacommons.org/licenses/odbl/1-0/">Open
+  Database License (ODbL) 1.0</a> — the full text ships with the site at
+  <a href="/data/open/LICENSE">/data/open/LICENSE</a>, and per-source credits at
+  <a href="/data/open/ATTRIBUTION.md">/data/open/ATTRIBUTION.md</a>. Share-alike applies to that tree.</p>
+
+  <div class="card"><div class="k">Course registry</div>
+    <p><a href="https://opengolfapi.org">OpenGolfAPI</a> — © OpenGolfAPI contributors, ODbL.
+    Identity, location, pars, stroke index, yardages, and per-tee ratings where crawled.
+    OpenGolfAPI itself contains information from OpenStreetMap. Registry fields are cited as
+    OPENGOLFAPI — not USGA — until independently verified per course.</p></div>
+
+  <div class="card"><div class="k">Hole geometry &amp; hazards</div>
+    <p><a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> —
+    © OpenStreetMap contributors, ODbL. Hole centerlines, bunker / water / green polygons,
+    course boundaries, retrieved via the Overpass API.</p></div>
+
+  <div class="card"><div class="k">Elevation</div>
+    <p><a href="https://www.usgs.gov/3d-elevation-program">USGS 3DEP</a> — public domain
+    (U.S. Government work). 1/3 arc-second GeoTIFF tiles via the AWS Open Data program,
+    sampled along hole centerlines; EPQS point API as fallback.</p></div>
+
+  <div class="card"><div class="k">Weather</div>
+    <p><a href="https://www.weather.gov">NOAA / National Weather Service</a> — public domain.
+    Precipitation observations fetched client-side from api.weather.gov at page load;
+    not stored in the open tree.</p></div>
+
+  <h2>The scoring layer</h2>
+  <p>Axis outputs, verdict states, heuristic parameters, scoring configuration, and editorial
+  overlays under <span class="mono">/data/starpoint/</span> are proprietary — © Starpoint LLC,
+  all rights reserved. The scoring layer joins the open tree at render time, by slug, and never
+  writes into it. Computed scores are never part of the ODbL collective database.</p>
+
+  <h2>Corrections</h2>
+  <p>Conflicting sources are flagged, never averaged. If you have the authoritative document for
+  a flagged field (association handicap table, published card), open an issue at
+  <a href="https://github.com/CaptainMig/greenbook">github.com/CaptainMig/greenbook</a>.</p>
+</div>
+</body>
+</html>

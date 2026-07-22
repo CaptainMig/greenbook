@@ -68,37 +68,39 @@ input[type=range]{width:100%;accent-color:#8fd6a0;background:transparent}
 .ghost{font-family:var(--mono);font-size:9.5px;color:var(--sand);letter-spacing:.06em;text-transform:uppercase;margin-top:10px}
 .attr{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.04em;margin-top:24px;padding-top:10px;border-top:1px solid var(--line);line-height:1.8}
 .attr a{color:var(--dim)}
+.feed{font-family:var(--mono);font-size:9px;color:var(--ok);letter-spacing:.06em;margin-top:6px;text-transform:uppercase}
+.feed.off{color:var(--sand)}
 </style>
 </head>
 <body>
 <div class="app">
   <div class="top">
     <b><a href="/">GREEN<i>BOOK</i></a></b>
-    <span class="mono" id="cname"></span>
+    <span class="mono" id="cname">LOADING…</span>
   </div>
 
   <div class="holes" id="holes"></div>
 
   <!-- PLAYS LIKE -->
   <div class="card">
-    <h3>Plays like <span class="st dem" id="pl-st">DEMO TERRAIN</span></h3>
+    <h3>Plays like <span class="st dem" id="pl-st">—</span></h3>
     <div class="big"><span class="n" id="plays">—</span><span class="u">YDS<br><span id="rawyds"></span></span></div>
     <svg id="strip" viewBox="0 0 400 90" role="img" aria-label="elevation strip"></svg>
-    <div class="row"><span id="r-card-label">Card yardage · Black</span><span id="r-card"></span></div>
+    <div class="row"><span id="r-card-label">Yardage</span><span id="r-card"></span></div>
     <div class="row"><span>Elevation Δ</span><span id="r-delta"></span></div>
     <div class="row"><span>Par / stroke index</span><span id="r-par"></span></div>
   </div>
 
   <!-- FIRMNESS -->
   <div class="card">
-    <h3>Firmness &amp; roll-out <span class="st der">DERIVED · HEURISTIC</span></h3>
+    <h3>Firmness &amp; roll-out <span class="st der" id="firm-st">DERIVED · HEURISTIC</span></h3>
     <div class="ctrl"><label><span>Rain, last 72h</span><b id="rainv">0.4"</b></label>
       <input type="range" id="rain" min="0" max="30" value="4" aria-label="rain last 72 hours"></div>
     <div class="ctrl"><label><span>Days since last rain</span><b id="daysv">2</b></label>
       <input type="range" id="days" min="0" max="10" value="2" aria-label="days since rain"></div>
     <div class="big"><span class="n" id="roll">—</span><span class="u">YDS<br>EXPECTED ROLL<br>(DRIVER)</span></div>
     <div class="sub" id="firmnote"></div>
-    <div class="sub" style="margin-top:4px">Production build reads NOAA station precip automatically — sliders become a live feed.</div>
+    <div class="feed off" id="noaastatus">NOAA FEED: CONNECTING…</div>
   </div>
 
   <!-- VERDICT -->
@@ -142,65 +144,92 @@ input[type=range]{width:100%;accent-color:#8fd6a0;background:transparent}
   <div class="attr" id="attr"></div>
 </div>
 
-<!--COURSE_DATA-->
+<script src="/assets/greenbook.js"></script>
 <script>
-/* ---- course layer: injected at build time from data/courses/<slug>.json ---- */
-const C = window.COURSE || null;
-const DEMO = !C || C.demo !== false;
-
-/* demo fallback arrays (labeled DEMO — never blended with real layers) */
-const demoPars=[4,4,5,3,4,4,3,5,4,4,3,5,4,4,3,4,5,4];
-const demoHcp=[7,3,11,17,9,1,15,5,13,8,16,4,2,10,18,12,6,14];
-const demoYds=[385,410,520,175,395,430,160,540,375,400,190,515,420,385,205,410,535,395];
-const SEED=(C&&C.demoSeed)||7;
-function demoProfile(h){const s=SEED*31+h*7,n=40,p=[];for(let i=0;i<=n;i++){const t=i/n;
- p.push(18*Math.sin(t*Math.PI*1.2+s)+9*Math.sin(t*Math.PI*2.6+s*1.7)+5*Math.sin(t*Math.PI*5.1+s*.6))}
- const b=p[0];return p.map(e=>e-b)}
-
-/* coverage:none on a real course renders gated & empty — demo arrays are ONLY for demo courses */
-const holesData = (C && C.holes && C.holes.length)
-  ? C.holes
-  : (DEMO ? demoPars.map((p,i)=>({ref:String(i+1),par:p,handicap:demoHcp[i],length_yds:demoYds[i],elev_delta_ft:null,profile:null})) : []);
-
-const pars=holesData.map(h=>h.par);
-const hcp=holesData.map(h=>h.handicap);
-const yards=holesData.map(h=>h.card_yds || h.length_yds);
-
-/* relative elevation series for a hole: real profile if present, else demo generator */
-function relProfile(h){
-  const hd=holesData[h];
-  if(hd.profile && hd.profile.length){
-    const v=hd.profile.filter(p=>p.elev_ft!==null);
-    if(v.length>=2){const b=v[0].elev_ft;return v.map(p=>p.elev_ft-b)}
-  }
-  return demoProfile(h);
-}
 const $=id=>document.getElementById(id);
-let hole=0;
+let C=null, hole=0;
 
 /* ---- state ---- */
-let pen=2, conf=80, holdArmed=false;
+let pen=2, conf=80, holdArmed=false, shots=[];
 
-/* calibration ledger: on-device persistence, per course */
-const CAL_KEY='greenbook:cal:'+((C&&C.slug)||'demo');
-let shots=[];
-try{shots=JSON.parse(localStorage.getItem(CAL_KEY)||'[]')}catch(e){shots=[]}
-function saveShots(){try{localStorage.setItem(CAL_KEY,JSON.stringify(shots))}catch(e){}}
+(async function(){
+  const slug=GB.slugFromPath();
+  try{ C=await GB.loadCourse(slug); }
+  catch(e){ $('cname').textContent='COURSE NOT FOUND'; return; }
+  $('cname').textContent=C.name.toUpperCase()+' · PLAY MODE';
+
+  const CAL_KEY='greenbook:cal:'+C.slug;
+  try{shots=JSON.parse(localStorage.getItem(CAL_KEY)||'[]')}catch(e){shots=[]}
+  window._saveShots=()=>{try{localStorage.setItem(CAL_KEY,JSON.stringify(shots))}catch(e){}};
+
+  if(C.demo){$('pl-st').textContent='DEMO TERRAIN';$('pl-st').className='st dem';}
+  else if(C.holeSource==='osm'){$('pl-st').textContent='DERIVED · OSM + 3DEP';$('pl-st').className='st der';}
+  else{$('pl-st').textContent='TERRAIN GATED';$('pl-st').className='st dem';}
+  $('attr').innerHTML=GB.attributionLine(C);
+  renderAll();
+  startNoaa();
+})();
+
+/* ---- NOAA live precip: api.weather.gov, fetched on load; sliders = manual override ---- */
+let noaaOverridden=false;
+async function startNoaa(){
+  const lat=C.reg?C.reg.lat:null, lon=C.reg?C.reg.lon:null;
+  if(lat===null){ setFeed(false,'NOAA FEED: OFF — NO STATION COORDS (DEMO LAYER)'); return; }
+  try{
+    const J=u=>fetch(u,{headers:{Accept:'application/geo+json'}}).then(r=>r.ok?r.json():Promise.reject(new Error('HTTP '+r.status)));
+    const pt=await J(`https://api.weather.gov/points/${lat},${lon}`);
+    const stations=await J(pt.properties.observationStations);
+    const st=stations.features[0];
+    const start=new Date(Date.now()-72*3600e3).toISOString();
+    const obs=await J(`${st.id}/observations?start=${encodeURIComponent(start)}&limit=500`);
+    let mm=0, seen=false, lastRain=null, latest=null;
+    for(const f of obs.features){
+      const v=f.properties.precipitationLastHour&&f.properties.precipitationLastHour.value;
+      const t=f.properties.timestamp;
+      if(!latest||t>latest)latest=t;
+      if(v!==null&&v!==undefined){seen=true;if(v>0){mm+=v;if(!lastRain||t>lastRain)lastRain=t}}
+    }
+    if(!seen){ setFeed(false,`NOAA FEED: ${st.properties.stationIdentifier} REPORTS NO PRECIP FIELD — SLIDERS MANUAL`); return; }
+    const inches=mm/25.4;
+    const days=lastRain?Math.min(10,Math.floor((Date.now()-new Date(lastRain).getTime())/86400e3)):4;
+    if(!noaaOverridden){
+      $('rain').value=Math.min(30,Math.round(inches*10));
+      $('days').value=days;
+      renderFirm();
+    }
+    $('firm-st').textContent='DERIVED · NOAA + HEURISTIC';
+    setFeed(true,`NOAA ${st.properties.stationIdentifier} · ${inches.toFixed(2)}" / 72H · OBS ${latest?latest.slice(0,16).replace('T',' '):'—'}Z · SLIDERS OVERRIDE`);
+  }catch(e){
+    setFeed(false,'NOAA FEED: UNAVAILABLE — SLIDERS MANUAL');
+  }
+}
+function setFeed(ok,txt){const el=$('noaastatus');el.textContent=txt;el.className='feed'+(ok?'':' off')}
 
 function renderHoles(){
-  $('holes').innerHTML=pars.map((p,i)=>`<button class="${i===hole?'on':''}" onclick="setHole(${i})">${i+1}</button>`).join('');
+  $('holes').innerHTML=C.holes.length
+    ? C.holes.map((h,i)=>`<button class="${i===hole?'on':''}" onclick="setHole(${i})">${h.ref}</button>`).join('')
+    : '<span class="k" style="padding:10px 0">NO HOLE LAYER — REGISTRY-ONLY COURSE. NOTHING SYNTHESIZED.</span>';
 }
 function setHole(h){hole=h;holdArmed=false;$('brake').classList.remove('show');renderAll();}
 
 function renderPlays(){
-  const yds=yards[hole], prof=relProfile(hole);
-  const delta=(!DEMO && holesData[hole].elev_delta_ft!==null)?holesData[hole].elev_delta_ft:prof[prof.length-1];
-  const plays=Math.round(yds+delta/3);
-  $('plays').textContent=plays;
-  $('rawyds').textContent=(DEMO?'CARD ':'OSM ')+yds;
-  $('r-card').textContent=yds+' yds';
-  $('r-delta').textContent=(delta>0?'+':'')+delta.toFixed(0)+' ft';
-  $('r-par').textContent=`Par ${pars[hole]} · SI ${hcp[hole]}`;
+  if(!C.holes.length){
+    $('plays').textContent='—';$('rawyds').textContent='';$('strip').innerHTML='';
+    $('r-card').textContent='—';$('r-delta').textContent='—';$('r-par').textContent='—';
+    return;
+  }
+  const h=C.holes[hole];
+  const yds=GB.holeYds(C,hole,0);
+  const prof=GB.relProfile(C,hole);
+  const delta=(!C.demo&&h.elev_delta_ft!==null&&h.elev_delta_ft!==undefined)?h.elev_delta_ft:(prof.length?prof[prof.length-1]:null);
+  const plays=(yds!==null&&delta!==null)?Math.round(yds+delta/3):yds;
+  $('plays').textContent=plays===null?'—':plays;
+  $('rawyds').textContent=yds===null?'':((C.demo?'CARD ':'OSM ')+yds);
+  $('r-card-label').textContent=C.demo?'Card yardage · Black':'Centerline yardage · OSM';
+  $('r-card').textContent=yds===null?'—':yds+' yds';
+  $('r-delta').textContent=delta===null?'—':(delta>0?'+':'')+delta.toFixed(0)+' ft';
+  $('r-par').textContent=`Par ${h.par??'—'} · SI ${h.handicap??'—'}`;
+  if(!prof.length){$('strip').innerHTML='';return;}
   const W=400,H=90,PL=8,PR=8,PT=12,PB=12;
   const min=Math.min(...prof)-4,max=Math.max(...prof)+4;
   const x=i=>PL+(W-PL-PR)*i/(prof.length-1), y=e=>PT+(H-PT-PB)*(1-(e-min)/(max-min));
@@ -261,37 +290,20 @@ function renderCal(){
 }
 
 /* ---- wiring ---- */
-['rain','days'].forEach(id=>$(id).addEventListener('input',renderFirm));
+['rain','days'].forEach(id=>$(id).addEventListener('input',()=>{noaaOverridden=true;renderFirm()}));
 ['need','have'].forEach(id=>$(id).addEventListener('input',renderVerdict));
 $('pen').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
   pen=+b.dataset.p;[...$('pen').children].forEach(x=>x.classList.toggle('on',x===b));renderVerdict()});
 $('conf').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
   conf=+b.dataset.c;[...$('conf').children].forEach(x=>x.classList.toggle('on',x===b))});
-$('hitbtn').onclick=()=>{shots.push({h:hole,c:conf,hit:true});saveShots();renderCal()};
-$('missbtn').onclick=()=>{shots.push({h:hole,c:conf,hit:false});saveShots();renderCal()};
+$('hitbtn').onclick=()=>{shots.push({h:hole,c:conf,hit:true});window._saveShots&&window._saveShots();renderCal()};
+$('missbtn').onclick=()=>{shots.push({h:hole,c:conf,hit:false});window._saveShots&&window._saveShots();renderCal()};
 $('exportbtn').onclick=()=>{
-  const blob=new Blob([JSON.stringify({course:(C&&C.slug)||'demo',exported:new Date().toISOString(),shots},null,1)],{type:'application/json'});
+  const blob=new Blob([JSON.stringify({course:C?C.slug:'unknown',exported:new Date().toISOString(),shots},null,1)],{type:'application/json'});
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);
-  a.download='greenbook-cal-'+((C&&C.slug)||'demo')+'.json';a.click();URL.revokeObjectURL(a.href)};
+  a.download='greenbook-cal-'+(C?C.slug:'unknown')+'.json';a.click();URL.revokeObjectURL(a.href)};
 
-/* ---- course chrome ---- */
-$('cname').textContent=((C&&C.name)||'GreenBook demo').toUpperCase()+' · PLAY MODE';
-if(!DEMO){
-  $('pl-st').textContent='DERIVED · OSM + 3DEP';$('pl-st').className='st der';
-  $('r-card-label').textContent='Centerline yardage · OSM';
-  $('attr').innerHTML='Course geometry © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a>, ODbL 1.0 · Elevation: USGS 3DEP (public domain). Centerline yardage ≠ card yardage — card values withheld until a verified source is ledgered.';
-}else{
-  $('attr').innerHTML='Demo layer — no OpenStreetMap data rendered on this page. Demo values are labeled and never blended into composites.';
-}
-
-function renderAll(){
-  if(!holesData.length){ /* honest coverage:none state — no demo fill */
-    $('holes').innerHTML='<span class="k" style="padding:10px 0">COVERAGE: NONE — course not yet mapped in OSM. Nothing synthesized.</span>';
-    $('plays').textContent='—';renderFirm();renderVerdict();renderCal();return;
-  }
-  renderHoles();renderPlays();renderFirm();renderVerdict();renderCal();
-}
-renderAll();
+function renderAll(){renderHoles();renderPlays();renderFirm();renderVerdict();renderCal();}
 </script>
 </body>
 </html>

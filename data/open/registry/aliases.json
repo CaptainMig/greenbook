@@ -1,0 +1,12 @@
+{
+ "allentown": {
+  "state": "PA",
+  "opengolfapi_id": "5830101c-3d28-400b-958d-22858dd81e98"
+ },
+ "bethpage-black": {
+  "demo": true
+ },
+ "swope-memorial": {
+  "demo": true
+ }
+}

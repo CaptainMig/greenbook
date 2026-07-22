@@ -1,0 +1,50 @@
+{
+ "_license": "All rights reserved, Starpoint LLC",
+ "slug": "augusta-national-golf-club-ga",
+ "computed": "2026-07-22T04:48:52.005Z",
+ "axes": [
+  {
+   "name": "Challenge",
+   "status": "WITHHELD",
+   "srcLabel": "",
+   "score": null,
+   "note": "No rating source ledgered for this course.",
+   "counted": false
+  },
+  {
+   "name": "Pedigree",
+   "status": "WITHHELD",
+   "srcLabel": "",
+   "score": null,
+   "note": "No editorial layer curated for this course yet.",
+   "counted": false
+  },
+  {
+   "name": "Terrain",
+   "status": "DERIVED",
+   "srcLabel": "OSM + 3DEP",
+   "score": 9.1,
+   "note": "mean |Δelev| 32.2 ft over 35 ingested holes. score = 2.0 + 0.22·mean, cap 9.5.",
+   "counted": true
+  },
+  {
+   "name": "Access",
+   "status": "WITHHELD",
+   "srcLabel": "",
+   "score": null,
+   "note": "No editorial layer curated for this course yet.",
+   "counted": false
+  },
+  {
+   "name": "Conditions",
+   "status": "WITHHELD",
+   "srcLabel": "",
+   "score": null,
+   "note": "No verified review or agronomy feed ingested. A gap is not a zero.",
+   "counted": false
+  }
+ ],
+ "counted": 1,
+ "composite": null,
+ "verdict": "INSUFFICIENT"
+}
