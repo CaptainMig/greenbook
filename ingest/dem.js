@@ -40,7 +40,16 @@ async function fetchRange(url, start, end) {
 }
 
 async function loadHeader(t) {
+  /* cache the PROMISE so concurrent callers share one in-flight load —
+     32 parallel samples on a cold tile must not fetch the header 32 times */
   if (headerCache.has(t)) return headerCache.get(t);
+  const p = loadHeaderUncached(t);
+  headerCache.set(t, p);
+  p.catch(() => headerCache.delete(t)); // failed loads retry on next call
+  return p;
+}
+
+async function loadHeaderUncached(t) {
   const url = tileUrl(t);
   const head = await fetchRange(url, 0, 65535);
   if (!head) { headerCache.set(t, null); return null; }
@@ -172,11 +181,13 @@ async function getBlock(t, hdr, blockIdx) {
   }
   const off = hdr.offsets[blockIdx], cnt = hdr.counts[blockIdx];
   if (!cnt) return null;
-  const buf = await fetchRange(hdr.url, off, off + cnt - 1);
-  const data = decodeTile(buf, hdr);
-  blockCache.set(key, data);
+  /* cache the PROMISE: concurrent samples on a cold block share ONE fetch +
+     decode instead of racing duplicate range-reads ("never re-fetch") */
+  const p = fetchRange(hdr.url, off, off + cnt - 1).then((buf) => decodeTile(buf, hdr));
+  blockCache.set(key, p);
+  p.catch(() => blockCache.delete(key)); // failed fetches retry on next call
   while (blockCache.size > MAX_BLOCKS) blockCache.delete(blockCache.keys().next().value);
-  return data;
+  return p;
 }
 
 async function pixelAt(t, hdr, px, py) {

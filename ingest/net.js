@@ -45,16 +45,40 @@ function tunnel(proxy, host, port, timeout) {
   });
 }
 
-async function request(url, opts = {}) {
+/* keep-alive agents, one per destination host: sockets (and their CONNECT
+ * tunnels) are pooled and reused. Without pooling, bulk range-read runs open
+ * a fresh tunnel per request and proxies drop the churn with ECONNRESET. */
+const agents = new Map();
+function agentFor(u, proxy) {
+  const key = (proxy ? proxy.host + "→" : "") + u.hostname;
+  if (agents.has(key)) return agents.get(key);
+  const agent = new https.Agent({ keepAlive: true, maxSockets: 6, maxFreeSockets: 6, timeout: 60000 });
+  if (proxy) {
+    agent.createConnection = (opts, cb) => {
+      tunnel(proxy, u.hostname, +u.port || 443, 30000)
+        .then((socket) => {
+          const ts = tls.connect({ socket, servername: u.hostname });
+          /* idle pooled sockets the proxy closes must not crash the process;
+             in-flight requests still see errors via the http client itself */
+          ts.on("error", () => {});
+          cb(null, ts);
+        })
+        .catch(cb);
+    };
+  }
+  agents.set(key, agent);
+  return agent;
+}
+
+function requestOnce(url, opts) {
   const u = new URL(url);
   const timeout = opts.timeout || 120000;
   const proxy = proxyFor(url);
-  const socket = proxy ? await tunnel(proxy, u.hostname, +u.port || 443, timeout) : null;
   return new Promise((resolve, reject) => {
     const req = https.request({
       host: u.hostname, port: +u.port || 443, path: u.pathname + u.search,
       method: opts.method || "GET", headers: opts.headers || {},
-      ...(socket ? { createConnection: () => tls.connect({ socket, servername: u.hostname }) } : {}),
+      agent: agentFor(u, proxy),
     }, (res) => {
       const chunks = [];
       res.on("data", (c) => chunks.push(c));
@@ -66,6 +90,23 @@ async function request(url, opts = {}) {
     if (opts.body) req.write(opts.body);
     req.end();
   });
+}
+
+/* transient network errors (connection reuse races, proxy resets) retry with
+ * backoff; HTTP statuses are returned as-is — callers judge those. */
+const TRANSIENT = /ECONNRESET|EPIPE|ETIMEDOUT|ECONNREFUSED|EAI_AGAIN|socket disconnected|socket hang up|timeout/i;
+async function request(url, opts = {}) {
+  let lastErr;
+  for (let attempt = 0; attempt < 4; attempt++) {
+    try {
+      return await requestOnce(url, opts);
+    } catch (e) {
+      lastErr = e;
+      if (!TRANSIENT.test(e.message)) throw e;
+      await new Promise((r) => setTimeout(r, 500 * (attempt + 1) ** 2));
+    }
+  }
+  throw lastErr;
 }
 
 module.exports = { request };
