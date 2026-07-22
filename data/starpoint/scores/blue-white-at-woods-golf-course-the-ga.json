@@ -1,7 +1,7 @@
 {
  "_license": "All rights reserved, Starpoint LLC",
  "slug": "blue-white-at-woods-golf-course-the-ga",
- "computed": "2026-07-22T05:34:42.948Z",
+ "computed": "2026-07-22T19:07:37.714Z",
  "axes": [
   {
    "name": "Challenge",
@@ -22,7 +22,7 @@
   {
    "name": "Terrain",
    "status": "DERIVED",
-   "srcLabel": "OSM + 3DEP",
+   "srcLabel": "HOLE-LEVEL · OSM + 3DEP",
    "score": 6.1,
    "note": "mean |Δelev| 18.4 ft over 27 ingested holes. score = 2.0 + 0.22·mean, cap 9.5.",
    "counted": true

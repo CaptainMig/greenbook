@@ -47,12 +47,13 @@ window.GB = (function () {
       if (m) state = m[1].toUpperCase();
     }
 
-    const [shard, artifact, overlay, scores, qualityShard] = await Promise.all([
+    const [shard, artifact, overlay, scores, qualityShard, courseTerrain] = await Promise.all([
       state ? J(`/data/open/registry/state/${state}.json`) : Promise.resolve(null),
       J(`/data/open/courses/${slug}.json`),
       J(`/data/starpoint/courses/${slug}.json`),
       J(`/data/starpoint/scores/${slug}.json`),
       state ? J(`/data/starpoint/quality/state/${state}.json`) : Promise.resolve(null),
+      J(`/data/open/terrain-course/${slug}.json`),
     ]);
     const reg = shard ? shard.courses.find((c) => c.slug === slug) || null : null;
     if (!reg && !overlay && !artifact) throw new Error("no data for slug " + slug);
@@ -61,10 +62,16 @@ window.GB = (function () {
     let dupRecs = [];
     if (quality && quality.dup_members && shard)
       dupRecs = quality.dup_members.map((s) => shard.courses.find((c) => c.slug === s)).filter(Boolean);
-    return normalize(slug, reg, artifact, overlay, scores, scoring, quality, dupRecs);
+    return normalize(slug, reg, artifact, overlay, scores, scoring, quality, dupRecs, courseTerrain);
   }
 
-  function normalize(slug, reg, artifact, overlay, scores, scoring, quality, dupRecs) {
+  /* course-level terrain qualifies only on real coverage: >=100 valid samples,
+     gap share <= 50%. Below that the artifact is shown but the axis stays gated. */
+  function courseTerrainQualifies(ct) {
+    return !!(ct && ct.stats && !ct.stats.low_coverage && ct.stats.relief_p90_p10_ft !== null && ct.stats.slope_pairs > 0);
+  }
+
+  function normalize(slug, reg, artifact, overlay, scores, scoring, quality, dupRecs, courseTerrain) {
     const o = overlay || {};
     const demo = !!o.demo;
     const C = {
@@ -80,6 +87,9 @@ window.GB = (function () {
       founded: (reg && reg.year_built) || (o.meta && o.meta.founded) || null,
       seed: o.demoSeed || 7,
       quality: quality || null,
+      /* course-level terrain artifact (boundary grid). Hole-level artifacts are
+         strictly superior — this is only consulted when no hole ingest exists. */
+      courseTerrain: courseTerrain || null,
     };
 
     /* ---- holes ---- */
@@ -160,7 +170,10 @@ window.GB = (function () {
           : "No per-hole card in any ledgered source.");
     C.terrainFlag = o.terrainFlag || (demo
       ? "▲ Demo layer — hole yardages are representative and elevation is synthetic until OSM centerlines + USGS 3DEP are ingested for this course."
-      : C.holeSource === "osm" ? "" : "▲ Terrain gated — no OSM centerline coverage ingested for this course. Elevation is never synthesized.");
+      : C.holeSource === "osm" ? ""
+        : C.courseTerrain
+          ? "▲ Hole cross-sections gated — no OSM centerline coverage ingested for this course. Elevation is never synthesized. Course-level terrain above is a boundary-grid read; hole-level ingest available when centerlines are mapped."
+          : "▲ Terrain gated — no OSM centerline coverage ingested for this course. Elevation is never synthesized.");
 
     /* ---- provenance rows ---- */
     if (o.prov) C.prov = o.prov;
@@ -190,6 +203,14 @@ window.GB = (function () {
         C.prov.push(["Elevation Δ / centerline yds", "Computed from the two layers above", "DERIVED"]);
       } else {
         C.prov.push(["Hole geometry & elevation", "No OSM centerline ingest for this course yet", "WITHHELD"]);
+        const ct = C.courseTerrain;
+        if (ct && ct.stats) {
+          const st = ct.stats;
+          C.prov.push(["Terrain (course-level)",
+            `OSM leisure=golf_course boundary ${ct.osm_boundary} (ODbL) + USGS 3DEP grid — ${st.valid} samples at ${ct.spacing_m} m, ${st.gaps} gaps (gaps counted, never interpolated).` +
+            (courseTerrainQualifies(ct) ? " Reduced-precision read; superseded by hole-level ingest when centerlines are mapped." : " Below the coverage bar — axis stays gated."),
+            courseTerrainQualifies(ct) ? "DERIVED" : "WITHHELD"]);
+        }
       }
       C.prov.push(["Conditions & pace", "No ground truth ingested", "WITHHELD"]);
     }
@@ -224,13 +245,28 @@ window.GB = (function () {
       ? { name: "Pedigree", status: oa.pedigree.status, srcLabel: "STARPOINT", score: oa.pedigree.score, note: oa.pedigree.note }
       : { name: "Pedigree", status: "WITHHELD", srcLabel: "", score: null, note: "No editorial layer curated for this course yet." });
 
-    /* Terrain — real ingest only */
+    /* Terrain — real ingest only. Two modes, hole-level strictly superior:
+       HOLE-LEVEL   routed centerline profiles, full axis (unchanged).
+       COURSE-LEVEL boundary-grid read (relief + slope distribution), CAPPED
+                    at 6.0/10 — a boundary read cannot claim the precision of
+                    a routed profile. Never a substitute where holes exist. */
     const deltas = (C.artifact && C.artifact.holes ? C.artifact.holes : []).map((h) => h.elev_delta_ft).filter((d) => d !== null && d !== undefined);
     if (deltas.length >= 14) {
       const meanAbs = deltas.reduce((s, d) => s + Math.abs(d), 0) / deltas.length;
-      axes.push({ name: "Terrain", status: "DERIVED", srcLabel: "OSM + 3DEP", score: +Math.min(9.5, 2.0 + 0.22 * meanAbs).toFixed(1), note: `mean |Δelev| ${meanAbs.toFixed(1)} ft over ${deltas.length} ingested holes. score = 2.0 + 0.22·mean, cap 9.5.` });
+      axes.push({ name: "Terrain", status: "DERIVED", srcLabel: "HOLE-LEVEL · OSM + 3DEP", score: +Math.min(9.5, 2.0 + 0.22 * meanAbs).toFixed(1), note: `mean |Δelev| ${meanAbs.toFixed(1)} ft over ${deltas.length} ingested holes. score = 2.0 + 0.22·mean, cap 9.5.` });
+    } else if (courseTerrainQualifies(C.courseTerrain)) {
+      const st = C.courseTerrain.stats;
+      const steepShare = (st.slope_ge5_pairs || 0) / st.slope_pairs;
+      const sc = Math.min(6.0, 1.0 + st.relief_p90_p10_ft / 40 + 4 * steepShare);
+      axes.push({
+        name: "Terrain", status: "DERIVED", srcLabel: "COURSE-LEVEL · OSM BOUNDARY + 3DEP",
+        score: +sc.toFixed(1),
+        note: `Boundary-grid read: relief p90−p10 ${st.relief_p90_p10_ft} ft, ${(steepShare * 100).toFixed(0)}% of grid slopes ≥5%, over ${st.valid} samples (${st.gaps} gaps). score = min(6.0, 1.0 + relief/40 + 4·steep share) — CAPPED at 6.0: a boundary read cannot claim the precision of a routed hole profile. Full axis unlocks on hole-level ingest.`,
+      });
     } else if (C.demo) {
       axes.push({ name: "Terrain", status: "DEMO", srcLabel: "", score: null, note: "Profiles below are placeholders. Axis activates when 3DEP + OSM centerlines land." });
+    } else if (C.courseTerrain) {
+      axes.push({ name: "Terrain", status: "WITHHELD", srcLabel: "", score: null, note: `Boundary grid sampled but below the coverage bar (${C.courseTerrain.stats ? C.courseTerrain.stats.valid : 0} valid samples). Gaps are never interpolated; the axis waits for coverage.` });
     } else {
       axes.push({ name: "Terrain", status: "WITHHELD", srcLabel: "", score: null, note: "No OSM centerline coverage ingested. In the terrain queue if mapped; never synthesized." });
     }
@@ -283,10 +319,11 @@ window.GB = (function () {
     const parts = [];
     if (C && C.reg) parts.push('Registry: <a href="https://opengolfapi.org">OpenGolfAPI</a> (ODbL)');
     if (osm) parts.push('Geometry © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> (ODbL) · Elevation: USGS 3DEP (public domain)');
+    else if (C && C.courseTerrain) parts.push('Course boundary © <a href="https://www.openstreetmap.org/copyright">OpenStreetMap contributors</a> (ODbL) · Elevation: USGS 3DEP (public domain)');
     if (C && C.demo) parts.push("Demo layers labeled — no open data rendered for demo fields");
     parts.push('<a href="/attribution">Full attribution & licenses</a>');
     return parts.join(" · ");
   }
 
-  return { slugFromPath, loadCourse, scoreCourse, computeAxes, normalize, relProfile, holeYds, attributionLine, demoProfile };
+  return { slugFromPath, loadCourse, scoreCourse, computeAxes, normalize, relProfile, holeYds, attributionLine, demoProfile, courseTerrainQualifies };
 })();

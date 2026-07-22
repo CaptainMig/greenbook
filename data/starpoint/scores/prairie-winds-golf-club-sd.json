@@ -1,7 +1,7 @@
 {
  "_license": "All rights reserved, Starpoint LLC",
  "slug": "prairie-winds-golf-club-sd",
- "computed": "2026-07-22T05:34:42.977Z",
+ "computed": "2026-07-22T19:07:38.658Z",
  "axes": [
   {
    "name": "Challenge",
@@ -22,7 +22,7 @@
   {
    "name": "Terrain",
    "status": "DERIVED",
-   "srcLabel": "OSM + 3DEP",
+   "srcLabel": "HOLE-LEVEL · OSM + 3DEP",
    "score": 3.2,
    "note": "mean |Δelev| 5.4 ft over 27 ingested holes. score = 2.0 + 0.22·mean, cap 9.5.",
    "counted": true

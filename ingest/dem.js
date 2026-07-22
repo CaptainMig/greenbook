@@ -18,10 +18,12 @@
  */
 
 const zlib = require("zlib");
+const { request } = require("./net"); // proxy-aware — node fetch ignores HTTPS_PROXY
 
 const S3 = "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current";
 const headerCache = new Map(); // tileName -> parsed header (or null if missing)
-const blockCache = new Map();  // tileName/blockIdx -> Float32Array
+const blockCache = new Map();  // tileName/blockIdx -> Float32Array (LRU-bounded)
+const MAX_BLOCKS = 256;        // ~1 MB per decoded 512×512 block — bounds multi-course runs
 
 function tileName(lat, lon) {
   const n = Math.ceil(lat);
@@ -31,28 +33,43 @@ function tileName(lat, lon) {
 const tileUrl = (t) => `${S3}/${t}/USGS_13_${t}.tif`;
 
 async function fetchRange(url, start, end) {
-  const res = await fetch(url, { headers: { Range: `bytes=${start}-${end}` } });
+  const res = await request(url, { headers: { Range: `bytes=${start}-${end}` } });
   if (res.status === 404) return null;
   if (res.status !== 206 && res.status !== 200) throw new Error(`range fetch ${res.status} ${url}`);
-  return Buffer.from(await res.arrayBuffer());
+  return res.buffer;
 }
 
 async function loadHeader(t) {
+  /* cache the PROMISE so concurrent callers share one in-flight load —
+     32 parallel samples on a cold tile must not fetch the header 32 times */
   if (headerCache.has(t)) return headerCache.get(t);
+  const p = loadHeaderUncached(t);
+  headerCache.set(t, p);
+  p.catch(() => headerCache.delete(t)); // failed loads retry on next call
+  return p;
+}
+
+async function loadHeaderUncached(t) {
   const url = tileUrl(t);
   const head = await fetchRange(url, 0, 65535);
   if (!head) { headerCache.set(t, null); return null; }
   if (head.readUInt16LE(0) !== 0x4949 || head.readUInt16LE(2) !== 42)
     throw new Error(`${t}: not a classic little-endian TIFF`);
   const ifdOff = head.readUInt32LE(4);
-  if (ifdOff + 2 > head.length) throw new Error(`${t}: IFD beyond header window`);
-  const n = head.readUInt16LE(ifdOff);
+  /* some tiles (e.g. n49w115) write the IFD at the END of the file — fetch a
+     window wherever it lives instead of assuming it sits in the first 64 KB */
+  let ifdBuf = head, ifdBase = 0;
+  if (ifdOff + 2 > head.length) {
+    ifdBuf = await fetchRange(url, ifdOff, ifdOff + 131071);
+    ifdBase = ifdOff;
+  }
+  const n = ifdBuf.readUInt16LE(ifdOff - ifdBase);
   const tags = {};
   for (let i = 0; i < n; i++) {
     const off = ifdOff + 2 + i * 12;
-    const id = head.readUInt16LE(off);
-    const type = head.readUInt16LE(off + 2);
-    const count = head.readUInt32LE(off + 4);
+    const id = ifdBuf.readUInt16LE(off - ifdBase);
+    const type = ifdBuf.readUInt16LE(off - ifdBase + 2);
+    const count = ifdBuf.readUInt32LE(off - ifdBase + 4);
     tags[id] = { type, count, valOff: off + 8 };
   }
   const typeSize = { 1: 1, 2: 1, 3: 2, 4: 4, 5: 8, 11: 4, 12: 8 };
@@ -61,10 +78,12 @@ async function loadHeader(t) {
     if (!tg) return null;
     const size = typeSize[tg.type] * tg.count;
     let buf;
-    if (size <= 4) buf = head.subarray(tg.valOff, tg.valOff + size);
+    if (size <= 4) buf = ifdBuf.subarray(tg.valOff - ifdBase, tg.valOff - ifdBase + size);
     else {
-      const ptr = head.readUInt32LE(tg.valOff);
-      buf = ptr + size <= head.length ? head.subarray(ptr, ptr + size) : await fetchRange(url, ptr, ptr + size - 1);
+      const ptr = ifdBuf.readUInt32LE(tg.valOff - ifdBase);
+      if (ptr + size <= head.length) buf = head.subarray(ptr, ptr + size);
+      else if (ptr >= ifdBase && ptr + size <= ifdBase + ifdBuf.length) buf = ifdBuf.subarray(ptr - ifdBase, ptr - ifdBase + size);
+      else buf = await fetchRange(url, ptr, ptr + size - 1);
     }
     const out = [];
     for (let i = 0; i < tg.count; i++) {
@@ -83,7 +102,7 @@ async function loadHeader(t) {
     tagValues(324), tagValues(325), tagValues(339), tagValues(258),
   ]);
   if (!w || !tw || !offsets) throw new Error(`${t}: missing tiling tags`);
-  if (comp[0] !== 8 && comp[0] !== 5) throw new Error(`${t}: unsupported compression ${comp[0]} (want DEFLATE=8 or LZW=5)`);
+  if (comp[0] !== 8 && comp[0] !== 5 && comp[0] !== 1) throw new Error(`${t}: unsupported compression ${comp[0]} (want DEFLATE=8, LZW=5 or none=1)`);
   if (bps[0] !== 32 || (sfmt && sfmt[0] !== 3)) throw new Error(`${t}: not Float32`);
   const hdr = {
     url, width: w[0], height: h[0], tileW: tw[0], tileH: th[0],
@@ -137,7 +156,9 @@ function lzwDecode(input, expectedSize) {
 
 function decodeTile(buf, hdr) {
   const expected = hdr.tileW * hdr.tileH * 4;
-  let raw = hdr.compression === 5 ? lzwDecode(buf, expected) : zlib.inflateSync(buf);
+  let raw = hdr.compression === 5 ? lzwDecode(buf, expected)
+    : hdr.compression === 1 ? buf
+      : zlib.inflateSync(buf);
   const { tileW, tileH, predictor } = hdr;
   const rowBytes = tileW * 4;
   const out = new Float32Array(tileW * tileH);
@@ -163,13 +184,20 @@ function decodeTile(buf, hdr) {
 
 async function getBlock(t, hdr, blockIdx) {
   const key = `${t}/${blockIdx}`;
-  if (blockCache.has(key)) return blockCache.get(key);
+  if (blockCache.has(key)) {
+    const v = blockCache.get(key);
+    blockCache.delete(key); blockCache.set(key, v); // refresh LRU recency
+    return v;
+  }
   const off = hdr.offsets[blockIdx], cnt = hdr.counts[blockIdx];
   if (!cnt) return null;
-  const buf = await fetchRange(hdr.url, off, off + cnt - 1);
-  const data = decodeTile(buf, hdr);
-  blockCache.set(key, data);
-  return data;
+  /* cache the PROMISE: concurrent samples on a cold block share ONE fetch +
+     decode instead of racing duplicate range-reads ("never re-fetch") */
+  const p = fetchRange(hdr.url, off, off + cnt - 1).then((buf) => decodeTile(buf, hdr));
+  blockCache.set(key, p);
+  p.catch(() => blockCache.delete(key)); // failed fetches retry on next call
+  while (blockCache.size > MAX_BLOCKS) blockCache.delete(blockCache.keys().next().value);
+  return p;
 }
 
 async function pixelAt(t, hdr, px, py) {

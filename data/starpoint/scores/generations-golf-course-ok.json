@@ -1,0 +1,50 @@
+{
+ "_license": "All rights reserved, Starpoint LLC",
+ "slug": "generations-golf-course-ok",
+ "computed": "2026-07-22T19:07:38.128Z",
+ "axes": [
+  {
+   "name": "Challenge",
+   "status": "WITHHELD",
+   "srcLabel": "",
+   "score": null,
+   "note": "No rating source ledgered for this course.",
+   "counted": false
+  },
+  {
+   "name": "Pedigree",
+   "status": "WITHHELD",
+   "srcLabel": "",
+   "score": null,
+   "note": "No editorial layer curated for this course yet.",
+   "counted": false
+  },
+  {
+   "name": "Terrain",
+   "status": "DERIVED",
+   "srcLabel": "COURSE-LEVEL · OSM BOUNDARY + 3DEP",
+   "score": 2.8,
+   "note": "Boundary-grid read: relief p90−p10 38 ft, 21% of grid slopes ≥5%, over 351 samples (0 gaps). score = min(6.0, 1.0 + relief/40 + 4·steep share) — CAPPED at 6.0: a boundary read cannot claim the precision of a routed hole profile. Full axis unlocks on hole-level ingest.",
+   "counted": true
+  },
+  {
+   "name": "Access",
+   "status": "WITHHELD",
+   "srcLabel": "",
+   "score": null,
+   "note": "No editorial layer curated for this course yet.",
+   "counted": false
+  },
+  {
+   "name": "Conditions",
+   "status": "WITHHELD",
+   "srcLabel": "",
+   "score": null,
+   "note": "No verified review or agronomy feed ingested. A gap is not a zero.",
+   "counted": false
+  }
+ ],
+ "counted": 1,
+ "composite": null,
+ "verdict": "INSUFFICIENT"
+}
