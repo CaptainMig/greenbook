@@ -1,0 +1,50 @@
+{
+ "_license": "All rights reserved, Starpoint LLC",
+ "slug": "wawona-golf-course-ca",
+ "computed": "2026-07-22T19:07:39.109Z",
+ "axes": [
+  {
+   "name": "Challenge",
+   "status": "WITHHELD",
+   "srcLabel": "",
+   "score": null,
+   "note": "No rating source ledgered for this course.",
+   "counted": false
+  },
+  {
+   "name": "Pedigree",
+   "status": "WITHHELD",
+   "srcLabel": "",
+   "score": null,
+   "note": "No editorial layer curated for this course yet.",
+   "counted": false
+  },
+  {
+   "name": "Terrain",
+   "status": "DERIVED",
+   "srcLabel": "COURSE-LEVEL · OSM BOUNDARY + 3DEP",
+   "score": 3.7,
+   "note": "Boundary-grid read: relief p90−p10 53.8 ft, 34% of grid slopes ≥5%, over 233 samples (0 gaps). score = min(6.0, 1.0 + relief/40 + 4·steep share) — CAPPED at 6.0: a boundary read cannot claim the precision of a routed hole profile. Full axis unlocks on hole-level ingest.",
+   "counted": true
+  },
+  {
+   "name": "Access",
+   "status": "WITHHELD",
+   "srcLabel": "",
+   "score": null,
+   "note": "No editorial layer curated for this course yet.",
+   "counted": false
+  },
+  {
+   "name": "Conditions",
+   "status": "WITHHELD",
+   "srcLabel": "",
+   "score": null,
+   "note": "No verified review or agronomy feed ingested. A gap is not a zero.",
+   "counted": false
+  }
+ ],
+ "counted": 1,
+ "composite": null,
+ "verdict": "INSUFFICIENT"
+}
