@@ -4,7 +4,7 @@
   "cleanUrls": true,
   "trailingSlash": false,
   "rewrites": [
-    { "source": "/c/:slug/play", "destination": "/c/play.html" },
-    { "source": "/c/:slug", "destination": "/c/course.html" }
+    { "source": "/c/:slug/play", "destination": "/c/play" },
+    { "source": "/c/:slug", "destination": "/c/course" }
   ]
 }
