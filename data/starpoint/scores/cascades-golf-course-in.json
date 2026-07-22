@@ -1,7 +1,7 @@
 {
  "_license": "All rights reserved, Starpoint LLC",
  "slug": "cascades-golf-course-in",
- "computed": "2026-07-22T05:34:42.961Z",
+ "computed": "2026-07-22T16:02:08.132Z",
  "axes": [
   {
    "name": "Challenge",
@@ -22,7 +22,7 @@
   {
    "name": "Terrain",
    "status": "DERIVED",
-   "srcLabel": "OSM + 3DEP",
+   "srcLabel": "HOLE-LEVEL · OSM + 3DEP",
    "score": 5.2,
    "note": "mean |Δelev| 14.6 ft over 27 ingested holes. score = 2.0 + 0.22·mean, cap 9.5.",
    "counted": true

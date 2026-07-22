@@ -120,6 +120,25 @@ h2 .n{font-family:var(--mono);font-weight:500;font-size:11px;color:var(--chalk-d
 .hs .v small{font-size:10px;color:var(--chalk-dim);font-weight:400}
 .demoflag{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;color:var(--sand);text-transform:uppercase;margin-top:10px}
 
+/* ---------- course-level terrain summary (boundary grid — no cross-section) ---------- */
+.cterr{margin-top:22px;border:1px solid var(--line);background:var(--pine-2);border-radius:2px;padding:16px}
+.cterr .hd{display:flex;justify-content:space-between;align-items:baseline;flex-wrap:wrap;gap:8px}
+.cterr .hd b{font-weight:800;font-stretch:106%;font-size:14px;text-transform:uppercase}
+.cterr .hd .mode{font-family:var(--mono);font-size:9px;letter-spacing:.1em;color:var(--sand);text-transform:uppercase}
+.cterr .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:14px}
+.cterr .cell{border:1px solid var(--line);padding:10px 12px;border-radius:2px}
+.cterr .cell .k{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--chalk-dim)}
+.cterr .cell .v{font-family:var(--mono);font-weight:600;font-size:18px;margin-top:3px}
+.cterr .cell .v small{font-size:10px;color:var(--chalk-dim);font-weight:400}
+.cterr .slopes{margin-top:14px}
+.cterr .slopes .k{font-family:var(--mono);font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--chalk-dim)}
+.cterr .srow{display:flex;align-items:center;gap:8px;margin-top:6px;font-family:var(--mono);font-size:10px;color:var(--chalk-dim)}
+.cterr .srow .lbl{width:52px}
+.cterr .srow .bar{flex:1;height:6px;background:var(--pine-3);border-radius:2px;overflow:hidden}
+.cterr .srow .bar i{display:block;height:100%;background:var(--verified)}
+.cterr .srow .n{width:44px;text-align:right}
+.cterr .note{font-size:11.5px;color:var(--chalk-dim);margin-top:14px;line-height:1.5}
+
 /* ---------- scorecard ---------- */
 .cardwrap{overflow-x:auto;margin-top:22px;border:1px solid var(--line);border-radius:2px}
 table{border-collapse:collapse;width:100%;min-width:640px;font-family:var(--mono);font-size:12px}
@@ -209,6 +228,7 @@ footer a{color:var(--chalk-dim)}
 <section id="terrain"><div class="wrap">
   <h2><span class="n">02</span>Terrain, hole by hole</h2>
   <p class="sub">Cross-section from tee to green. Elevation-adjusted "plays-like" distance uses the caddie rule of thumb: one yard added per yard of rise, subtracted per yard of fall. Hover the profile for a live readout.</p>
+  <div class="cterr" id="cterrpanel" style="display:none"></div>
   <div class="holetabs" id="holetabs"></div>
   <div class="teesel" id="teesel"></div>
   <div class="holecard">
@@ -315,12 +335,51 @@ function renderAxes(){
     </div>`).join('');
 }
 
+/* course-level terrain summary panel — shown in place of the hole cross-section
+   when the only elevation layer is the boundary grid. The cross-section itself
+   stays gated with its existing message; nothing per-hole is faked. */
+function slopeCharacter(st){
+  const m=st.mean_slope_pct;
+  if(m===null)return '—';
+  return m<1.5?'PREDOMINANTLY FLAT':m<3?'GENTLY ROLLING':m<5?'ROLLING':m<8?'HILLY':'STEEP';
+}
+function renderCourseTerrain(){
+  const ct=C.courseTerrain;
+  const courseMode=!C.demo&&C.holeSource!=='osm'&&ct&&ct.stats;
+  if(!courseMode){$('cterrpanel').style.display='none';return;}
+  const st=ct.stats;
+  const hist=st.slope_hist||{};
+  const maxBin=Math.max(1,...Object.values(hist));
+  const acres=(st.area_sampled_ha*2.471).toFixed(0);
+  $('cterrpanel').style.display='';
+  $('cterrpanel').innerHTML=`
+    <div class="hd"><b>Course-level terrain · boundary grid</b>
+      <span class="mode">${GB.courseTerrainQualifies(ct)?'DERIVED · COURSE-LEVEL · CAPPED 6.0':'BELOW COVERAGE BAR — AXIS GATED'}</span></div>
+    <div class="grid">
+      <div class="cell"><div class="k">Relief (max−min)</div><div class="v">${st.relief_ft??'—'}<small> ft</small></div></div>
+      <div class="cell"><div class="k">Relief p90−p10</div><div class="v">${st.relief_p90_p10_ft??'—'}<small> ft</small></div></div>
+      <div class="cell"><div class="k">Slope character</div><div class="v" style="font-size:13px">${slopeCharacter(st)}</div></div>
+      <div class="cell"><div class="k">Mean grid slope</div><div class="v">${st.mean_slope_pct??'—'}<small> %</small></div></div>
+      <div class="cell"><div class="k">Sampled area</div><div class="v">${st.area_sampled_ha}<small> ha · ${acres} ac</small></div></div>
+      <div class="cell"><div class="k">Samples / gaps</div><div class="v">${st.valid}<small> · ${st.gaps} gaps</small></div></div>
+    </div>
+    <div class="slopes"><div class="k">Slope distribution (% grade between ${ct.spacing_m} m grid neighbors)</div>
+      ${Object.entries(hist).map(([b,n])=>`<div class="srow"><span class="lbl">${b}%</span><span class="bar"><i style="width:${n/maxBin*100}%"></i></span><span class="n">${st.slope_pairs?Math.round(n/st.slope_pairs*100):0}%</span></div>`).join('')}
+    </div>
+    <div class="note">Grid read across the OSM course boundary (${ct.osm_boundary}) — describes the property, not the routing.
+    Gaps are uncovered DEM cells, counted and never interpolated. The Terrain axis in this mode is capped at 6.0/10;
+    per-hole cross-sections and plays-like numbers stay gated until hole centerlines are mapped.</div>`;
+}
+
 function renderTerrain(){
+  renderCourseTerrain();
   const H=C.holes;
   if(!H.length){
     $('holetabs').innerHTML='';$('teesel').innerHTML='';$('holestats').innerHTML='';
     $('profsvg').innerHTML='';$('readout').innerHTML='';
-    $('terrainflag').textContent='▲ No hole layer for this course yet — no OSM centerlines ingested and no demo layer loaded. Nothing is synthesized.';
+    $('terrainflag').textContent=C.courseTerrain
+      ? '▲ No hole layer for this course yet — no OSM centerlines ingested. Nothing is synthesized. Hole-level ingest available when centerlines are mapped.'
+      : '▲ No hole layer for this course yet — no OSM centerlines ingested and no demo layer loaded. Nothing is synthesized.';
     return;
   }
   $('holetabs').innerHTML=H.map((h,i)=>
@@ -473,7 +532,9 @@ function renderProv(){
    Identity, verdict, provenance, and a "what's needed" panel replace the
    full instrument scaffolding. Cohort/FULL/demo courses are unaffected. */
 function renderNeeds(){
-  const isStub=!C.demo&&!C.artifact&&C.quality&&C.quality.grade==='STUB';
+  /* a course-level terrain artifact is real data — such a course renders the
+     full instrument (axis cards + boundary-grid panel), not the stub layout */
+  const isStub=!C.demo&&!C.artifact&&!C.courseTerrain&&C.quality&&C.quality.grade==='STUB';
   if(!isStub)return false;
   document.body.classList.add('stub');
   const rows=[];

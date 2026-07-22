@@ -11,7 +11,14 @@
   },
   "axes": {
     "challenge": { "formula": "(slope - 55) / (155 - 55) * 10, clamp 0..10" },
-    "terrain": { "formula": "min(9.5, 2.0 + 0.22 * mean(|elev_delta_ft|)), requires >= 14 ingested holes" },
+    "terrain": { "formula": "min(9.5, 2.0 + 0.22 * mean(|elev_delta_ft|)), requires >= 14 ingested holes", "mode": "DERIVED · HOLE-LEVEL" },
+    "terrain_course": {
+      "formula": "min(6.0, 1.0 + relief_p90_p10_ft / 40 + 4 * share(slope >= 5%)), requires >= 100 valid boundary-grid samples and gap share <= 50%",
+      "mode": "DERIVED · COURSE-LEVEL",
+      "cap": 6.0,
+      "cap_reason": "A boundary-grid read describes the property, not the routing — it cannot claim the precision of a routed hole profile, so it is capped at 6.0/10. Hole-level ingest always supersedes it.",
+      "counts_toward_composite": true
+    },
     "pedigree": { "formula": "editorial, curated per course" },
     "access": { "formula": "editorial, curated per course" },
     "conditions": { "formula": "withheld until a verified feed exists" }

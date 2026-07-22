@@ -30,6 +30,37 @@ The composite is **x.x / 10** with verdict bands STRONG PLAY ≥ 8.0 > PLAY ≥ 
 > HOLD, per the original design. (A Phase-1 interim rebuild displayed /100 while
 the original file was missing; that rescale is reverted.)
 
+## Phase 3 — course-level terrain from boundary polygons
+
+A REDUCED Terrain axis for courses that have an OSM `leisure=golf_course`
+boundary but no hole centerlines. Hole-level data is strictly superior and
+course-level output never substitutes for it.
+
+- **Two axis modes:** `DERIVED · HOLE-LEVEL` (routed centerline profiles, full
+  axis, unchanged) and `DERIVED · COURSE-LEVEL` (boundary-grid relief + slope
+  distribution, **capped at 6.0/10** — a boundary read cannot claim the
+  precision of a routed profile). Course-level counts toward the ≥3-axis
+  composite bar. The axis card states the cap and why.
+- **Census** (`ingest/boundary-census.js`): one nationwide Overpass pass for
+  boundary polygons, matched to registry dedup clusters by name + proximity
+  (high = exact normalized name ≤3 km; medium = token Jaccard ≥0.5 ≤2 km).
+  Unmatched polygons and courses are listed, never force-paired →
+  `ingest/boundary-queue.json` + `ingest/boundary-geometry.json.gz`.
+- **Sampler** (`ingest/boundary-dem.js`): ~30 m grid across the polygon
+  interior (points-in-polygon only, cap 2,500/course), elevation via the same
+  3DEP GeoTIFF range-read machinery with an LRU tile-block cache shared across
+  courses. No-coverage cells are gaps — counted, never interpolated. Resumable:
+  existing artifacts are skipped. Output → `data/open/terrain-course/<slug>.json`
+  (grid, samples, min/max/mean, relief, slope histogram, gap count — facts only).
+- **Purity:** samples/summaries live in `data/open/terrain-course/` (ODbL +
+  public domain); scores, the 6.0 cap, and match-confidence judgments live in
+  `data/starpoint/` and `ingest/`. The build purity gate covers the new tree.
+- **Play view is NOT enabled by course-level terrain** — no per-hole plays-like
+  without centerlines; a course average is never faked into one. Course pages
+  in this mode show a terrain summary panel; the hole cross-section stays gated
+  with "hole-level ingest available when centerlines are mapped."
+- `/courses` chips: `TERRAIN·H` (hole-level) vs `TERRAIN·C` (course-level).
+
 ## Licensing structure (non-negotiable)
 
 - `data/open/` — **ODbL collective database**: registry (seeded from OpenGolfAPI

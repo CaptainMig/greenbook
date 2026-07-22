@@ -55,13 +55,16 @@ function purityCheck(dir, bad = []) {
   return bad;
 }
 
+/* recursive over ALL of data/open — including data/open/terrain-course/ (Phase 3
+ * boundary-grid artifacts): samples and summaries are open facts; scores, caps
+ * and match judgments live only in data/starpoint. */
 const violations = purityCheck(path.join(ROOT, "data", "open"));
 if (violations.length) {
   console.error("✗ PURITY GATE FAILED — computed scores in data/open:");
   violations.forEach((v) => console.error("  " + v));
   process.exit(1);
 }
-console.log("✓ purity gate: data/open contains no score-like keys");
+console.log("✓ purity gate: data/open contains no score-like keys (incl. terrain-course tree)");
 
 /* ---------- registry validator → data/starpoint/quality/ ----------
  * Grades every registry record. A nine is a legitimate course type, never an
@@ -211,9 +214,11 @@ fs.mkdirSync(scoresDir, { recursive: true });
 
 const overlayDir = path.join(ROOT, "data", "starpoint", "courses");
 const artifactDir = path.join(ROOT, "data", "open", "courses");
+const courseTerrainDir = path.join(ROOT, "data", "open", "terrain-course");
 const slugs = new Set();
 if (fs.existsSync(overlayDir)) fs.readdirSync(overlayDir).forEach((f) => slugs.add(f.replace(".json", "")));
 if (fs.existsSync(artifactDir)) fs.readdirSync(artifactDir).forEach((f) => slugs.add(f.replace(".json", "")));
+if (fs.existsSync(courseTerrainDir)) fs.readdirSync(courseTerrainDir).forEach((f) => slugs.add(f.replace(".json", "")));
 
 const aliases = JSON.parse(read(path.join(ROOT, "data", "open", "registry", "aliases.json")));
 const shardCache = new Map();
@@ -231,14 +236,18 @@ function regFor(slug) {
 }
 
 const axesBySlug = {};
+const courseTerrainLive = []; // slugs whose Terrain axis runs COURSE-LEVEL (no hole artifact)
 for (const slug of [...slugs].sort()) {
   const overlayP = path.join(overlayDir, `${slug}.json`);
   const artifactP = path.join(artifactDir, `${slug}.json`);
+  const ctP = path.join(courseTerrainDir, `${slug}.json`);
   const overlay = fs.existsSync(overlayP) ? JSON.parse(read(overlayP)) : null;
   const artifact = fs.existsSync(artifactP) ? JSON.parse(read(artifactP)) : null;
-  const C = GB.normalize(slug, regFor(slug), artifact, overlay, null, scoring, qualityBySlug.get(slug) || null);
+  const courseTerrain = fs.existsSync(ctP) ? JSON.parse(read(ctP)) : null;
+  const C = GB.normalize(slug, regFor(slug), artifact, overlay, null, scoring, qualityBySlug.get(slug) || null, null, courseTerrain);
   const R = GB.computeAxes(C);
   if (R.counted > 0) axesBySlug[slug] = R.counted;
+  if (!artifact && courseTerrain && GB.courseTerrainQualifies(courseTerrain)) courseTerrainLive.push(slug);
   fs.writeFileSync(path.join(scoresDir, `${slug}.json`), JSON.stringify({
     _license: "All rights reserved, Starpoint LLC",
     slug, computed: new Date().toISOString(),
@@ -250,7 +259,7 @@ console.log(`✓ axis outputs materialized for ${slugs.size} courses → data/st
 /* quality index ships grade + partial ratio + qualified-axes count per slug */
 fs.writeFileSync(path.join(qualityDir, "index.json"), JSON.stringify({
   _license: "All rights reserved, Starpoint LLC",
-  counts: gradeCounts, terrain_live: artifactSlugs, grades: gradeIndex,
+  counts: gradeCounts, terrain_live: artifactSlugs, terrain_course: courseTerrainLive, grades: gradeIndex,
   partials: partialRatio, axes: axesBySlug,
   dup_primaries: dupPrimaries, shadowed,
 }));

@@ -36,6 +36,7 @@ a.course .meta{font-family:var(--mono);font-size:10px;color:var(--dim);white-spa
 .chip.partial{color:var(--sand);border-color:var(--sand)}
 .chip.stub{color:var(--dim)}
 .chip.live{color:var(--pine);background:var(--ok);border-color:var(--ok)}
+.chip.clive{color:var(--pine);background:var(--sand);border-color:var(--sand)}
 button.more{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-top:14px;padding:12px;width:100%;background:transparent;border:1px solid var(--line);border-radius:2px;color:var(--dim);cursor:pointer}
 button.more:hover{color:var(--chalk);border-color:var(--chalk-dim)}
 .attr{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.04em;margin-top:40px;padding-top:12px;border-top:1px solid var(--line);line-height:1.8}
@@ -58,7 +59,8 @@ button.more:hover{color:var(--chalk);border-color:var(--chalk-dim)}
     <select id="grade" aria-label="filter by coverage">
       <option value="">Any coverage</option>
       <option value="SCORED">Scored (axes ≥3)</option>
-      <option value="LIVE">Terrain live</option>
+      <option value="LIVE">Terrain · hole-level</option>
+      <option value="CLIVE">Terrain · course-level</option>
       <option value="FULL">Card complete</option>
       <option value="PARTIAL">Card partial</option>
       <option value="STUB">Stub</option>
@@ -74,7 +76,7 @@ button.more:hover{color:var(--chalk);border-color:var(--chalk-dim)}
 
 <script>
 const $=id=>document.getElementById(id);
-let ALL=[], shown=0, filtered=[], GRADES={}, PARTIALS={}, AXES={}, LIVE=new Set(), DUPS={}, SHADOWED=new Set();
+let ALL=[], shown=0, filtered=[], GRADES={}, PARTIALS={}, AXES={}, LIVE=new Set(), CLIVE=new Set(), DUPS={}, SHADOWED=new Set();
 const PAGE=100;
 
 Promise.all([
@@ -82,7 +84,7 @@ Promise.all([
   fetch('/data/starpoint/quality/index.json').then(r=>r.ok?r.json():null).catch(()=>null),
 ]).then(([j,ql])=>{
   ALL=j.courses;
-  if(ql){GRADES=ql.grades||{};PARTIALS=ql.partials||{};AXES=ql.axes||{};LIVE=new Set(ql.terrain_live||[]);
+  if(ql){GRADES=ql.grades||{};PARTIALS=ql.partials||{};AXES=ql.axes||{};LIVE=new Set(ql.terrain_live||[]);CLIVE=new Set(ql.terrain_course||[]);
     DUPS=ql.dup_primaries||{};SHADOWED=new Set(ql.shadowed||[]);
     /* one row per duplicate cluster: shadowed records fold into their primary */
     ALL=ALL.filter(c=>!SHADOWED.has(c.slug));}
@@ -97,6 +99,7 @@ function matches(slug,gr){
   if(!gr)return true;
   if(gr==='SCORED')return axesOf(slug)>=3;
   if(gr==='LIVE')return LIVE.has(slug);
+  if(gr==='CLIVE')return CLIVE.has(slug);
   return (GRADES[slug]||'')===gr;
 }
 function apply(){
@@ -111,7 +114,8 @@ function apply(){
 function chips(slug){
   const g=GRADES[slug]||'';
   let out=`<span class="chip ${axesOf(slug)>=3?'full':'stub'}">AXES ${axesOf(slug)}/5</span> `;
-  if(LIVE.has(slug))out+='<span class="chip live">TERRAIN LIVE</span> ';
+  if(LIVE.has(slug))out+='<span class="chip live">TERRAIN·H</span> ';
+  else if(CLIVE.has(slug))out+='<span class="chip clive">TERRAIN·C</span> ';
   if(g==='FULL')out+='<span class="chip full">CARD COMPLETE</span>';
   else if(g==='PARTIAL')out+=`<span class="chip partial">CARD PARTIAL ${PARTIALS[slug]||''}</span>`;
   else if(g==='STUB')out+='<span class="chip stub">STUB</span>';

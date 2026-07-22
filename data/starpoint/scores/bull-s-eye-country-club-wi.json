@@ -1,7 +1,7 @@
 {
  "_license": "All rights reserved, Starpoint LLC",
  "slug": "bull-s-eye-country-club-wi",
- "computed": "2026-07-22T05:34:42.958Z",
+ "computed": "2026-07-22T16:02:08.129Z",
  "axes": [
   {
    "name": "Challenge",
@@ -22,7 +22,7 @@
   {
    "name": "Terrain",
    "status": "DERIVED",
-   "srcLabel": "OSM + 3DEP",
+   "srcLabel": "HOLE-LEVEL · OSM + 3DEP",
    "score": 3.6,
    "note": "mean |Δelev| 7.2 ft over 27 ingested holes. score = 2.0 + 0.22·mean, cap 9.5.",
    "counted": true

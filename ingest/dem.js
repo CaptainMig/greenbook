@@ -21,7 +21,8 @@ const zlib = require("zlib");
 
 const S3 = "https://prd-tnm.s3.amazonaws.com/StagedProducts/Elevation/13/TIFF/current";
 const headerCache = new Map(); // tileName -> parsed header (or null if missing)
-const blockCache = new Map();  // tileName/blockIdx -> Float32Array
+const blockCache = new Map();  // tileName/blockIdx -> Float32Array (LRU-bounded)
+const MAX_BLOCKS = 256;        // ~1 MB per decoded 512×512 block — bounds multi-course runs
 
 function tileName(lat, lon) {
   const n = Math.ceil(lat);
@@ -163,12 +164,17 @@ function decodeTile(buf, hdr) {
 
 async function getBlock(t, hdr, blockIdx) {
   const key = `${t}/${blockIdx}`;
-  if (blockCache.has(key)) return blockCache.get(key);
+  if (blockCache.has(key)) {
+    const v = blockCache.get(key);
+    blockCache.delete(key); blockCache.set(key, v); // refresh LRU recency
+    return v;
+  }
   const off = hdr.offsets[blockIdx], cnt = hdr.counts[blockIdx];
   if (!cnt) return null;
   const buf = await fetchRange(hdr.url, off, off + cnt - 1);
   const data = decodeTile(buf, hdr);
   blockCache.set(key, data);
+  while (blockCache.size > MAX_BLOCKS) blockCache.delete(blockCache.keys().next().value);
   return data;
 }
 

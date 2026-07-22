@@ -1,7 +1,7 @@
 {
  "_license": "All rights reserved, Starpoint LLC",
  "slug": "arrowhead-golf-club-il",
- "computed": "2026-07-22T05:34:42.893Z",
+ "computed": "2026-07-22T16:02:08.079Z",
  "axes": [
   {
    "name": "Challenge",
@@ -22,7 +22,7 @@
   {
    "name": "Terrain",
    "status": "DERIVED",
-   "srcLabel": "OSM + 3DEP",
+   "srcLabel": "HOLE-LEVEL · OSM + 3DEP",
    "score": 5,
    "note": "mean |Δelev| 13.5 ft over 27 ingested holes. score = 2.0 + 0.22·mean, cap 9.5.",
    "counted": true
