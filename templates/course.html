@@ -129,7 +129,20 @@ th:first-child,td:first-child{text-align:left;position:sticky;left:0;background:
 tbody tr:hover td{background:var(--pine-3)}
 td.par{color:var(--chalk-dim)}
 tr.tot td{font-weight:600;border-top:1px solid var(--chalk-dim)}
+tr.gap td{color:var(--line);background:repeating-linear-gradient(45deg,transparent,transparent 6px,rgba(217,185,138,.04) 6px,rgba(217,185,138,.04) 12px)}
+tr.gap td:first-child{color:var(--sand);opacity:.6}
 .teecell{display:flex;align-items:center;gap:6px;justify-content:flex-end}
+
+/* ---------- STUB compact layout: identity + verdict + provenance + needs ---------- */
+body.stub #terrain,body.stub #card,body.stub #pipe{display:none}
+body.stub nav a[href="#terrain"],body.stub nav a[href="#card"],body.stub nav a[href="#pipe"]{display:none}
+.needs{margin-top:24px;border:1px solid var(--line);border-radius:2px;overflow:hidden}
+.needs .nrow{display:grid;grid-template-columns:150px 1fr;gap:14px;padding:12px 16px;border-bottom:1px solid var(--line);font-size:13px;align-items:baseline}
+.needs .nrow:last-child{border-bottom:none}
+.needs .nrow .a{font-weight:800;font-stretch:105%}
+.needs .nrow .w{color:var(--chalk-dim);font-size:12.5px;line-height:1.5}
+.needs .nrow .w b{color:var(--verified);font-weight:600}
+@media(max-width:700px){.needs .nrow{grid-template-columns:1fr;gap:2px}}
 
 /* ---------- ratings ---------- */
 .ratings{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin-top:22px}
@@ -242,7 +255,7 @@ footer a{color:var(--chalk-dim)}
 /* ============ page bootstrap: /c/<slug> — ONE template, data fetched by slug ============ */
 const $=id=>document.getElementById(id);
 const statusClass={VERIFIED:'verified',DERIVED:'derived',APPROX:'approx',DEMO:'approx',WITHHELD:'withheld'};
-const srcClass=s=>statusClass[s]||'derived';
+const srcClass=s=>/^PARTIAL/.test(s)?'approx':(statusClass[s]||'derived');
 
 let C=null, hole=0, teeIdx=0;
 
@@ -377,23 +390,42 @@ function renderCard(){
   const ydCol=perHoleTees.length?perHoleTees:[C.teeList[teeIdx]];
   const head=`<thead><tr><th>Hole</th><th>Par</th><th>HCP</th>`+
     ydCol.map(t=>`<th><span class="teecell"><span class="dot" style="width:8px;height:8px;border-radius:50%;display:inline-block;background:${t.color};${t.dark?'border:1px solid #555':''}"></span>${t.ydLabel||t.label}</span></th>`).join('')+`</tr></thead>`;
-  const yv=(t,i)=>GB.holeYds(C,i,C.teeList.indexOf(t));
-  const seg=(from,to,lab)=>{
-    let rows='';
-    for(let i=from;i<to;i++){
-      rows+=`<tr><td>${H[i].ref}</td><td class="par">${H[i].par??'—'}</td><td class="par">${H[i].handicap??'—'}</td>`+
+  const yv=(t,i)=>i===null?null:GB.holeYds(C,i,C.teeList.indexOf(t));
+
+  /* honest card: registry PARTIAL records lay out ALL holes of the inferred
+     size; missing holes are gap rows, and no total is summed over an
+     incomplete set — "— · incomplete" instead. */
+  const inferred=(C.holeSource==='registry'&&C.quality&&C.quality.inferred)?C.quality.inferred:H.length;
+  const byNum=new Map(H.map((h,i)=>[parseInt(h.ref),i]));
+  const layout=[];               /* [holeNumber, holesIdx|null] */
+  if(C.holeSource==='registry'&&inferred){
+    for(let n=1;n<=inferred;n++)layout.push([n,byNum.has(n)?byNum.get(n):null]);
+  }else{
+    H.forEach((h,i)=>layout.push([h.ref,i]));
+  }
+  const incomplete=layout.some(([,i])=>i===null);
+
+  const seg=(rows,lab)=>{
+    let out='';
+    for(const [n,i] of rows){
+      if(i===null){out+=`<tr class="gap"><td>${n}</td><td class="par">—</td><td class="par">—</td>`+ydCol.map(()=>`<td>—</td>`).join('')+`</tr>`;continue;}
+      out+=`<tr><td>${H[i].ref}</td><td class="par">${H[i].par??'—'}</td><td class="par">${H[i].handicap??'—'}</td>`+
         ydCol.map(t=>`<td>${yv(t,i)??'—'}</td>`).join('')+`</tr>`;
     }
-    const tp=H.slice(from,to).reduce((a,h)=>a+(h.par||0),0);
-    rows+=`<tr class="tot"><td>${lab}</td><td class="par">${tp||'—'}</td><td></td>`+
-      ydCol.map(t=>{let s=0,ok=true;for(let i=from;i<to;i++){const v=yv(t,i);if(v===null)ok=false;else s+=v}return `<td>${ok?s.toLocaleString():'—'}</td>`}).join('')+`</tr>`;
-    return rows;
+    const gapHere=rows.some(([,i])=>i===null);
+    const tp=gapHere?null:rows.reduce((a,[,i])=>a+(H[i].par||0),0);
+    out+=`<tr class="tot"><td>${lab}</td><td class="par">${tp===null?'— · incomplete':(tp||'—')}</td><td></td>`+
+      ydCol.map(t=>{if(gapHere)return `<td>— · incomplete</td>`;let s=0,ok=true;for(const [,i] of rows){const v=yv(t,i);if(v===null)ok=false;else s+=v}return `<td>${ok?s.toLocaleString():'—'}</td>`}).join('')+`</tr>`;
+    return out;
   };
-  const mid=Math.min(9,H.length);
-  let body=seg(0,mid,'OUT');
-  if(H.length>9) body+=seg(9,H.length,'IN');
-  body+=`<tr class="tot"><td>TOTAL</td><td class="par">${H.reduce((a,h)=>a+(h.par||0),0)||'—'}</td><td></td>`+
-    ydCol.map(t=>{let s=0,ok=true;for(let i=0;i<H.length;i++){const v=yv(t,i);if(v===null)ok=false;else s+=v}return `<td>${ok?s.toLocaleString():'—'}</td>`}).join('')+`</tr>`;
+  const mid=Math.min(9,layout.length);
+  let body=seg(layout.slice(0,mid),layout.length>9?'OUT':'TOTAL');
+  if(layout.length>9){
+    body+=seg(layout.slice(9),'IN');
+    const tpAll=incomplete?null:layout.reduce((a,[,i])=>a+(H[i].par||0),0);
+    body+=`<tr class="tot"><td>TOTAL</td><td class="par">${tpAll===null?'— · incomplete':(tpAll||'—')}</td><td></td>`+
+      ydCol.map(t=>{if(incomplete)return `<td>— · incomplete</td>`;let s=0,ok=true;for(const [,i] of layout){const v=yv(t,i);if(v===null)ok=false;else s+=v}return `<td>${ok?s.toLocaleString():'—'}</td>`}).join('')+`</tr>`;
+  }
   $('scorecard').innerHTML=head+`<tbody>${body}</tbody>`;
   $('ratings').innerHTML=renderRatingCards();
 }
@@ -418,8 +450,31 @@ function renderProv(){
   if(note){$('provnote').style.display='';$('provnote').innerHTML=note;}
 }
 
+/* STUB adaptive render: registry identity only → compact directory layout.
+   Identity, verdict, provenance, and a "what's needed" panel replace the
+   full instrument scaffolding. Cohort/FULL/demo courses are unaffected. */
+function renderNeeds(){
+  const isStub=!C.demo&&!C.artifact&&C.quality&&C.quality.grade==='STUB';
+  if(!isStub)return false;
+  document.body.classList.add('stub');
+  const rows=[];
+  if(!C.slope)rows.push(['Challenge','A rated tee set — state golf association handicap table (<b>VERIFIED</b>) or OpenGolfAPI per-tee crawl (<b>DERIVED</b>).']);
+  rows.push(['Terrain','OSM <b>golf=hole</b> centerlines mapped for this course, then USGS 3DEP elevation sampling. In the ingest queue automatically once mapped — never synthesized.']);
+  rows.push(['The card','Per-hole par and stroke index. The registry record carries none for this course ('+(C.quality.par_stated?'stated par '+C.quality.par_stated+' only':'no par on record')+').']);
+  rows.push(['Pedigree','Starpoint editorial layer — architect, era, championship record, cohort context.']);
+  rows.push(['Access','Starpoint editorial layer — rate card, booking friction, tee-sheet reality.']);
+  rows.push(['Conditions','A verified agronomy or review feed. A gap is not a zero.']);
+  $('axes').outerHTML=`<div class="needs" id="axes">`+rows.map(([a,w])=>
+    `<div class="nrow"><div class="a">${a}</div><div class="w">${w}</div></div>`).join('')+`</div>`;
+  const sub=document.querySelector('#score .sub');
+  if(sub)sub.textContent='Registry identity only — nothing here meets the provenance bar yet. This is what it takes to turn the page into an instrument:';
+  return true;
+}
+
 function renderAll(){
-  renderSwitcher();renderHero();renderAxes();renderTerrain();renderCard();renderProv();
+  renderSwitcher();renderHero();
+  if(!renderNeeds())renderAxes();
+  renderTerrain();renderCard();renderProv();
   $('attrline').innerHTML=GB.attributionLine(C);
 }
 </script>

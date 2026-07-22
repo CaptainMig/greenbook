@@ -47,18 +47,20 @@ window.GB = (function () {
       if (m) state = m[1].toUpperCase();
     }
 
-    const [shard, artifact, overlay, scores] = await Promise.all([
+    const [shard, artifact, overlay, scores, qualityShard] = await Promise.all([
       state ? J(`/data/open/registry/state/${state}.json`) : Promise.resolve(null),
       J(`/data/open/courses/${slug}.json`),
       J(`/data/starpoint/courses/${slug}.json`),
       J(`/data/starpoint/scores/${slug}.json`),
+      state ? J(`/data/starpoint/quality/state/${state}.json`) : Promise.resolve(null),
     ]);
     const reg = shard ? shard.courses.find((c) => c.slug === slug) || null : null;
     if (!reg && !overlay && !artifact) throw new Error("no data for slug " + slug);
-    return normalize(slug, reg, artifact, overlay, scores, scoring);
+    const quality = qualityShard && qualityShard.courses ? qualityShard.courses[slug] || null : null;
+    return normalize(slug, reg, artifact, overlay, scores, scoring, quality);
   }
 
-  function normalize(slug, reg, artifact, overlay, scores, scoring) {
+  function normalize(slug, reg, artifact, overlay, scores, scoring, quality) {
     const o = overlay || {};
     const demo = !!o.demo;
     const C = {
@@ -73,6 +75,7 @@ window.GB = (function () {
       architect: (reg && reg.architect) || (o.meta && o.meta.architect) || null,
       founded: (reg && reg.year_built) || (o.meta && o.meta.founded) || null,
       seed: o.demoSeed || 7,
+      quality: quality || null,
     };
 
     /* ---- holes ---- */
@@ -135,7 +138,11 @@ window.GB = (function () {
       C.prov = [];
       if (reg) {
         C.prov.push(["Identity, city, type", "OpenGolfAPI registry (ODbL) — community-maintained", "DERIVED"]);
-        C.prov.push(["Par / stroke index", reg.scorecard && reg.scorecard.length ? "OpenGolfAPI scorecard — cited as OPENGOLFAPI, not USGA" : "Not present in registry record", reg.scorecard && reg.scorecard.length ? "DERIVED" : "WITHHELD"]);
+        const q = C.quality;
+        if (q && q.grade === "PARTIAL")
+          C.prov.push(["Hole-by-hole card", `OpenGolfAPI scorecard — cited as OPENGOLFAPI, not USGA. ${q.flags.join(" · ")}`, `PARTIAL · ${q.present}/${q.inferred} HOLES`]);
+        else
+          C.prov.push(["Par / stroke index", reg.scorecard && reg.scorecard.length ? "OpenGolfAPI scorecard — cited as OPENGOLFAPI, not USGA" : "Not present in registry record", reg.scorecard && reg.scorecard.length ? "DERIVED" : "WITHHELD"]);
         C.prov.push(["Ratings & slope", C.ratingCards.length ? "OpenGolfAPI per-tee crawl — cited as OPENGOLFAPI until independently verified" : "Not present in registry record", C.ratingCards.length ? "DERIVED" : "WITHHELD"]);
       }
       if (artifact) {

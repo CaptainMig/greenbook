@@ -30,7 +30,12 @@ a.course{display:flex;justify-content:space-between;align-items:center;gap:14px;
 a.course:hover{background:var(--pine-3)}
 a.course .nm{font-weight:800;font-stretch:106%;font-size:14px}
 a.course .loc{font-family:var(--mono);font-size:9.5px;color:var(--dim);margin-top:2px;letter-spacing:.06em;text-transform:uppercase}
-a.course .meta{font-family:var(--mono);font-size:10px;color:var(--dim);white-space:nowrap}
+a.course .meta{font-family:var(--mono);font-size:10px;color:var(--dim);white-space:nowrap;text-align:right}
+.chip{font-family:var(--mono);font-size:8px;letter-spacing:.1em;padding:2px 7px;border-radius:2px;border:1px solid var(--line);white-space:nowrap;display:inline-block;margin-top:4px}
+.chip.full{color:var(--ok);border-color:var(--ok)}
+.chip.partial{color:var(--sand);border-color:var(--sand)}
+.chip.stub{color:var(--dim)}
+.chip.live{color:var(--pine);background:var(--ok);border-color:var(--ok)}
 button.more{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;margin-top:14px;padding:12px;width:100%;background:transparent;border:1px solid var(--line);border-radius:2px;color:var(--dim);cursor:pointer}
 button.more:hover{color:var(--chalk);border-color:var(--chalk-dim)}
 .attr{font-family:var(--mono);font-size:9px;color:var(--dim);letter-spacing:.04em;margin-top:40px;padding-top:12px;border-top:1px solid var(--line);line-height:1.8}
@@ -50,6 +55,13 @@ button.more:hover{color:var(--chalk);border-color:var(--chalk-dim)}
   <div class="controls">
     <input type="search" id="q" placeholder="Search name or city…" aria-label="search courses">
     <select id="state" aria-label="filter by state"><option value="">All states</option></select>
+    <select id="grade" aria-label="filter by completeness">
+      <option value="">Any completeness</option>
+      <option value="LIVE">Terrain live</option>
+      <option value="FULL">Full record</option>
+      <option value="PARTIAL">Partial record</option>
+      <option value="STUB">Stub</option>
+    </select>
   </div>
   <div class="count" id="count"></div>
   <div class="list" id="list"></div>
@@ -61,35 +73,51 @@ button.more:hover{color:var(--chalk);border-color:var(--chalk-dim)}
 
 <script>
 const $=id=>document.getElementById(id);
-let ALL=[], shown=0, filtered=[];
+let ALL=[], shown=0, filtered=[], GRADES={}, LIVE=new Set();
 const PAGE=100;
 
-fetch('/data/open/registry/index.json').then(r=>r.json()).then(j=>{
+Promise.all([
+  fetch('/data/open/registry/index.json').then(r=>r.json()),
+  fetch('/data/starpoint/quality/index.json').then(r=>r.ok?r.json():null).catch(()=>null),
+]).then(([j,ql])=>{
   ALL=j.courses;
+  if(ql){GRADES=ql.grades||{};LIVE=new Set(ql.terrain_live||[]);}
   const states=[...new Set(ALL.map(c=>c.state))].sort();
   $('state').innerHTML='<option value="">All states</option>'+states.map(s=>`<option>${s}</option>`).join('');
   apply();
 });
 
+const gradeOf=s=>LIVE.has(s)?'LIVE':(GRADES[s]||'');
 function apply(){
-  const q=$('q').value.trim().toLowerCase(), st=$('state').value;
-  filtered=ALL.filter(c=>(!st||c.state===st)&&(!q||c.name.toLowerCase().includes(q)||(c.city||'').toLowerCase().includes(q)));
+  const q=$('q').value.trim().toLowerCase(), st=$('state').value, gr=$('grade').value;
+  filtered=ALL.filter(c=>(!st||c.state===st)
+    &&(!gr||gradeOf(c.slug)===gr)
+    &&(!q||c.name.toLowerCase().includes(q)||(c.city||'').toLowerCase().includes(q)));
   shown=0;$('list').innerHTML='';
   more();
   $('count').textContent=`${filtered.length.toLocaleString()} OF ${ALL.length.toLocaleString()} COURSES`;
+}
+function chip(slug){
+  const g=gradeOf(slug);
+  if(g==='LIVE')return '<span class="chip live">TERRAIN LIVE</span>';
+  if(g==='FULL')return '<span class="chip full">FULL RECORD</span>';
+  if(g==='PARTIAL')return '<span class="chip partial">PARTIAL RECORD</span>';
+  if(g==='STUB')return '<span class="chip stub">STUB</span>';
+  return '';
 }
 function more(){
   const chunk=filtered.slice(shown,shown+PAGE);
   $('list').insertAdjacentHTML('beforeend',chunk.map(c=>
     `<a class="course" href="/c/${c.slug}">
       <span><span class="nm">${c.name}</span><br><span class="loc">${c.city||''}, ${c.state}</span></span>
-      <span class="meta">${c.holes||'—'} HOLES · PAR ${c.par||'—'}${c.yardage?' · '+c.yardage.toLocaleString()+' YDS':''}</span>
+      <span class="meta">${c.holes||'—'} HOLES · PAR ${c.par||'—'}${c.yardage?' · '+c.yardage.toLocaleString()+' YDS':''}<br>${chip(c.slug)}</span>
     </a>`).join(''));
   shown+=chunk.length;
   $('more').style.display=shown<filtered.length?'':'none';
 }
 $('q').addEventListener('input',apply);
 $('state').addEventListener('change',apply);
+$('grade').addEventListener('change',apply);
 $('more').addEventListener('click',more);
 </script>
 </body>

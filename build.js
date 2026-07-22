@@ -63,6 +63,75 @@ if (violations.length) {
 }
 console.log("✓ purity gate: data/open contains no score-like keys");
 
+/* ---------- registry validator → data/starpoint/quality/ ----------
+ * Grades every registry record. A nine is a legitimate course type, never an
+ * incomplete eighteen: intended size is inferred FIRST (from stated par via
+ * par-per-hole plausibility, else hole numbering), THEN completeness is graded
+ * against it. Grades are Starpoint outputs — they never touch data/open. */
+const SIZES = [9, 18, 27, 36];
+function inferSize(rec) {
+  if (rec.par) {
+    for (const s of SIZES) {
+      const pph = rec.par / s;
+      if (pph >= 2.7 && pph <= 5.5) return s; // par 27–37 → 9; par 58–74 → 18
+    }
+  }
+  const n = Math.max(rec.holes || 0, ...(rec.scorecard || []).map((h) => h.hole || 0));
+  if (n === 0) return null;
+  return SIZES.find((s) => s >= n) || 36;
+}
+function gradeRecord(rec) {
+  const sc = rec.scorecard || [];
+  const present = sc.length;
+  const inferred = inferSize(rec);
+  const parSummed = sc.reduce((s, h) => s + (h.par || 0), 0) || null;
+  const flags = [];
+  let grade;
+  if (present === 0) {
+    grade = "STUB";
+    flags.push("registry identity only — no per-hole data");
+  } else if (inferred && present < inferred) {
+    grade = "PARTIAL";
+    flags.push(`PARTIAL · ${present}/${inferred} HOLES`);
+    if (rec.par && parSummed && parSummed < rec.par - 2)
+      flags.push(`hole count and par sum mutually implausible: ${present} holes summing ${parSummed} against stated par ${rec.par}`);
+  } else {
+    grade = "FULL";
+    if (rec.par && parSummed && Math.abs(parSummed - rec.par) > 2)
+      flags.push(`PAR MISMATCH · card sums ${parSummed} vs stated ${rec.par}`);
+  }
+  return { grade, inferred, present, par_stated: rec.par ?? null, par_summed: parSummed, flags };
+}
+
+const qualityDir = path.join(ROOT, "data", "starpoint", "quality");
+fs.rmSync(qualityDir, { recursive: true, force: true });
+fs.mkdirSync(path.join(qualityDir, "state"), { recursive: true });
+const stateDir = path.join(ROOT, "data", "open", "registry", "state");
+const gradeIndex = {};
+const gradeCounts = { FULL: 0, PARTIAL: 0, STUB: 0 };
+const artifactSlugs = fs.existsSync(path.join(ROOT, "data", "open", "courses"))
+  ? fs.readdirSync(path.join(ROOT, "data", "open", "courses")).map((f) => f.replace(".json", "")) : [];
+const qualityBySlug = new Map();
+for (const f of fs.readdirSync(stateDir)) {
+  const shard = JSON.parse(read(path.join(stateDir, f)));
+  const out = {};
+  for (const rec of shard.courses) {
+    const q = gradeRecord(rec);
+    out[rec.slug] = q;
+    qualityBySlug.set(rec.slug, q);
+    gradeIndex[rec.slug] = q.grade;
+    gradeCounts[q.grade]++;
+  }
+  fs.writeFileSync(path.join(qualityDir, "state", f), JSON.stringify({
+    _license: "All rights reserved, Starpoint LLC", state: shard.state, courses: out,
+  }));
+}
+fs.writeFileSync(path.join(qualityDir, "index.json"), JSON.stringify({
+  _license: "All rights reserved, Starpoint LLC",
+  counts: gradeCounts, terrain_live: artifactSlugs, grades: gradeIndex,
+}));
+console.log(`✓ registry graded: ${gradeCounts.FULL} FULL · ${gradeCounts.PARTIAL} PARTIAL · ${gradeCounts.STUB} STUB → data/starpoint/quality/`);
+
 /* ---------- materialize axis outputs → data/starpoint/scores/<slug>.json ---------- */
 const scoring = JSON.parse(read(path.join(ROOT, "data", "starpoint", "scoring.json")));
 const scoresDir = path.join(ROOT, "data", "starpoint", "scores");
@@ -95,7 +164,7 @@ for (const slug of [...slugs].sort()) {
   const artifactP = path.join(artifactDir, `${slug}.json`);
   const overlay = fs.existsSync(overlayP) ? JSON.parse(read(overlayP)) : null;
   const artifact = fs.existsSync(artifactP) ? JSON.parse(read(artifactP)) : null;
-  const C = GB.normalize(slug, regFor(slug), artifact, overlay, null, scoring);
+  const C = GB.normalize(slug, regFor(slug), artifact, overlay, null, scoring, qualityBySlug.get(slug) || null);
   const R = GB.computeAxes(C);
   fs.writeFileSync(path.join(scoresDir, `${slug}.json`), JSON.stringify({
     _license: "All rights reserved, Starpoint LLC",
