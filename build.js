@@ -114,6 +114,13 @@ const gradeIndex = {};
 const gradeCounts = { FULL: 0, PARTIAL: 0, STUB: 0 };
 const artifactSlugs = fs.existsSync(path.join(ROOT, "data", "open", "courses"))
   ? fs.readdirSync(path.join(ROOT, "data", "open", "courses")).map((f) => f.replace(".json", "")) : [];
+/* Phase 4 enrichment attempt ledger: 404/empty detail-endpoint responses are
+ * ATTEMPTED · NOT AVAILABLE — surfaced through the quality layer, never
+ * retried in a loop, never guessed. */
+const enrichLogPath = path.join(ROOT, "data", "starpoint", "enrichment.json");
+const enrichLog = fs.existsSync(enrichLogPath) ? JSON.parse(read(enrichLogPath)) : { attempted: {} };
+const ratingsNA = new Set(Object.entries(enrichLog.attempted).filter(([, v]) => v.status === "not_available").map(([k]) => k));
+
 const qualityBySlug = new Map();
 const shardQuality = new Map(); // state file -> {state, courses:{}}
 const shardRecords = new Map(); // state file -> records
@@ -122,6 +129,7 @@ for (const f of fs.readdirSync(stateDir)) {
   const out = {};
   for (const rec of shard.courses) {
     const q = gradeRecord(rec);
+    if (ratingsNA.has(rec.slug)) q.ratings_na = true;
     out[rec.slug] = q;
     qualityBySlug.set(rec.slug, q);
     gradeIndex[rec.slug] = q.grade;

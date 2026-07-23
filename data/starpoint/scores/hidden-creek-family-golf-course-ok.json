@@ -1,15 +1,15 @@
 {
  "_license": "All rights reserved, Starpoint LLC",
  "slug": "hidden-creek-family-golf-course-ok",
- "computed": "2026-07-22T19:07:38.229Z",
+ "computed": "2026-07-23T20:07:00.211Z",
  "axes": [
   {
    "name": "Challenge",
-   "status": "WITHHELD",
-   "srcLabel": "",
-   "score": null,
-   "note": "No rating source ledgered for this course.",
-   "counted": false
+   "status": "DERIVED",
+   "srcLabel": "OPENGOLFAPI",
+   "score": 2.6,
+   "note": "Derived from slope 81 — reproducible from the ledgered rating source. score = (slope−55)/100·10.",
+   "counted": true
   },
   {
    "name": "Pedigree",
@@ -44,7 +44,7 @@
    "counted": false
   }
  ],
- "counted": 1,
+ "counted": 2,
  "composite": null,
  "verdict": "INSUFFICIENT"
 }

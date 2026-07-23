@@ -1,15 +1,15 @@
 {
  "_license": "All rights reserved, Starpoint LLC",
  "slug": "club-de-golf-dufferin-heights-nh",
- "computed": "2026-07-22T19:07:37.876Z",
+ "computed": "2026-07-23T20:06:59.610Z",
  "axes": [
   {
    "name": "Challenge",
-   "status": "WITHHELD",
-   "srcLabel": "",
-   "score": null,
-   "note": "No rating source ledgered for this course.",
-   "counted": false
+   "status": "DERIVED",
+   "srcLabel": "OPENGOLFAPI",
+   "score": 6.6,
+   "note": "Derived from slope 121 / rating 69.2 — reproducible from the ledgered rating source. score = (slope−55)/100·10.",
+   "counted": true
   },
   {
    "name": "Pedigree",
@@ -44,7 +44,7 @@
    "counted": false
   }
  ],
- "counted": 0,
+ "counted": 1,
  "composite": null,
  "verdict": "INSUFFICIENT"
 }

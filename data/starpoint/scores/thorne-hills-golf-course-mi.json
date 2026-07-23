@@ -1,15 +1,15 @@
 {
  "_license": "All rights reserved, Starpoint LLC",
  "slug": "thorne-hills-golf-course-mi",
- "computed": "2026-07-22T19:07:39.022Z",
+ "computed": "2026-07-23T20:07:01.548Z",
  "axes": [
   {
    "name": "Challenge",
-   "status": "WITHHELD",
-   "srcLabel": "",
-   "score": null,
-   "note": "No rating source ledgered for this course.",
-   "counted": false
+   "status": "DERIVED",
+   "srcLabel": "OPENGOLFAPI",
+   "score": 5.9,
+   "note": "Derived from slope 114 / rating 67.4 — reproducible from the ledgered rating source. score = (slope−55)/100·10.",
+   "counted": true
   },
   {
    "name": "Pedigree",
@@ -44,7 +44,7 @@
    "counted": false
   }
  ],
- "counted": 1,
+ "counted": 2,
  "composite": null,
  "verdict": "INSUFFICIENT"
 }

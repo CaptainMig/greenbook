@@ -538,7 +538,7 @@ function renderNeeds(){
   if(!isStub)return false;
   document.body.classList.add('stub');
   const rows=[];
-  if(!C.slope)rows.push(['Challenge','A rated tee set — state golf association handicap table (<b>VERIFIED</b>) or OpenGolfAPI per-tee crawl (<b>DERIVED</b>).']);
+  if(!C.slope)rows.push(['Challenge','A rated tee set — state golf association handicap table (<b>VERIFIED</b>) or OpenGolfAPI per-tee crawl (<b>DERIVED</b>).'+(C.quality&&C.quality.ratings_na?' OpenGolfAPI detail endpoint already queried — none published (ATTEMPTED · NOT AVAILABLE).':'')]);
   rows.push(['Terrain','OSM <b>golf=hole</b> centerlines mapped for this course, then USGS 3DEP elevation sampling. In the ingest queue automatically once mapped — never synthesized.']);
   rows.push(['The card','Per-hole par and stroke index. The registry record carries none for this course ('+(C.quality.par_stated?'stated par '+C.quality.par_stated+' only':'no par on record')+').']);
   rows.push(['Pedigree','Starpoint editorial layer — architect, era, championship record, cohort context.']);
