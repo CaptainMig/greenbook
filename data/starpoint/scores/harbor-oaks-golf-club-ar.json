@@ -1,15 +1,15 @@
 {
  "_license": "All rights reserved, Starpoint LLC",
  "slug": "harbor-oaks-golf-club-ar",
- "computed": "2026-07-22T19:07:38.198Z",
+ "computed": "2026-07-23T20:07:00.152Z",
  "axes": [
   {
    "name": "Challenge",
-   "status": "WITHHELD",
-   "srcLabel": "",
-   "score": null,
-   "note": "No rating source ledgered for this course.",
-   "counted": false
+   "status": "DERIVED",
+   "srcLabel": "OPENGOLFAPI",
+   "score": 7.3,
+   "note": "Derived from slope 128 / rating 74.5 — reproducible from the ledgered rating source. score = (slope−55)/100·10.",
+   "counted": true
   },
   {
    "name": "Pedigree",
@@ -44,7 +44,7 @@
    "counted": false
   }
  ],
- "counted": 1,
+ "counted": 2,
  "composite": null,
  "verdict": "INSUFFICIENT"
 }
