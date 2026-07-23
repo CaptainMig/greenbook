@@ -1,0 +1,2729 @@
+{
+ "_license": "All rights reserved, Starpoint LLC",
+ "note": "Enrichment attempt ledger. not_available = OpenGolfAPI detail endpoint queried, no ratings published — ATTEMPTED · NOT AVAILABLE, never retried in a loop, never guessed.",
+ "attempted": {
+  "eagle-valley-golf-course-mn": {
+   "status": "ok",
+   "tees": 5,
+   "at": "2026-07-22T19:25:34.393Z"
+  },
+  "don-williams-golf-course-ia": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:25:35.656Z"
+  },
+  "jester-park-golf-course-ia": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:25:38.886Z"
+  },
+  "mystic-creek-golf-club-mi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:25:40.318Z"
+  },
+  "westhaven-golf-club-wi": {
+   "status": "ok",
+   "tees": 5,
+   "at": "2026-07-22T19:25:44.473Z"
+  },
+  "madeline-island-golf-club-wi": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:25:46.016Z"
+  },
+  "st-peters-golf-course-mo": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:25:47.352Z"
+  },
+  "eagle-trace-golf-club-co": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:25:48.950Z"
+  },
+  "platteville-golf-and-country-club-wi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:25:50.473Z"
+  },
+  "tribute-golf-course-wi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:25:51.645Z"
+  },
+  "west-grand-golf-ia": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:25:52.936Z"
+  },
+  "trout-lake-golf-club-wi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:25:54.114Z"
+  },
+  "muskegon-country-club-mi": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:25:55.680Z"
+  },
+  "billy-caldwell-golf-course-il": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:25:57.137Z"
+  },
+  "blackwolf-run-wi": {
+   "status": "ok",
+   "tees": 5,
+   "at": "2026-07-22T19:25:58.360Z"
+  },
+  "eagle-ridge-golf-course-il": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:25:59.750Z"
+  },
+  "bearpath-mn": {
+   "status": "ok",
+   "tees": 7,
+   "at": "2026-07-22T19:26:01.259Z"
+  },
+  "lake-forest-golf-club-wi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:26:02.529Z"
+  },
+  "bass-lake-golf-course-wi": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:26:03.952Z"
+  },
+  "minneapolis-golf-club-mn": {
+   "status": "ok",
+   "tees": 6,
+   "at": "2026-07-22T19:26:05.527Z"
+  },
+  "golf-club-of-wentzville-mo": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:26:06.847Z"
+  },
+  "birch-pointe-golf-club-mi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:26:08.118Z"
+  },
+  "arrowhead-golf-club-oh": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:26:09.398Z"
+  },
+  "twin-lakes-golf-swim-club-mi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:26:10.679Z"
+  },
+  "plum-creek-golf-course-in": {
+   "status": "ok",
+   "tees": 6,
+   "at": "2026-07-22T19:26:12.096Z"
+  },
+  "towanda-country-club-pa": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:26:13.690Z"
+  },
+  "brookings-country-club-sd": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:26:15.094Z"
+  },
+  "tee-hi-club-wi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:26:16.658Z"
+  },
+  "eagle-view-golf-course-mn": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:26:18.114Z"
+  },
+  "thal-acres-golf-course-wi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:26:19.401Z"
+  },
+  "country-club-of-lansing-mi": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:26:21.233Z"
+  },
+  "mark-s-par-3-in": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:26:22.744Z"
+  },
+  "stonewater-golf-club-oh": {
+   "status": "ok",
+   "tees": 7,
+   "at": "2026-07-22T19:26:24.073Z"
+  },
+  "island-hills-golf-club-mi": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:26:25.555Z"
+  },
+  "the-meadows-mn": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:26:27.540Z"
+  },
+  "fox-run-golf-club-mo": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:26:28.930Z"
+  },
+  "springvale-golf-course-oh": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:26:30.161Z"
+  },
+  "arrowhead-golf-course-in": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:26:32.422Z"
+  },
+  "fox-ridge-golf-course-ia": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:26:33.857Z"
+  },
+  "ridgewood-golf-course-oh": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:26:35.286Z"
+  },
+  "seven-lakes-golf-course-wi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:26:36.852Z"
+  },
+  "arrowhead-golf-club-mi": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:26:38.323Z"
+  },
+  "oaks-golf-course-oh": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:26:39.868Z"
+  },
+  "the-little-course-mi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:26:41.025Z"
+  },
+  "rackham-golf-course-mi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:26:42.259Z"
+  },
+  "sycamore-springs-oh": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:26:43.544Z"
+  },
+  "ives-grove-golf-links-wi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:26:45.035Z"
+  },
+  "roses-run-country-club-oh": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:26:46.306Z"
+  },
+  "stewartville-golf-club-mn": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:26:47.869Z"
+  },
+  "como-park-golf-course-mn": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:26:49.382Z"
+  },
+  "cambridge-country-club-oh": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:26:50.622Z"
+  },
+  "heather-ridge-golf-course-il": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:26:52.175Z"
+  },
+  "birch-run-golf-club-oh": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:26:53.737Z"
+  },
+  "veterans-memorial-golf-course-il": {
+   "status": "ok",
+   "tees": 6,
+   "at": "2026-07-22T19:26:54.998Z"
+  },
+  "acorn-park-golf-course-ia": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:26:56.369Z"
+  },
+  "westwood-golf-course-wi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:26:57.791Z"
+  },
+  "tustin-trails-golf-course-mi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:26:59.087Z"
+  },
+  "gun-ridge-golf-course-mi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:27:00.394Z"
+  },
+  "woodland-country-club-in": {
+   "status": "ok",
+   "tees": 5,
+   "at": "2026-07-22T19:27:02.331Z"
+  },
+  "george-young-golf-course-mi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:27:03.764Z"
+  },
+  "village-green-golf-course-oh": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:27:05.063Z"
+  },
+  "friendly-valley-golf-course-ca": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:27:06.365Z"
+  },
+  "marin-country-club-ca": {
+   "status": "ok",
+   "tees": 9,
+   "at": "2026-07-22T19:27:07.870Z"
+  },
+  "the-legend-at-bergamont-wi": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:27:09.283Z"
+  },
+  "nine-springs-golf-course-wi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:27:10.461Z"
+  },
+  "mills-creek-golf-course-oh": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:27:11.837Z"
+  },
+  "foxford-hills-golf-course-il": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:27:13.044Z"
+  },
+  "pheasant-ridge-golf-course-ia": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:27:14.326Z"
+  },
+  "westbrook-hills-golf-course-wi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:27:15.811Z"
+  },
+  "eaglewood-resort-and-spa-il": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:27:17.089Z"
+  },
+  "mallard-golf-club-mi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:27:18.483Z"
+  },
+  "beech-hollow-golf-course-mi": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:27:19.918Z"
+  },
+  "greynolds-golf-course-fl": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:27:21.452Z"
+  },
+  "princeton-valley-golf-course-wi": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:27:22.679Z"
+  },
+  "crane-meadows-golf-course-wi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:27:24.159Z"
+  },
+  "kenyon-country-club-mn": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:27:25.508Z"
+  },
+  "the-country-club-of-saint-albans-mo": {
+   "status": "ok",
+   "tees": 9,
+   "at": "2026-07-22T19:27:26.805Z"
+  },
+  "white-eagle-golf-club-wi": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:27:28.057Z"
+  },
+  "deer-run-golf-club-mn": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:27:29.543Z"
+  },
+  "renwood-golf-course-il": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:27:30.902Z"
+  },
+  "washington-golf-learning-center-oh": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:27:32.338Z"
+  },
+  "pfau-indiana-university-golf-course-in": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:27:33.645Z"
+  },
+  "sullivan-elks-country-club-in": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:27:34.839Z"
+  },
+  "oak-knoll-golf-course-in": {
+   "status": "ok",
+   "tees": 7,
+   "at": "2026-07-22T19:27:36.231Z"
+  },
+  "zionsville-golf-course-in": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:27:37.580Z"
+  },
+  "kincaid-lake-golf-course-ky": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:27:38.903Z"
+  },
+  "the-quarry-golf-club-oh": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:27:40.213Z"
+  },
+  "ocean-hills-country-club-ca": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:27:41.555Z"
+  },
+  "zumbro-valley-golf-course-mn": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:27:43.022Z"
+  },
+  "eagle-bluff-golf-club-hurley-wi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:27:44.299Z"
+  },
+  "hiawatha-golf-club-wi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:27:45.710Z"
+  },
+  "perttu-s-big-spruce-golf-course-mi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:27:47.034Z"
+  },
+  "primghar-golf-and-country-club-ia": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:27:48.354Z"
+  },
+  "lake-city-country-club-ia": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:27:49.701Z"
+  },
+  "oakdale-golf-course-mn": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:27:51.195Z"
+  },
+  "north-branch-golf-course-in": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:27:52.690Z"
+  },
+  "south-hills-country-club-wi": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:27:54.293Z"
+  },
+  "grosse-ile-golf-country-club-mi": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:27:55.789Z"
+  },
+  "quarry-ridge-golf-center-mi": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:27:57.033Z"
+  },
+  "twin-lakes-golf-course-oh": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:27:58.301Z"
+  },
+  "fore-way-challenge-golf-driving-range-il": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:27:59.848Z"
+  },
+  "terrace-bluff-golf-course-mi": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:28:01.383Z"
+  },
+  "tipton-municipal-golf-course-in": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:28:02.851Z"
+  },
+  "noyac-golf-club-ny": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:28:04.381Z"
+  },
+  "quail-ridge-golf-course-wa": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:28:05.597Z"
+  },
+  "mendota-golf-club-il": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:28:06.810Z"
+  },
+  "spring-valley-golf-course-mi": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:28:08.083Z"
+  },
+  "chardell-golf-course-mi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:28:09.361Z"
+  },
+  "pine-creek-golf-course-mi": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:28:10.585Z"
+  },
+  "boughton-ridge-golf-course-il": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:28:12.034Z"
+  },
+  "meadowbrook-at-clayton-oh": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:28:13.468Z"
+  },
+  "sagamore-spring-golf-club-ma": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:28:14.813Z"
+  },
+  "miracle-hill-golf-course-ne": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:28:16.326Z"
+  },
+  "cross-creek-golf-links-ne": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:28:17.691Z"
+  },
+  "snowflake-ski-club-wi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:28:19.096Z"
+  },
+  "five-island-golf-course-ia": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:28:20.601Z"
+  },
+  "beaver-meadows-golf-club-ia": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:28:21.794Z"
+  },
+  "rolling-hills-golf-course-ia": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:28:22.982Z"
+  },
+  "radcliffe-friendly-fareways-ia": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:28:24.531Z"
+  },
+  "oak-springs-golf-club-il": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:28:26.309Z"
+  },
+  "canterbury-golf-club-oh": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:28:27.611Z"
+  },
+  "27-pines-golf-course-wi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:28:30.693Z"
+  },
+  "studio59-golf-libertyville-golf-course-il": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:28:34.505Z"
+  },
+  "black-bear-golf-club-fl": {
+   "status": "ok",
+   "tees": 6,
+   "at": "2026-07-22T19:28:35.789Z"
+  },
+  "rancho-maria-golf-club-ca": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:28:37.458Z"
+  },
+  "birchwood-golf-course-mn": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:28:38.703Z"
+  },
+  "kalona-golf-club-ia": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:28:40.203Z"
+  },
+  "marsh-ridge-golf-course-and-resort-mi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:28:41.657Z"
+  },
+  "signal-point-club-mi": {
+   "status": "not_available",
+   "code": 404,
+   "at": "2026-07-22T19:28:43.023Z"
+  },
+  "o-bannon-creek-golf-club-oh": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:28:44.545Z"
+  },
+  "the-fox-valley-club-ny": {
+   "status": "ok",
+   "tees": 5,
+   "at": "2026-07-22T19:28:45.942Z"
+  },
+  "moundsville-country-club-wv": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:28:47.233Z"
+  },
+  "pequot-golf-club-ct": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:28:48.805Z"
+  },
+  "grantsburg-golf-course-wi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:28:50.341Z"
+  },
+  "whitnall-park-golf-course-wi": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:28:51.695Z"
+  },
+  "atkins-golf-club-at-the-university-of-illinois-il": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:28:53.107Z"
+  },
+  "bushwood-golf-course-mi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:28:54.507Z"
+  },
+  "marietta-country-club-oh": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:28:55.737Z"
+  },
+  "pine-lake-golf-course-ne": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:28:56.928Z"
+  },
+  "brightwood-hills-golf-course-mn": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:28:58.197Z"
+  },
+  "l-c-boles-golf-course-holes-1-2-9-oh": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:28:59.479Z"
+  },
+  "pine-hills-golf-course-mi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:29:01.065Z"
+  },
+  "pan-yak-golf-course-wi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:29:02.605Z"
+  },
+  "mink-lake-golf-course-in": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:29:03.789Z"
+  },
+  "thatcher-golf-course-in": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:29:05.319Z"
+  },
+  "el-dorado-golf-course-mi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:29:06.535Z"
+  },
+  "plum-creek-golf-course-ia": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:29:08.144Z"
+  },
+  "wapsi-oaks-country-club-ia": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:29:09.616Z"
+  },
+  "mapple-hills-ia": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:29:11.165Z"
+  },
+  "avon-field-oh": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:29:12.710Z"
+  },
+  "cnc-links-newton-wi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:29:14.169Z"
+  },
+  "wawasee-golf-club-in": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:29:15.698Z"
+  },
+  "golf-club-of-west-virginia-wv": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:29:17.167Z"
+  },
+  "blackstone-golf-club-il": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:29:18.640Z"
+  },
+  "pickaway-golf-course-oh": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:29:19.949Z"
+  },
+  "detroit-golf-club-mi": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:29:21.456Z"
+  },
+  "oak-knolls-golf-course-mn": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:29:22.904Z"
+  },
+  "garrison-golf-club-nd": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:29:24.314Z"
+  },
+  "gaillardia-country-club-ok": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:29:25.880Z"
+  },
+  "ridges-at-sand-creek-mn": {
+   "status": "ok",
+   "tees": 5,
+   "at": "2026-07-22T19:29:27.325Z"
+  },
+  "lincoln-greens-golf-course-il": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:29:28.867Z"
+  },
+  "wildwood-marshes-golf-course-wi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:29:30.314Z"
+  },
+  "new-hope-village-golf-course-mn": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:29:31.874Z"
+  },
+  "north-shore-country-club-il": {
+   "status": "ok",
+   "tees": 5,
+   "at": "2026-07-22T19:29:33.300Z"
+  },
+  "fort-mitchell-country-club-golf-course-ky": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:29:34.678Z"
+  },
+  "klinger-lake-country-club-mi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:29:35.914Z"
+  },
+  "eagle-links-golf-club-wi": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:29:37.428Z"
+  },
+  "hidden-valley-golf-club-ny": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:29:38.875Z"
+  },
+  "madison-country-club-oh": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:29:40.417Z"
+  },
+  "glenville-golf-club-wv": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:29:41.810Z"
+  },
+  "salmon-falls-golf-club-me": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:29:43.220Z"
+  },
+  "edelweiss-chalet-country-club-wi": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:29:44.561Z"
+  },
+  "burning-tree-golf-club-ks": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:29:45.907Z"
+  },
+  "deerwood-golf-club-ia": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:29:47.422Z"
+  },
+  "weymont-run-country-club-wi": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:29:48.685Z"
+  },
+  "edgewood-valley-country-club-il": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:29:50.183Z"
+  },
+  "richland-country-club-il": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:29:51.682Z"
+  },
+  "deer-creek-golf-club-in": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:29:53.153Z"
+  },
+  "gull-lake-country-club-mi": {
+   "status": "ok",
+   "tees": 5,
+   "at": "2026-07-22T19:29:54.660Z"
+  },
+  "dogwood-hills-golf-course-oh": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:29:56.159Z"
+  },
+  "rose-brook-golf-course-ny": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:29:57.572Z"
+  },
+  "brooke-hills-park-golf-course-wv": {
+   "status": "not_available",
+   "code": 404,
+   "at": "2026-07-22T19:29:58.961Z"
+  },
+  "golden-gate-park-golf-course-ca": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:30:00.288Z"
+  },
+  "riverbend-golf-course-ut": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:30:01.821Z"
+  },
+  "sunland-village-golf-course-az": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:30:03.176Z"
+  },
+  "ackley-country-club-ia": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:30:04.432Z"
+  },
+  "honey-creek-golf-club-ia": {
+   "status": "ok",
+   "tees": 5,
+   "at": "2026-07-22T19:30:05.814Z"
+  },
+  "huron-shores-golf-club-restaurant-mi": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:30:07.362Z"
+  },
+  "champion-hill-golf-course-mi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:30:08.802Z"
+  },
+  "pebble-creek-golf-club-oh": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:30:10.078Z"
+  },
+  "bowling-green-country-club-oh": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:30:11.465Z"
+  },
+  "oglebay-resort-speidel-golf-club-par-3-course-wv": {
+   "status": "ok",
+   "tees": 5,
+   "at": "2026-07-22T19:30:12.824Z"
+  },
+  "old-avalon-golf-course-oh": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:30:14.089Z"
+  },
+  "ontonagon-golf-club-mi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:30:15.473Z"
+  },
+  "hidden-lake-country-club-il": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:30:16.953Z"
+  },
+  "johnson-ridge-golf-course-ia": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:30:18.392Z"
+  },
+  "l-c-boles-golf-course-holes-3-8-oh": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:30:19.964Z"
+  },
+  "hillview-country-club-in": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:30:21.485Z"
+  },
+  "yankee-springs-golf-course-mi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:30:23.130Z"
+  },
+  "the-highlands-mi": {
+   "status": "ok",
+   "tees": 6,
+   "at": "2026-07-22T19:30:24.408Z"
+  },
+  "sherwood-on-the-hill-golf-course-mi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:30:25.661Z"
+  },
+  "angel-hill-gc-in": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:30:27.221Z"
+  },
+  "shady-hills-golf-course-in": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:30:28.742Z"
+  },
+  "apple-valley-golf-club-oh": {
+   "status": "ok",
+   "tees": 5,
+   "at": "2026-07-22T19:30:30.215Z"
+  },
+  "hillcrest-ky": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:30:31.750Z"
+  },
+  "blackford-golf-club-in": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:30:33.213Z"
+  },
+  "kernoustie-golf-club-ia": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:30:34.495Z"
+  },
+  "rice-lake-golf-and-country-club-ia": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:30:35.985Z"
+  },
+  "arcadia-country-club-wi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:30:37.344Z"
+  },
+  "beaver-creek-golf-course-il": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:30:38.586Z"
+  },
+  "salt-creek-golf-resort-in": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:30:40.105Z"
+  },
+  "little-met-golf-course-oh": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:30:41.516Z"
+  },
+  "wolf-creek-golf-club-il": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:30:42.851Z"
+  },
+  "springbrook-golf-club-mi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:30:44.202Z"
+  },
+  "hollow-acres-golf-center-in": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:30:45.615Z"
+  },
+  "steubenville-country-club-oh": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:30:47.132Z"
+  },
+  "benson-park-golf-course-ne": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:30:48.746Z"
+  },
+  "ramsey-lake-golf-course-il": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:30:50.082Z"
+  },
+  "edgewater-golf-course-ia": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:30:51.384Z"
+  },
+  "terry-park-golf-course-il": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:30:52.694Z"
+  },
+  "miamiview-golf-course-oh": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:30:54.169Z"
+  },
+  "southern-dunes-golf-course-in": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:30:55.689Z"
+  },
+  "meadowood-golf-course-oh": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:30:56.938Z"
+  },
+  "elmbrook-golf-course-mi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:30:58.430Z"
+  },
+  "the-serradella-mi": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:30:59.740Z"
+  },
+  "the-valley-at-eastport-golf-club-sc": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:31:01.244Z"
+  },
+  "edgewood-golf-course-nd": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:31:02.589Z"
+  },
+  "field-club-of-omaha-north-ne": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:31:04.183Z"
+  },
+  "schleswig-community-golf-club-ia": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:31:05.390Z"
+  },
+  "big-sand-lake-club-golf-course-wi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:31:06.826Z"
+  },
+  "slippery-elm-golf-course-ia": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:31:08.039Z"
+  },
+  "cherry-ridge-golf-course-oh": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:31:09.444Z"
+  },
+  "whitefish-lake-golf-club-mi": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:31:10.635Z"
+  },
+  "winding-branch-golf-course-in": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:31:11.916Z"
+  },
+  "hoosier-heights-country-club-in": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:31:13.433Z"
+  },
+  "shennecossett-golf-club-ct": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:31:15.025Z"
+  },
+  "spring-hills-golf-course-ca": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:31:16.434Z"
+  },
+  "rancho-carlsbad-golf-club-ca": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:31:17.726Z"
+  },
+  "hyland-greens-golf-course-mn": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:31:19.066Z"
+  },
+  "kaufman-golf-course-il": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:31:20.275Z"
+  },
+  "blueberry-hills-golf-course-mn": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:31:21.488Z"
+  },
+  "sandtrap-golf-course-mn": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:31:23.050Z"
+  },
+  "spring-lake-golf-course-ne": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:31:24.294Z"
+  },
+  "park-falls-country-club-wi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:31:25.608Z"
+  },
+  "3-30-club-ia": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:31:27.044Z"
+  },
+  "buena-vista-golf-course-il": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:31:28.480Z"
+  },
+  "bellwood-oaks-golf-course-mn": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:31:29.951Z"
+  },
+  "gravel-pit-mn": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:31:31.587Z"
+  },
+  "downers-grove-golf-club-il": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:31:33.030Z"
+  },
+  "intimidator-golf-course-mi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:31:34.594Z"
+  },
+  "pierce-park-golf-events-mi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:31:36.211Z"
+  },
+  "smock-golf-course-in": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:31:37.756Z"
+  },
+  "big-walnut-golf-course-oh": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:31:39.241Z"
+  },
+  "aston-oaks-golf-club-oh": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:31:40.476Z"
+  },
+  "dyer-country-club-oh": {
+   "status": "not_available",
+   "code": 404,
+   "at": "2026-07-22T19:31:41.683Z"
+  },
+  "oglebay-resort-crispin-golf-course-wv": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:31:43.069Z"
+  },
+  "pine-valley-country-club-nc": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:31:44.626Z"
+  },
+  "lakeside-country-club-il": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:31:45.820Z"
+  },
+  "pine-knolls-country-club-ia": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:31:47.294Z"
+  },
+  "soldiers-field-golf-course-mn": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:31:48.502Z"
+  },
+  "conrad-golf-course-ia": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:31:49.825Z"
+  },
+  "crow-valley-golf-club-ia": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:31:51.257Z"
+  },
+  "saint-francois-country-club-mo": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:31:52.614Z"
+  },
+  "epworth-heights-golf-course-mi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:31:53.794Z"
+  },
+  "greenbriar-golf-course-mi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:31:55.351Z"
+  },
+  "shadow-ridge-golf-club-mi": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:31:56.706Z"
+  },
+  "franklin-valley-golf-club-oh": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:31:58.135Z"
+  },
+  "hill-top-oh": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:31:59.552Z"
+  },
+  "circling-hills-golf-course-oh": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:32:00.966Z"
+  },
+  "tannenhauf-golf-club-oh": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:32:02.403Z"
+  },
+  "woburn-country-club-ma": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:32:03.922Z"
+  },
+  "blackhawk-golf-course-wi": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:32:05.101Z"
+  },
+  "owatonna-country-club-mn": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:32:06.487Z"
+  },
+  "dairymens-country-club-wi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:32:07.679Z"
+  },
+  "new-richmond-golf-club-wi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:32:09.275Z"
+  },
+  "emerald-hill-il": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:32:10.745Z"
+  },
+  "clear-lake-golf-club-wi": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:32:12.307Z"
+  },
+  "white-mountain-golf-park-il": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:32:13.731Z"
+  },
+  "the-golf-course-at-branch-river-wi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:32:15.041Z"
+  },
+  "fawn-crest-golf-course-mi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:32:16.262Z"
+  },
+  "wildwood-lake-golf-course-mi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:32:17.681Z"
+  },
+  "crestview-golf-course-mi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:32:19.201Z"
+  },
+  "willow-ridge-golf-club-mi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:32:20.602Z"
+  },
+  "cherrywood-golf-club-mi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:32:22.044Z"
+  },
+  "pendleton-hills-ky": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:32:23.232Z"
+  },
+  "delaware-golf-club-oh": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:32:24.638Z"
+  },
+  "eagles-landing-md": {
+   "status": "ok",
+   "tees": 5,
+   "at": "2026-07-22T19:32:26.360Z"
+  },
+  "oakmoore-golf-course-ca": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:32:27.711Z"
+  },
+  "lancaster-riverside-golf-club-mn": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:32:29.110Z"
+  },
+  "franklin-county-country-club-mo": {
+   "status": "ok",
+   "tees": 5,
+   "at": "2026-07-22T19:32:30.419Z"
+  },
+  "grand-prarie-golf-course-mi": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:32:31.846Z"
+  },
+  "marquette-golf-club-greywalls-mi": {
+   "status": "ok",
+   "tees": 5,
+   "at": "2026-07-22T19:32:33.194Z"
+  },
+  "hampton-golf-and-country-club-mi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:32:34.685Z"
+  },
+  "pittsboro-golf-club-in": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:32:35.977Z"
+  },
+  "hidden-valley-golf-course-oh": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:32:37.511Z"
+  },
+  "country-club-of-winter-haven-fl": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:32:39.108Z"
+  },
+  "grantwood-golf-course-oh": {
+   "status": "ok",
+   "tees": 5,
+   "at": "2026-07-22T19:32:40.689Z"
+  },
+  "alliance-country-club-oh": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:32:42.146Z"
+  },
+  "prairie-trails-golf-course-ks": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:32:43.340Z"
+  },
+  "northridge-hills-il": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:32:44.600Z"
+  },
+  "woodlyn-hills-golf-course-ia": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:32:46.007Z"
+  },
+  "tepetonka-golf-club-mn": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:32:47.245Z"
+  },
+  "washtenaw-golf-club-mi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:32:48.573Z"
+  },
+  "seneca-golf-course-oh": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:32:50.147Z"
+  },
+  "upper-lansdowne-golf-course-oh": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:32:51.388Z"
+  },
+  "hillcrest-golf-course-oh": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:32:52.778Z"
+  },
+  "autumn-ridge-colf-course-wi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:32:54.001Z"
+  },
+  "the-retreat-mi": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:32:55.448Z"
+  },
+  "the-pines-mi": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:32:56.609Z"
+  },
+  "ellsworth-meadows-golf-club-oh": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:32:58.010Z"
+  },
+  "pleasant-valley-golf-course-oh": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:32:59.292Z"
+  },
+  "eagle-creek-oh": {
+   "status": "ok",
+   "tees": 7,
+   "at": "2026-07-22T19:33:00.642Z"
+  },
+  "north-olmsted-golf-club-oh": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:33:01.871Z"
+  },
+  "pheasant-run-golfcourse-oh": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:33:03.354Z"
+  },
+  "maplewood-golf-club-nh": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:33:04.806Z"
+  },
+  "salmon-run-golf-course-or": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:33:06.340Z"
+  },
+  "whitetail-run-golf-course-ne": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:33:07.711Z"
+  },
+  "spring-green-municipal-golf-course-wi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:33:08.984Z"
+  },
+  "dwan-golf-course-mn": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:33:10.319Z"
+  },
+  "ferndale-country-club-mn": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:33:11.825Z"
+  },
+  "root-river-country-club-mn": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:33:13.330Z"
+  },
+  "rock-creek-country-club-ks": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:33:14.502Z"
+  },
+  "maquoketa-country-club-ia": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:33:15.998Z"
+  },
+  "valley-high-golf-course-mn": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:33:17.537Z"
+  },
+  "earlville-country-club-il": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:33:18.927Z"
+  },
+  "golden-eagle-golf-club-mn": {
+   "status": "ok",
+   "tees": 5,
+   "at": "2026-07-22T19:33:20.282Z"
+  },
+  "sydney-r-marovitz-golf-course-il": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:33:21.783Z"
+  },
+  "summit-hills-country-club-ky": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:33:23.132Z"
+  },
+  "arlington-lakes-golf-course-il": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:33:24.521Z"
+  },
+  "chicago-heights-park-district-golf-course-west-il": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:33:25.919Z"
+  },
+  "ryland-lakes-golf-course-ky": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:33:28.657Z"
+  },
+  "owl-creek-country-club-ky": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:33:30.240Z"
+  },
+  "hillsdale-country-club-mi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:33:36.723Z"
+  },
+  "wilderness-golf-course-mi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:33:38.209Z"
+  },
+  "southmoor-golf-course-former-mi": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:33:39.537Z"
+  },
+  "maple-grove-golf-course-mi": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:33:41.081Z"
+  },
+  "pleasant-hill-golf-course-perrysville-oh": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:33:42.670Z"
+  },
+  "crane-s-landing-golf-club-at-marriott-lincolnshire-resort-il": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:33:43.972Z"
+  },
+  "greene-county-country-club-pa": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:33:45.294Z"
+  },
+  "akron-golf-club-ia": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:33:46.807Z"
+  },
+  "lidgerwood-golf-course-nd": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:33:48.351Z"
+  },
+  "kyle-memorial-golf-course-mn": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:33:49.623Z"
+  },
+  "goodrich-golf-course-mn": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:33:50.988Z"
+  },
+  "hurryville-driving-range-mo": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:33:52.332Z"
+  },
+  "derby-grange-golf-recreation-center-ia": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:33:53.915Z"
+  },
+  "the-woodlands-golf-club-il": {
+   "status": "ok",
+   "tees": 5,
+   "at": "2026-07-22T19:33:55.141Z"
+  },
+  "cyclone-golf-performance-center-ia": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:33:56.375Z"
+  },
+  "poplar-golf-course-wi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:33:57.829Z"
+  },
+  "four-bridges-country-club-oh": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:33:59.090Z"
+  },
+  "la-grange-country-club-il": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:34:00.354Z"
+  },
+  "glenmary-country-club-ky": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:34:01.991Z"
+  },
+  "stonehedge-golf-course-wi": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:34:03.446Z"
+  },
+  "sunset-ridge-country-club-il": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:34:04.866Z"
+  },
+  "woodland-ridge-golf-course-wi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:34:06.516Z"
+  },
+  "lakelands-golf-and-country-club-mi": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:34:08.100Z"
+  },
+  "custer-greens-golf-course-mi": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:34:09.379Z"
+  },
+  "crooked-lake-golf-club-in": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:34:10.630Z"
+  },
+  "carroll-county-country-club-in": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:34:12.136Z"
+  },
+  "desert-horizons-country-club-ca": {
+   "status": "ok",
+   "tees": 5,
+   "at": "2026-07-22T19:34:13.436Z"
+  },
+  "hidden-acres-golf-course-ia": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:34:14.648Z"
+  },
+  "halla-greens-mn": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:34:16.171Z"
+  },
+  "kimbeland-country-club-mo": {
+   "status": "ok",
+   "tees": 6,
+   "at": "2026-07-22T19:34:17.713Z"
+  },
+  "indian-hills-golf-club-il": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:34:18.966Z"
+  },
+  "sundance-golf-banquet-bowl-mn": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:34:20.148Z"
+  },
+  "lake-saint-louis-9-hole-golf-course-mo": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:34:22.023Z"
+  },
+  "sleepy-hollow-golf-course-oh": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:34:23.280Z"
+  },
+  "st-bernard-golf-club-oh": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:34:24.757Z"
+  },
+  "lincoln-hills-golf-club-oh": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:34:30.454Z"
+  },
+  "shamrock-hills-golf-club-mi": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:34:34.815Z"
+  },
+  "warnimont-park-golf-course-wi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:34:36.076Z"
+  },
+  "pipestone-creek-golf-course-mi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:34:38.386Z"
+  },
+  "black-wolf-links-va": {
+   "status": "not_available",
+   "code": 404,
+   "at": "2026-07-22T19:34:39.748Z"
+  },
+  "breckinridge-golf-course-ky": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:34:41.317Z"
+  },
+  "eagle-springs-golf-resort-wi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:34:42.550Z"
+  },
+  "fairgreens-golf-club-oh": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:34:43.844Z"
+  },
+  "grand-vue-park-golf-course-wv": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:34:45.218Z"
+  },
+  "the-fairways-at-twin-lakes-oh": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:34:46.777Z"
+  },
+  "sunny-hill-golf-course-oh": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:34:48.045Z"
+  },
+  "the-mission-club-ca": {
+   "status": "ok",
+   "tees": 6,
+   "at": "2026-07-22T19:34:49.483Z"
+  },
+  "highland-hills-golf-course-co": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:34:50.790Z"
+  },
+  "dubuque-country-club-ia": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:34:52.032Z"
+  },
+  "5-by-80-golf-and-country-club-ia": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:34:53.594Z"
+  },
+  "harmony-golf-club-mn": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:34:55.029Z"
+  },
+  "mystic-oak-golf-course-il": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:34:56.562Z"
+  },
+  "north-county-country-club-il": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:34:57.877Z"
+  },
+  "saint-elmo-golf-club-il": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:34:59.257Z"
+  },
+  "north-greens-golf-course-il": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:35:00.582Z"
+  },
+  "exmoor-country-club-il": {
+   "status": "ok",
+   "tees": 8,
+   "at": "2026-07-22T19:35:02.062Z"
+  },
+  "twin-lakes-golf-course-il": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:35:03.527Z"
+  },
+  "reid-municipal-golf-course-wi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:35:04.967Z"
+  },
+  "bear-chase-golf-club-in": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:35:06.282Z"
+  },
+  "evergreen-hills-golf-course-mi": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:35:07.574Z"
+  },
+  "crystal-view-golf-course-mi": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:35:09.023Z"
+  },
+  "mullenhurst-golf-course-mi": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:35:10.405Z"
+  },
+  "pine-grove-country-club-mi": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:35:11.765Z"
+  },
+  "gull-lake-view-east-mi": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:35:13.227Z"
+  },
+  "salt-river-golf-course-mi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:35:14.579Z"
+  },
+  "scalawags-golf-club-mi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:35:16.144Z"
+  },
+  "river-pointe-golf-club-ga": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:35:17.741Z"
+  },
+  "mission-hills-country-club-il": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:35:19.250Z"
+  },
+  "timber-ridge-golf-club-mi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:35:20.824Z"
+  },
+  "northport-creek-mi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:35:22.334Z"
+  },
+  "indian-boundary-golf-course-il": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:35:23.773Z"
+  },
+  "clermont-national-golf-course-fl": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:35:25.089Z"
+  },
+  "deer-run-golf-course-wi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:35:26.657Z"
+  },
+  "legend-lake-golf-course-oh": {
+   "status": "ok",
+   "tees": 5,
+   "at": "2026-07-22T19:35:28.085Z"
+  },
+  "brookside-golf-club-ia": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:35:29.361Z"
+  },
+  "bentwood-golf-course-mn": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:35:30.855Z"
+  },
+  "dakota-winds-golf-course-nd": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:35:32.162Z"
+  },
+  "waveland-golf-course-ia": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:35:33.599Z"
+  },
+  "little-willow-executive-course-mn": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:35:35.071Z"
+  },
+  "the-hills-golf-club-at-mckendree-university-il": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:35:36.268Z"
+  },
+  "frederic-golf-course-wi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:35:37.830Z"
+  },
+  "lewiston-golf-country-club-mn": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:35:39.365Z"
+  },
+  "eagle-lake-eagle-course-mn": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:35:40.698Z"
+  },
+  "the-jayhawk-club-ks": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:35:41.858Z"
+  },
+  "marquette-golf-club-mi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:35:43.302Z"
+  },
+  "moorland-road-golf-center-wi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:35:44.755Z"
+  },
+  "lockport-golf-and-recreation-club-il": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:35:46.311Z"
+  },
+  "oak-ridge-golf-course-in": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:35:47.816Z"
+  },
+  "horseshoe-bend-golf-course-oh": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:35:49.335Z"
+  },
+  "roane-county-country-club-wv": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:35:50.534Z"
+  },
+  "hawthorne-country-club-md": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:35:51.808Z"
+  },
+  "clair-mar-golf-course-oh": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:35:53.242Z"
+  },
+  "kissimmee-bay-country-club-fl": {
+   "status": "ok",
+   "tees": 5,
+   "at": "2026-07-22T19:35:54.698Z"
+  },
+  "diadema-golf-club-me": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:35:56.313Z"
+  },
+  "great-chebeague-golf-club-me": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:35:57.804Z"
+  },
+  "canadian-golf-club-tx": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:35:59.191Z"
+  },
+  "tuscumbia-country-club-wi": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:36:00.737Z"
+  },
+  "oak-ridge-golf-course-ia": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:36:02.206Z"
+  },
+  "prairie-woods-golf-course-wi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:36:03.697Z"
+  },
+  "willow-run-country-club-ia": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:36:04.979Z"
+  },
+  "timber-creek-golf-course-mn": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:36:06.376Z"
+  },
+  "spooner-golf-club-wi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:36:07.855Z"
+  },
+  "bryn-mawr-country-club-il": {
+   "status": "ok",
+   "tees": 5,
+   "at": "2026-07-22T19:36:09.320Z"
+  },
+  "pine-hills-golf-course-oh": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:36:10.616Z"
+  },
+  "beechwood-greens-golf-club-mi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:36:11.950Z"
+  },
+  "bridgewater-golf-club-in": {
+   "status": "ok",
+   "tees": 5,
+   "at": "2026-07-22T19:36:13.508Z"
+  },
+  "mcleansboro-golf-club-il": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:36:15.036Z"
+  },
+  "delaware-country-club-in": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:36:16.559Z"
+  },
+  "jackson-college-disc-golf-mi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:36:17.909Z"
+  },
+  "cobblestone-golf-course-in": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:36:19.134Z"
+  },
+  "the-legends-of-massillon-oh": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:36:20.612Z"
+  },
+  "wyantenuck-country-club-great-barrington-ma": {
+   "status": "not_available",
+   "code": 404,
+   "at": "2026-07-22T19:36:21.828Z"
+  },
+  "torrington-country-club-ct": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:36:23.289Z"
+  },
+  "pasco-golfland-wa": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:36:24.707Z"
+  },
+  "babbitt-golf-course-mn": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:36:25.998Z"
+  },
+  "cannon-golf-club-mn": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:36:27.257Z"
+  },
+  "linn-grove-country-club-ia": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:36:28.701Z"
+  },
+  "legend-trail-golf-course-ia": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:36:29.889Z"
+  },
+  "cottonwood-country-club-mn": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:36:31.428Z"
+  },
+  "tournament-club-of-iowa-ia": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:36:32.962Z"
+  },
+  "losantiville-country-club-oh": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:36:34.484Z"
+  },
+  "tournament-player-s-club-at-river-s-bend-oh": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:36:35.729Z"
+  },
+  "george-w-dunne-national-golf-course-il": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:36:37.295Z"
+  },
+  "the-meadows-at-grand-valley-state-university-mi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:36:38.890Z"
+  },
+  "otte-golf-family-fun-center-in": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:36:40.223Z"
+  },
+  "the-quest-golf-club-mi": {
+   "status": "ok",
+   "tees": 5,
+   "at": "2026-07-22T19:36:41.610Z"
+  },
+  "falcon-golf-course-mi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:36:43.099Z"
+  },
+  "sleepy-hollow-golf-club-wv": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:36:44.638Z"
+  },
+  "the-links-at-bowen-lake-mi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:36:46.053Z"
+  },
+  "old-hickory-golf-club-ny": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:36:47.664Z"
+  },
+  "mirabel-golf-club-az": {
+   "status": "ok",
+   "tees": 7,
+   "at": "2026-07-22T19:36:49.051Z"
+  },
+  "the-golf-club-at-cedar-creek-wi": {
+   "status": "ok",
+   "tees": 5,
+   "at": "2026-07-22T19:36:50.530Z"
+  },
+  "essex-golf-club-ia": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:36:51.966Z"
+  },
+  "rosman-glendale-farm-golf-course-ia": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:36:53.530Z"
+  },
+  "st-cloud-country-club-mn": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:36:54.965Z"
+  },
+  "tanner-s-brook-mn": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:36:56.160Z"
+  },
+  "thunderhawk-golf-club-il": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:36:57.739Z"
+  },
+  "west-bend-country-club-wi": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:36:58.992Z"
+  },
+  "apple-mountain-golf-course-mi": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:37:00.496Z"
+  },
+  "hocking-hills-golf-club-oh": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:37:01.985Z"
+  },
+  "weissinger-hills-golf-course-ky": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:37:03.216Z"
+  },
+  "wilson-road-golf-course-oh": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:37:04.592Z"
+  },
+  "lawrence-park-golf-club-pa": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:37:05.912Z"
+  },
+  "boulder-creek-golf-club-oh": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:37:07.430Z"
+  },
+  "the-glen-golf-park-wi": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:37:08.925Z"
+  },
+  "bunker-links-golf-course-il": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:37:10.412Z"
+  },
+  "tri-club-golf-club-ia": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:37:11.688Z"
+  },
+  "quail-run-golf-course-ia": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:37:13.219Z"
+  },
+  "arrowhead-heights-golf-course-il": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:37:14.703Z"
+  },
+  "paullina-golf-course-ia": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:37:15.981Z"
+  },
+  "wanaki-golf-course-wi": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:37:17.598Z"
+  },
+  "wicker-memorial-park-golf-course-in": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:37:19.065Z"
+  },
+  "black-bear-golf-club-mi": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:37:20.394Z"
+  },
+  "pontiac-country-club-mi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:37:21.730Z"
+  },
+  "quincy-golf-course-mi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:37:23.154Z"
+  },
+  "mayfair-country-club-oh": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:37:24.387Z"
+  },
+  "hillsboro-elks-golf-course-oh": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:37:25.775Z"
+  },
+  "clay-county-country-club-il": {
+   "status": "ok",
+   "tees": 6,
+   "at": "2026-07-22T19:37:27.165Z"
+  },
+  "stonebridge-golf-links-country-club-ny": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-22T19:37:28.528Z"
+  },
+  "contra-costa-country-club-ca": {
+   "status": "ok",
+   "tees": 7,
+   "at": "2026-07-22T19:37:29.815Z"
+  },
+  "two-rivers-golf-club-sd": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-22T19:37:31.297Z"
+  },
+  "blackhawk-country-club-wi": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:37:32.663Z"
+  },
+  "american-legion-golf-course-ia": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:37:34.142Z"
+  },
+  "elk-river-golf-club-mn": {
+   "status": "ok",
+   "tees": 5,
+   "at": "2026-07-22T19:37:35.552Z"
+  },
+  "grandview-country-club-mn": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-22T19:37:36.768Z"
+  },
+  "washington-park-municipal-golf-course-wi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:37:38.162Z"
+  },
+  "ridge-country-club-il": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-22T19:37:39.721Z"
+  },
+  "sun-valley-golf-course-ky": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-22T19:37:41.214Z"
+  },
+  "gull-lake-view-west-mi": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-23T15:40:10.718Z"
+  },
+  "crystal-lake-golf-club-mi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-23T15:40:12.497Z"
+  },
+  "caro-golf-club-mi": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-23T15:40:14.002Z"
+  },
+  "indian-springs-golf-club-il": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-23T15:40:15.657Z"
+  },
+  "joa-company-golf-course-wi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-23T15:40:17.341Z"
+  },
+  "meigs-golf-course-oh": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-23T15:40:18.824Z"
+  },
+  "the-crossings-golf-course-ky": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-23T15:40:20.518Z"
+  },
+  "tekoa-golf-course-tekoa-wa": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-23T15:40:22.251Z"
+  },
+  "arrowood-golf-course-ca": {
+   "status": "ok",
+   "tees": 6,
+   "at": "2026-07-23T15:40:23.734Z"
+  },
+  "timber-terrace-golf-course-wi": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-23T15:40:25.307Z"
+  },
+  "chosen-valley-golf-club-mn": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-23T15:40:26.506Z"
+  },
+  "hillcrest-event-center-il": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-23T15:40:27.873Z"
+  },
+  "marengo-golf-club-ia": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-23T15:40:29.185Z"
+  },
+  "wayton-hill-s-golf-course-il": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-23T15:40:30.644Z"
+  },
+  "raymond-shoal-creek-golf-course-il": {
+   "status": "ok",
+   "tees": 1,
+   "at": "2026-07-23T15:40:32.077Z"
+  },
+  "rolling-meadows-golf-course-in": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-23T15:40:33.648Z"
+  },
+  "apple-valley-golf-course-mi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-23T15:40:35.208Z"
+  },
+  "twin-bridges-golf-course-mi": {
+   "status": "not_available",
+   "code": 200,
+   "note": "no rated tee sets in response",
+   "at": "2026-07-23T15:40:36.602Z"
+  },
+  "twin-beach-country-club-mi": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-23T15:40:38.341Z"
+  },
+  "fox-woods-golf-course-mi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-23T15:40:40.022Z"
+  },
+  "brae-burn-golf-club-mi": {
+   "status": "ok",
+   "tees": 3,
+   "at": "2026-07-23T15:40:41.452Z"
+  },
+  "linville-falls-golf-club-nc": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-23T15:40:42.897Z"
+  },
+  "timuquana-country-club-fl": {
+   "status": "ok",
+   "tees": 10,
+   "at": "2026-07-23T15:40:44.553Z"
+  },
+  "sistersville-country-club-golf-course-wv": {
+   "status": "ok",
+   "tees": 2,
+   "at": "2026-07-23T15:40:46.174Z"
+  },
+  "packsaddle-ridge-golf-course-va": {
+   "status": "ok",
+   "tees": 4,
+   "at": "2026-07-23T15:40:47.766Z"
+  }
+ }
+}
