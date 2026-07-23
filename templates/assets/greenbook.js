@@ -195,7 +195,11 @@ window.GB = (function () {
           C.prov.push(["Hole-by-hole card", "OpenGolfAPI scorecard — cited as OPENGOLFAPI, not USGA. Card layer complete for the inferred size; completeness describes the card only, not axis coverage.", "CARD COMPLETE"]);
         else
           C.prov.push(["Par / stroke index", reg.scorecard && reg.scorecard.length ? "OpenGolfAPI scorecard — cited as OPENGOLFAPI, not USGA" : "Not present in registry record", reg.scorecard && reg.scorecard.length ? "DERIVED" : "WITHHELD"]);
-        C.prov.push(["Ratings & slope", C.ratingCards.length ? "OpenGolfAPI per-tee crawl — cited as OPENGOLFAPI until independently verified" : "Not present in registry record", C.ratingCards.length ? "DERIVED" : "WITHHELD"]);
+        C.prov.push(["Ratings & slope",
+          C.ratingCards.length ? "OpenGolfAPI per-tee crawl — cited as OPENGOLFAPI until independently verified"
+            : quality && quality.ratings_na ? "OpenGolfAPI detail endpoint queried — no per-tee ratings published for this course. Recorded, never guessed."
+              : "Not present in registry record",
+          C.ratingCards.length ? "DERIVED" : quality && quality.ratings_na ? "ATTEMPTED · NOT AVAILABLE" : "WITHHELD"]);
       }
       if (artifact) {
         C.prov.push(["Hole geometry", "OpenStreetMap via Overpass (ODbL)", "VERIFIED"]);
@@ -215,7 +219,26 @@ window.GB = (function () {
       C.prov.push(["Conditions & pace", "No ground truth ingested", "WITHHELD"]);
     }
     C.provNote = o.provNote || null;
-    C.conflicts = o.conflicts || [];
+    C.conflicts = (o.conflicts || []).slice();
+    /* Ledger precedent (Allentown 72.4/132): a crawl-derived enriched rating
+       that disagrees with a VERIFIED table is FLAGGED, never averaged — the
+       table wins (override precedence above already renders it). Curated
+       conflicts for the same tee are not duplicated. */
+    if (ro && ro.status === "VERIFIED" && reg && reg.tees && reg.tees.length) {
+      const already = (o.conflicts || []).map((c) => c.field).join(" · ");
+      for (const t of ro.tees) {
+        const rt = reg.tees.find((x) => x.tee_name && x.tee_name.toLowerCase() === t.tee.toLowerCase());
+        if (!rt) continue;
+        const differs = (rt.course_rating != null && t.r != null && rt.course_rating !== t.r) ||
+          (rt.slope != null && t.s != null && rt.slope !== t.s);
+        if (differs && !new RegExp(`\\(${t.tee}\\)`, "i").test(already))
+          C.conflicts.push({
+            field: `Course rating / slope (${t.tee})`,
+            authoritative: { source: `${ro.srcLabel} (verified table)`, value: `${t.r ?? "—"} / ${t.s ?? "—"}`, status: ro.status },
+            flagged: [{ source: "OpenGolfAPI enrichment (crawl-derived)", value: `${rt.course_rating ?? "—"} / ${rt.slope ?? "—"}`, status: "APPROX" }],
+          });
+      }
+    }
     return C;
   }
 
